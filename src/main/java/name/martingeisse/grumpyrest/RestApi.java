@@ -1,9 +1,12 @@
 package name.martingeisse.grumpyrest;
 
+import name.martingeisse.grumpyrest.path.Path;
 import name.martingeisse.grumpyrest.responder.Responder;
 import name.martingeisse.grumpyrest.responder.ResponderFactory;
 import name.martingeisse.grumpyrest.responder.ResponderFactoryRegistry;
 import name.martingeisse.grumpyrest.responder.StatusOnlyResponder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,18 +14,28 @@ import java.util.List;
 
 public final class RestApi {
 
+    private static Logger LOGGER = LoggerFactory.getLogger(RestApi.class);
+
     private final List<Route> routes = new ArrayList<>();
     private final ResponderFactoryRegistry responderFactoryRegistry = new ResponderFactoryRegistry();
 
-    public void add(Route route) {
+    public void addRoute(Route route) {
         routes.add(route);
+    }
+
+    public void addRoute(Path path, Handler handler) {
+        addRoute(new Route(path, handler));
+    }
+
+    public void addRoute(String path, Handler handler) {
+        addRoute(Path.parse(path), handler);
     }
 
     public List<Route> getRoutes() {
         return routes;
     }
 
-    public void add(ResponderFactory responderFactory) {
+    public void addResponderFactory(ResponderFactory responderFactory) {
         responderFactoryRegistry.add(responderFactory);
     }
 
@@ -59,6 +72,7 @@ public final class RestApi {
         try {
             responder = responderFactoryRegistry.createResponder(responseValue);
         } catch (Exception e) {
+            LOGGER.error("could not create responder to response value", e);
             responder = new StatusOnlyResponder(500);
         }
 

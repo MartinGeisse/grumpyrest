@@ -2,12 +2,15 @@ package name.martingeisse.grumpyrest.path;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Objects;
+
 public final class PathUtil {
 
     private PathUtil() {
     }
 
     public static String[] splitIntoSegments(String pathText) {
+        Objects.requireNonNull(pathText);
         while (pathText.startsWith("/")) {
             pathText = pathText.substring(1);
         }
