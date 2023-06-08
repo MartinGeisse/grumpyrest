@@ -8,6 +8,9 @@ import name.martingeisse.grumpyrest.responder.ResponderFactoryRegistry;
 import name.martingeisse.grumpyrest.responder.standard.IdentityResponderFactory;
 import name.martingeisse.grumpyrest.responder.standard.JsonResponderFactory;
 import name.martingeisse.grumpyrest.responder.standard.StandardErrorResponder;
+import name.martingeisse.grumpyrest.stringparser.FromStringParser;
+import name.martingeisse.grumpyrest.stringparser.FromStringParserRegistry;
+import name.martingeisse.grumpyrest.stringparser.standard.StringFromStringParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,10 +25,17 @@ public final class RestApi {
     private final List<Route> routes = new ArrayList<>();
     private final ResponderFactoryRegistry responderFactoryRegistry = new ResponderFactoryRegistry();
     private final JsonEngine jsonEngine = new JsonEngine();
+    private final FromStringParserRegistry fromStringParserRegistry = new FromStringParserRegistry();
 
     public RestApi() {
-        responderFactoryRegistry.add(new IdentityResponderFactory());
-        responderFactoryRegistry.add(new JsonResponderFactory());
+
+        // responder factories
+        addResponderFactory(new IdentityResponderFactory());
+        addResponderFactory(new JsonResponderFactory());
+
+        // from-string parsers
+        addFromStringParser(new StringFromStringParser());
+
     }
 
     public void addRoute(Route route) {
@@ -50,6 +60,14 @@ public final class RestApi {
 
     public ResponderFactoryRegistry getResponderFactoryRegistry() {
         return responderFactoryRegistry;
+    }
+
+    public void addFromStringParser(FromStringParser parser) {
+        fromStringParserRegistry.addParser(parser);
+    }
+
+    public FromStringParserRegistry getFromStringParserRegistry() {
+        return fromStringParserRegistry;
     }
 
     public JsonEngine getJsonEngine() {

@@ -10,6 +10,8 @@ public record StandardErrorResponder(int status, String message, ImmutableList<F
 
     public static final StandardErrorResponder UNKNOWN_URL = new StandardErrorResponder(404, "unknown URL");
     public static final StandardErrorResponder INTERNAL_SERVER_ERROR = new StandardErrorResponder(500, "internal server error");
+    public static final StandardErrorResponder JSON_EXPECTED = new StandardErrorResponder(415, "expected application/json content type");
+    public static final StandardErrorResponder IO_ERROR = new StandardErrorResponder(400, "I/O error");
 
     public StandardErrorResponder(int status, String message) {
         this(status, message, ImmutableList.of());
