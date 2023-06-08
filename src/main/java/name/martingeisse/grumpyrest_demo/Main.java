@@ -1,26 +1,43 @@
 package name.martingeisse.grumpyrest_demo;
 
-import name.martingeisse.grumpyjson.JsonEngine;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import name.martingeisse.grumpyrest.RestApi;
+import name.martingeisse.grumpyrest.servlet.RestServlet;
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.handler.DefaultHandler;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 
 public class Main {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(Main.class);
-
-
-    public record TestRecord(int foo, String bar) {}
-
-    public record AnotherRecord(TestRecord a, TestRecord b, int c) {}
-
     public static void main(String[] args) throws Exception {
-        // Launcher.launch();
+        Server server = new Server();
 
-        JsonEngine engine = new JsonEngine();
-        System.out.println(engine.stringify(
-                new AnotherRecord(new TestRecord(42, "xxx"), new TestRecord(123, "bla"), 99)));
+        @SuppressWarnings("resource") ServerConnector connector = new ServerConnector(server);
+        connector.setPort(8080);
+        server.setConnectors(new Connector[]{connector});
 
-        System.out.println(engine.parse("{}", TestRecord.class));
+        ServletContextHandler context = new ServletContextHandler();
+        context.setContextPath("/");
+        context.addServlet(MyServlet.class, "/");
+
+        server.setHandler(new HandlerList(context, new DefaultHandler()));
+        server.start();
+        server.join();
+    }
+
+    public static class MyServlet extends RestServlet {
+
+        public MyServlet() {
+            super(createApi());
+        }
+
+        private static RestApi createApi() {
+            RestApi api = new RestApi();
+            return api;
+        }
+
     }
 
 }
