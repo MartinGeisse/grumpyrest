@@ -1,5 +1,6 @@
 package name.martingeisse.grumpyrest.responder.standard;
 
+import name.martingeisse.grumpyrest.RequestCycle;
 import name.martingeisse.grumpyrest.responder.Responder;
 import name.martingeisse.grumpyrest.responder.ResponderFactory;
 
@@ -9,7 +10,7 @@ import name.martingeisse.grumpyrest.responder.ResponderFactory;
 public final class IdentityResponderFactory implements ResponderFactory {
 
     @Override
-    public Responder createResponder(Object value) {
+    public Responder createResponder(RequestCycle requestCycle, Object value) {
         return (value instanceof Responder responder) ? responder : null;
     }
 

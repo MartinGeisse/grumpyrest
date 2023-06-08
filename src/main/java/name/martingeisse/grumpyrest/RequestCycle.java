@@ -7,11 +7,13 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public final class RequestCycle {
 
+    private final RestApi api;
     private final HttpServletRequest request;
     private final HttpServletResponse response;
     private final ImmutableList<String> pathSegments;
 
-    public RequestCycle(HttpServletRequest request, HttpServletResponse response) {
+    public RequestCycle(RestApi api, HttpServletRequest request, HttpServletResponse response) {
+        this.api = api;
         this.request = request;
         this.response = response;
 
@@ -21,6 +23,10 @@ public final class RequestCycle {
         } else {
             this.pathSegments = ImmutableList.copyOf(PathUtil.splitIntoSegments(pathText));
         }
+    }
+
+    public RestApi getApi() {
+        return api;
     }
 
     public HttpServletRequest getRequest() {
