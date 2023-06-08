@@ -8,6 +8,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.RecordComponent;
+import java.util.Objects;
 
 public final class RecordAdapter<T> implements JsonTypeAdapter<T> {
 
@@ -35,6 +36,9 @@ public final class RecordAdapter<T> implements JsonTypeAdapter<T> {
     private final ImmutableList<ComponentAdapter> componentAdapters;
 
     public RecordAdapter(Class<T> clazz, JsonRegistry registry) {
+        Objects.requireNonNull(clazz, "clazz");
+        Objects.requireNonNull(registry, "registry");
+
         if (!clazz.isRecord()) {
             throw new IllegalArgumentException("not a record: " + clazz);
         }
@@ -59,14 +63,17 @@ public final class RecordAdapter<T> implements JsonTypeAdapter<T> {
 
     @Override
     public T fromJson(JsonElement json, TypeToken<? super T> type) throws JsonValidationException {
+        Objects.requireNonNull(json, "json");
+        Objects.requireNonNull(type, "type");
+
         throw new UnsupportedOperationException();
     }
 
     @Override
     public JsonElement toJson(T value, TypeToken<? super T> type) {
-        if (value == null) {
-            throw JsonGenerationException.fieldIsNull();
-        }
+        Objects.requireNonNull(value, "value");
+        Objects.requireNonNull(type, "type");
+
         JsonObject result = new JsonObject();
         for (ComponentAdapter adapter : componentAdapters) {
             try {

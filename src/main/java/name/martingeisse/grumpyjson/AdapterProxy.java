@@ -8,7 +8,7 @@ public final class AdapterProxy<T> implements JsonTypeAdapter<T> {
     private JsonTypeAdapter<T> target;
 
     public void setTarget(JsonTypeAdapter<T> target) {
-        this.target = target;
+        this.target = Objects.requireNonNull(target);
     }
 
     private JsonTypeAdapter<T> needTarget() {
@@ -20,11 +20,15 @@ public final class AdapterProxy<T> implements JsonTypeAdapter<T> {
 
     @Override
     public T fromJson(JsonElement json, TypeToken<? super T> type) throws JsonValidationException {
+        Objects.requireNonNull(json, "json");
+        Objects.requireNonNull(type, "type");
         return needTarget().fromJson(json, type);
     }
 
     @Override
     public JsonElement toJson(T value, TypeToken<? super T> type) {
+        Objects.requireNonNull(value, "value");
+        Objects.requireNonNull(type, "type");
         return needTarget().toJson(value, type);
     }
 }

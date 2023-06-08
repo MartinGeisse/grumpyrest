@@ -7,10 +7,15 @@ import name.martingeisse.grumpyjson.JsonGenerationException;
 import name.martingeisse.grumpyjson.JsonTypeAdapter;
 import name.martingeisse.grumpyjson.JsonValidationException;
 
+import java.util.Objects;
+
 public class IntAdapter implements JsonTypeAdapter<Integer> {
 
     @Override
     public Integer fromJson(JsonElement json, TypeToken<? super Integer> type) throws JsonValidationException {
+        Objects.requireNonNull(json, "json");
+        Objects.requireNonNull(type, "type");
+
         if (json instanceof JsonPrimitive primitive) {
             if (primitive.isNumber()) {
                 long longValue = primitive.getAsLong();
@@ -25,14 +30,14 @@ public class IntAdapter implements JsonTypeAdapter<Integer> {
                 }
             }
         }
+
         throw new JsonValidationException("expected int, found: " + json);
     }
 
     @Override
     public JsonElement toJson(Integer value, TypeToken<? super Integer> type) {
-        if (value == null) {
-            throw JsonGenerationException.fieldIsNull();
-        }
+        Objects.requireNonNull(value, "value");
+        Objects.requireNonNull(type, "type");
         return new JsonPrimitive(value);
     }
 
