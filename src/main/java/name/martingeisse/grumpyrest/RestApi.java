@@ -1,10 +1,9 @@
 package name.martingeisse.grumpyrest;
 
+import name.martingeisse.grumpyjson.JsonEngine;
 import name.martingeisse.grumpyrest.path.Path;
-import name.martingeisse.grumpyrest.responder.Responder;
-import name.martingeisse.grumpyrest.responder.ResponderFactory;
-import name.martingeisse.grumpyrest.responder.ResponderFactoryRegistry;
-import name.martingeisse.grumpyrest.responder.StatusOnlyResponder;
+import name.martingeisse.grumpyrest.responder.*;
+import name.martingeisse.grumpyrest.responder.standard.IdentityResponderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,10 +13,16 @@ import java.util.List;
 
 public final class RestApi {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(RestApi.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestApi.class);
 
     private final List<Route> routes = new ArrayList<>();
     private final ResponderFactoryRegistry responderFactoryRegistry = new ResponderFactoryRegistry();
+    private final JsonEngine jsonEngine = new JsonEngine();
+
+    public RestApi() {
+        responderFactoryRegistry.add(new IdentityResponderFactory());
+        responderFactoryRegistry.add(new JsonResponderFactory(jsonEngine));
+    }
 
     public void addRoute(Route route) {
         routes.add(route);
@@ -41,6 +46,10 @@ public final class RestApi {
 
     public ResponderFactoryRegistry getResponderFactoryRegistry() {
         return responderFactoryRegistry;
+    }
+
+    public JsonEngine getJsonEngine() {
+        return jsonEngine;
     }
 
     public Route match(RequestCycle requestCycle) {

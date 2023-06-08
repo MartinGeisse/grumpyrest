@@ -1,7 +1,5 @@
 package name.martingeisse.grumpyrest.responder;
 
-import name.martingeisse.grumpyrest.responder.standard.IdentityResponderFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +11,6 @@ public class ResponderFactoryRegistry {
     private final List<ResponderFactory> factories = new ArrayList<>();
 
     public ResponderFactoryRegistry() {
-        factories.add(new IdentityResponderFactory());
     }
 
     public void clear() {
