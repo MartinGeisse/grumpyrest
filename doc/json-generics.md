@@ -36,3 +36,30 @@ TODO:
   will not find a type adapter for this.
 
 
+```
+public class GenericJsonTest {
+
+    private record SimpleOuter(SimpleInner<String> inner) {}
+    private record SimpleInner<T>(T field) {}
+    private final JsonEngine engine = new JsonEngine();
+
+    /**
+     * Test that a type argument can be used to select the correct type adapter for a parameterized field.
+     */
+    @Test
+    public void testSimpleTypeArgumentPassing() throws JsonValidationException {
+        var json = "{\"inner\": {\"field\": \"foo\"}}";
+        var expected = new SimpleOuter(new SimpleInner<>("foo"));
+        Assertions.assertEquals(expected, engine.parse(json, SimpleOuter.class));
+    }
+
+    /**
+     * This is one of the most complicated scenarios
+     */
+    @Test
+    public void testComplexTypeArgumentPassing() {
+        // TODO A (T=String) -> B<T> -> List<T> -> T
+    }
+
+}
+```
