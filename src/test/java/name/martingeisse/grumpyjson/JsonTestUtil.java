@@ -2,11 +2,9 @@ package name.martingeisse.grumpyjson;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
-import name.martingeisse.grumpyjson.JsonGenerationException;
-import name.martingeisse.grumpyjson.JsonTypeAdapter;
-import name.martingeisse.grumpyjson.JsonValidationException;
 import org.junit.jupiter.api.Assertions;
 
+import java.lang.reflect.Type;
 import java.util.function.Consumer;
 
 public class JsonTestUtil {
@@ -148,23 +146,27 @@ public class JsonTestUtil {
     // assertion helpers
     // ----------------------------------------------------------------------------------------------------------------
 
-    public static void assertFailsValidation(JsonTypeAdapter<?> adapter, JsonElement json, Class<?> type) {
-        assertFailsValidation(adapter, json, TypeToken.get(type));
+    public static void assertFailsValidation(JsonTypeAdapter<?> adapter, JsonElement json, TypeToken<?> typeToken) {
+        assertFailsValidation(adapter, json, typeToken.getType());
     }
 
-    public static void assertFailsValidation(JsonTypeAdapter<?> adapter, JsonElement json, TypeToken<?> type) {
-        //noinspection unchecked,rawtypes
+    public static void assertFailsValidation(JsonTypeAdapter<?> adapter, JsonElement json, Type type) {
+        //noinspection rawtypes
         Assertions.assertThrows(JsonValidationException.class, () -> ((JsonTypeAdapter)adapter).fromJson(json, type));
-
     }
 
-    public static void assertFailsGeneration(JsonTypeAdapter<?> adapter, Object value, Class<?> type) {
-        assertFailsGeneration(adapter, value, TypeToken.get(type));
+    public static void assertFailsGeneration(JsonTypeAdapter<?> adapter, Object value, TypeToken<?> typeToken) {
+        assertFailsGeneration(adapter, value, typeToken.getType());
     }
 
-    public static void assertFailsGeneration(JsonTypeAdapter<?> adapter, Object value, TypeToken<?> type) {
+    public static void assertFailsGeneration(JsonTypeAdapter<?> adapter, Object value, Type type) {
         //noinspection unchecked,rawtypes
         Assertions.assertThrows(JsonGenerationException.class, () -> ((JsonTypeAdapter)adapter).toJson(value, type));
+    }
+
+    public static void assertFailsGenerationWithNpe(JsonTypeAdapter<?> adapter, Object value, Type type) {
+        //noinspection unchecked,rawtypes
+        Assertions.assertThrows(NullPointerException.class, () -> ((JsonTypeAdapter)adapter).toJson(value, type));
     }
 
 }
