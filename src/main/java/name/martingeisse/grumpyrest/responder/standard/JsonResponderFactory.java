@@ -1,6 +1,8 @@
-package name.martingeisse.grumpyrest.responder;
+package name.martingeisse.grumpyrest.responder.standard;
 
 import name.martingeisse.grumpyjson.JsonEngine;
+import name.martingeisse.grumpyrest.responder.Responder;
+import name.martingeisse.grumpyrest.responder.ResponderFactory;
 
 public final class JsonResponderFactory implements ResponderFactory {
 

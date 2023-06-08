@@ -1,6 +1,7 @@
-package name.martingeisse.grumpyrest.responder;
+package name.martingeisse.grumpyrest.responder.standard;
 
 import name.martingeisse.grumpyrest.RequestCycle;
+import name.martingeisse.grumpyrest.responder.Responder;
 
 /**
  * Sends an empty response with a configurable HTTP status code.

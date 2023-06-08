@@ -1,6 +1,7 @@
-package name.martingeisse.grumpyrest.responder;
+package name.martingeisse.grumpyrest.responder.standard;
 
 import name.martingeisse.grumpyrest.RequestCycle;
+import name.martingeisse.grumpyrest.responder.Responder;
 
 /**
  * Does not respond at all. This is meant to handle cases where the handler has already sent a response manually.

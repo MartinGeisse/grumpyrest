@@ -4,6 +4,8 @@ import name.martingeisse.grumpyjson.JsonEngine;
 import name.martingeisse.grumpyrest.path.Path;
 import name.martingeisse.grumpyrest.responder.*;
 import name.martingeisse.grumpyrest.responder.standard.IdentityResponderFactory;
+import name.martingeisse.grumpyrest.responder.standard.JsonResponderFactory;
+import name.martingeisse.grumpyrest.responder.standard.StatusOnlyResponder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
