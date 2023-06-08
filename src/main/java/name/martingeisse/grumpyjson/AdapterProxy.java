@@ -3,6 +3,8 @@ package name.martingeisse.grumpyjson;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 
+import java.util.Objects;
+
 public final class AdapterProxy<T> implements JsonTypeAdapter<T> {
 
     private JsonTypeAdapter<T> target;
@@ -16,6 +18,12 @@ public final class AdapterProxy<T> implements JsonTypeAdapter<T> {
             throw new IllegalStateException("using an AdapterProxy before its target has been set");
         }
         return target;
+    }
+
+    @Override
+    public boolean supportsType(TypeToken<?> type) {
+        Objects.requireNonNull(type, "type");
+        return needTarget().supportsType(type);
     }
 
     @Override

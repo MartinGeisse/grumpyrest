@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 
 public interface JsonTypeAdapter<T> {
+    boolean supportsType(TypeToken<?> type);
     T fromJson(JsonElement json, TypeToken<? super T> type) throws JsonValidationException;
     JsonElement toJson(T value, TypeToken<? super T> type) throws JsonGenerationException;
 }

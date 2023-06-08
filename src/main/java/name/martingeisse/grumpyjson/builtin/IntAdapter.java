@@ -3,13 +3,17 @@ package name.martingeisse.grumpyjson.builtin;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.reflect.TypeToken;
-import name.martingeisse.grumpyjson.JsonGenerationException;
 import name.martingeisse.grumpyjson.JsonTypeAdapter;
 import name.martingeisse.grumpyjson.JsonValidationException;
 
 import java.util.Objects;
 
 public class IntAdapter implements JsonTypeAdapter<Integer> {
+
+    @Override
+    public boolean supportsType(TypeToken<?> type) {
+        return Objects.requireNonNull(type, "type").getType().equals(Integer.TYPE);
+    }
 
     @Override
     public Integer fromJson(JsonElement json, TypeToken<? super Integer> type) throws JsonValidationException {

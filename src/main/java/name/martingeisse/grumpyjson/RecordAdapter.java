@@ -24,7 +24,7 @@ public final class RecordAdapter<T> implements JsonTypeAdapter<T> {
                 throw new JsonGenerationException("could not invoke getter " + accessor + " on " + javaContainer);
             }
             if (componentValue == null) {
-                throw new JsonGenerationException("field value is null in toJson()");
+                throw JsonGenerationException.fieldIsNull();
             }
             jsonContainer.add(component.getName(), typeAdapter.toJson(componentValue, typeToken));
         }
@@ -59,6 +59,12 @@ public final class RecordAdapter<T> implements JsonTypeAdapter<T> {
             throw new RuntimeException("could not find canonical constructor for record type " + clazz);
         }
         this.componentAdapters = ImmutableList.copyOf(componentAdapters);
+    }
+
+    @Override
+    public boolean supportsType(TypeToken<?> type) {
+        Objects.requireNonNull(type, "type");
+        return type.getType().equals(clazz);
     }
 
     @Override

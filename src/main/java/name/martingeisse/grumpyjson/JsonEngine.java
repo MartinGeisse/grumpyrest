@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import name.martingeisse.grumpyjson.builtin.IntAdapter;
+import name.martingeisse.grumpyjson.builtin.JsonElementAdapter;
 import name.martingeisse.grumpyjson.builtin.StringAdapter;
 
 import java.io.*;
@@ -18,16 +19,28 @@ public class JsonEngine {
     private final JsonRegistry registry = new JsonRegistry();
 
     public JsonEngine() {
-        registry.addTypeAdapter(TypeToken.get(Integer.TYPE), new IntAdapter());
-        registry.addTypeAdapter(TypeToken.get(String.class), new StringAdapter());
+        addTypeAdapter(new JsonElementAdapter());
+        addTypeAdapter(new IntAdapter());
+        addTypeAdapter(new StringAdapter());
     }
 
-    public <T> void addTypeAdapter(TypeToken<T> type, JsonTypeAdapter<T> adapter) {
-        registry.addTypeAdapter(type, adapter);
+    public <T> void addTypeAdapter(JsonTypeAdapter<T> adapter) {
+        Objects.requireNonNull(adapter, "adapter");
+        registry.addTypeAdapter(adapter);
     }
 
     public JsonRegistry getRegistry() {
         return registry;
+    }
+
+    public boolean supportsType(Class<?> clazz) {
+        Objects.requireNonNull(clazz, "clazz");
+        return registry.supportsType(clazz);
+    }
+
+    public boolean supportsType(TypeToken<?> type) {
+        Objects.requireNonNull(type, "type");
+        return registry.supportsType(type);
     }
 
     // -----------------------------------------------------------------------
@@ -90,7 +103,7 @@ public class JsonEngine {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(type, "type");
         JsonTypeAdapter adapter = registry.getTypeAdapter(type);
-        return gson.toJson(adapter.toJson(nonNull(value), type));
+        return gson.toJson(adapter.toJson(value, type));
     }
 
     public void writeTo(Object value, Writer destination) throws JsonGenerationException {
@@ -140,14 +153,8 @@ public class JsonEngine {
     // -----------------------------------------------------------------------
 
     private static TypeToken<?> typeOf(Object value) {
-        return TypeToken.get(nonNull(value).getClass());
-    }
-
-    private static <T> T nonNull(T value) {
-        if (value == null) {
-            throw new IllegalArgumentException("cannot turn Java null to JSON");
-        }
-        return value;
+        Objects.requireNonNull(value, "value");
+        return TypeToken.get(value.getClass());
     }
 
 }
