@@ -31,7 +31,7 @@ public class RestServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        RequestCycle requestCycle = new RequestCycle(request, response);
+        RequestCycle requestCycle = new RequestCycle(api, request, response);
         api.handle(requestCycle);
     }
 

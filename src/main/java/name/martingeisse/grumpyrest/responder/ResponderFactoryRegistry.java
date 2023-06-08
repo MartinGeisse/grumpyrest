@@ -1,5 +1,6 @@
 package name.martingeisse.grumpyrest.responder;
 
+import name.martingeisse.grumpyrest.RequestCycle;
 import name.martingeisse.grumpyrest.ResponseValueWrapper;
 
 import java.util.ArrayList;
@@ -23,12 +24,12 @@ public class ResponderFactoryRegistry {
         factories.add(factory);
     }
 
-    public Responder createResponder(Object value) {
+    public Responder createResponder(RequestCycle requestCycle, Object value) {
         while (value instanceof ResponseValueWrapper wrapper) {
             value = wrapper.getWrappedResponseValue();
         }
         for (ResponderFactory factory : factories) {
-            Responder responder = factory.createResponder(value);
+            Responder responder = factory.createResponder(requestCycle, value);
             if (responder != null) {
                 return responder;
             }

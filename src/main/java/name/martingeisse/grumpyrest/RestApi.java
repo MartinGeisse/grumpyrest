@@ -23,7 +23,7 @@ public final class RestApi {
 
     public RestApi() {
         responderFactoryRegistry.add(new IdentityResponderFactory());
-        responderFactoryRegistry.add(new JsonResponderFactory(jsonEngine));
+        responderFactoryRegistry.add(new JsonResponderFactory());
     }
 
     public void addRoute(Route route) {
@@ -81,7 +81,7 @@ public final class RestApi {
         // run the responder factory
         Responder responder;
         try {
-            responder = responderFactoryRegistry.createResponder(responseValue);
+            responder = responderFactoryRegistry.createResponder(requestCycle, responseValue);
         } catch (Exception e) {
             LOGGER.error("could not create responder for response value", e);
             responder = new StatusOnlyResponder(500);
