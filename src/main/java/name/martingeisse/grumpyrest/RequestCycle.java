@@ -21,7 +21,6 @@ public final class RequestCycle {
         } else {
             this.pathSegments = ImmutableList.copyOf(PathUtil.splitIntoSegments(pathText));
         }
-        System.out.println(pathSegments);
     }
 
     public HttpServletRequest getRequest() {

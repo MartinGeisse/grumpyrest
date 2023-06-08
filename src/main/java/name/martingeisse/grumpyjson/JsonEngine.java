@@ -131,21 +131,29 @@ public class JsonEngine {
     public void writeTo(Object value, OutputStream destination) throws JsonGenerationException {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(destination, "destination");
-        writeTo(value, new OutputStreamWriter(destination, StandardCharsets.UTF_8));
+        writeTo(value, typeOf(value), destination);
     }
 
     public void writeTo(Object value, Class<?> clazz, OutputStream destination) throws JsonGenerationException {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(clazz, "clazz");
         Objects.requireNonNull(destination, "destination");
-        writeTo(value, clazz, new OutputStreamWriter(destination, StandardCharsets.UTF_8));
+        writeTo(value, TypeToken.get(clazz), destination);
     }
 
     public void writeTo(Object value, TypeToken<?> type, OutputStream destination) throws JsonGenerationException {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(type, "type");
         Objects.requireNonNull(destination, "destination");
-        writeTo(value, type, new OutputStreamWriter(destination, StandardCharsets.UTF_8));
+        OutputStreamWriter writer = new OutputStreamWriter(destination, StandardCharsets.UTF_8);
+        writeTo(value, type, writer);
+        try {
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            // Ignore. This can happen if the network connection closes unexpectedly. There is no use in logging this,
+            // and we cannot tell the client about it either.
+        }
     }
 
     // -----------------------------------------------------------------------
