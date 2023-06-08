@@ -8,12 +8,12 @@ import name.martingeisse.grumpyjson.JsonValidationException;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
-public class IntAdapter implements JsonTypeAdapter<Integer> {
+public class IntegerAdapter implements JsonTypeAdapter<Integer> {
 
     @Override
     public boolean supportsType(Type type) {
         Objects.requireNonNull(type, "type");
-        return type.equals(Integer.TYPE);
+        return type.equals(Integer.TYPE) || type.equals(Integer.class);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class IntAdapter implements JsonTypeAdapter<Integer> {
             }
         }
 
-        throw new JsonValidationException("expected int, found: " + json);
+        throw new JsonValidationException("expected integer, found: " + json);
     }
 
     @Override

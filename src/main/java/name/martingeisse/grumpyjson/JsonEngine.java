@@ -6,7 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import name.martingeisse.grumpyjson.builtin.ImmutableListAdapter;
-import name.martingeisse.grumpyjson.builtin.IntAdapter;
+import name.martingeisse.grumpyjson.builtin.IntegerAdapter;
 import name.martingeisse.grumpyjson.builtin.json.JsonElementAdapter;
 import name.martingeisse.grumpyjson.builtin.StringAdapter;
 
@@ -23,7 +23,7 @@ public class JsonEngine {
 
     public JsonEngine() {
         addTypeAdapter(new JsonElementAdapter());
-        addTypeAdapter(new IntAdapter());
+        addTypeAdapter(new IntegerAdapter());
         addTypeAdapter(new StringAdapter());
         addTypeAdapter(new ImmutableListAdapter(registry));
     }
