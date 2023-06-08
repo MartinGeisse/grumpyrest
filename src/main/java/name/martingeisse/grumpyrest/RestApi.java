@@ -2,10 +2,12 @@ package name.martingeisse.grumpyrest;
 
 import name.martingeisse.grumpyjson.JsonEngine;
 import name.martingeisse.grumpyrest.path.Path;
-import name.martingeisse.grumpyrest.responder.*;
+import name.martingeisse.grumpyrest.responder.Responder;
+import name.martingeisse.grumpyrest.responder.ResponderFactory;
+import name.martingeisse.grumpyrest.responder.ResponderFactoryRegistry;
 import name.martingeisse.grumpyrest.responder.standard.IdentityResponderFactory;
 import name.martingeisse.grumpyrest.responder.standard.JsonResponderFactory;
-import name.martingeisse.grumpyrest.responder.standard.StatusOnlyResponder;
+import name.martingeisse.grumpyrest.responder.standard.StandardErrorResponder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,7 +74,7 @@ public final class RestApi {
             if (route != null) {
                 responseValue = route.handle(requestCycle);
             } else {
-                responseValue = new StatusOnlyResponder(404);
+                responseValue = StandardErrorResponder.UNKNOWN_URL;
             }
         } catch (Exception e) {
             responseValue = e;
@@ -84,7 +86,7 @@ public final class RestApi {
             responder = responderFactoryRegistry.createResponder(requestCycle, responseValue);
         } catch (Exception e) {
             LOGGER.error("could not create responder for response value", e);
-            responder = new StatusOnlyResponder(500);
+            responder = StandardErrorResponder.INTERNAL_SERVER_ERROR;
         }
 
         // generate the response. Catching exceptions here is not useful because the response has already been started

@@ -14,4 +14,5 @@ public class FinishRequestException extends RuntimeException implements Response
     public Object getWrappedResponseValue() {
         return responseValue;
     }
+
 }
