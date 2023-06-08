@@ -2,21 +2,22 @@ package name.martingeisse.grumpyjson.builtin;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import com.google.gson.reflect.TypeToken;
 import name.martingeisse.grumpyjson.JsonTypeAdapter;
 import name.martingeisse.grumpyjson.JsonValidationException;
 
+import java.lang.reflect.Type;
 import java.util.Objects;
 
 public class IntAdapter implements JsonTypeAdapter<Integer> {
 
     @Override
-    public boolean supportsType(TypeToken<?> type) {
-        return Objects.requireNonNull(type, "type").getType().equals(Integer.TYPE);
+    public boolean supportsType(Type type) {
+        Objects.requireNonNull(type, "type");
+        return type.equals(Integer.TYPE);
     }
 
     @Override
-    public Integer fromJson(JsonElement json, TypeToken<? super Integer> type) throws JsonValidationException {
+    public Integer fromJson(JsonElement json, Type type) throws JsonValidationException {
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
 
@@ -39,7 +40,7 @@ public class IntAdapter implements JsonTypeAdapter<Integer> {
     }
 
     @Override
-    public JsonElement toJson(Integer value, TypeToken<? super Integer> type) {
+    public JsonElement toJson(Integer value, Type type) {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(type, "type");
         return new JsonPrimitive(value);

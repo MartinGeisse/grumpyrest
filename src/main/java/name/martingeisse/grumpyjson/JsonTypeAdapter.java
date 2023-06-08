@@ -1,10 +1,11 @@
 package name.martingeisse.grumpyjson;
 
 import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 
 public interface JsonTypeAdapter<T> {
-    boolean supportsType(TypeToken<?> type);
-    T fromJson(JsonElement json, TypeToken<? super T> type) throws JsonValidationException;
-    JsonElement toJson(T value, TypeToken<? super T> type) throws JsonGenerationException;
+    boolean supportsType(Type type);
+    T fromJson(JsonElement json, Type type) throws JsonValidationException;
+    JsonElement toJson(T value, Type type) throws JsonGenerationException;
 }

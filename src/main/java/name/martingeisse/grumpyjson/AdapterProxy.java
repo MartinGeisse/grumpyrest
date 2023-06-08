@@ -1,8 +1,8 @@
 package name.martingeisse.grumpyjson;
 
 import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.Objects;
 
 public final class AdapterProxy<T> implements JsonTypeAdapter<T> {
@@ -21,20 +21,20 @@ public final class AdapterProxy<T> implements JsonTypeAdapter<T> {
     }
 
     @Override
-    public boolean supportsType(TypeToken<?> type) {
+    public boolean supportsType(Type type) {
         Objects.requireNonNull(type, "type");
         return needTarget().supportsType(type);
     }
 
     @Override
-    public T fromJson(JsonElement json, TypeToken<? super T> type) throws JsonValidationException {
+    public T fromJson(JsonElement json, Type type) throws JsonValidationException {
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
         return needTarget().fromJson(json, type);
     }
 
     @Override
-    public JsonElement toJson(T value, TypeToken<? super T> type) {
+    public JsonElement toJson(T value, Type type) {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(type, "type");
         return needTarget().toJson(value, type);

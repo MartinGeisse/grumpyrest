@@ -1,7 +1,6 @@
 package name.martingeisse.grumpyjson;
 
-import com.google.gson.reflect.TypeToken;
-
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -13,7 +12,7 @@ public final class JsonRegistry {
     // This list is not thread-safe, but adding type adapters after starting to serve requests would mess up
     // things anyway.
     private final List<JsonTypeAdapter<?>> adapterList = new ArrayList<>();
-    private final ConcurrentMap<TypeToken<?>, JsonTypeAdapter<?>> adapterMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Type, JsonTypeAdapter<?>> adapterMap = new ConcurrentHashMap<>();
 
     // ----------------------------------------------------------------------------------------------------------------
     // configuration-time methods
@@ -31,12 +30,7 @@ public final class JsonRegistry {
     // run-time methods
     // ----------------------------------------------------------------------------------------------------------------
 
-    public boolean supportsType(Class<?> clazz) {
-        Objects.requireNonNull(clazz, "clazz");
-        return supportsType(TypeToken.get(clazz));
-    }
-
-    public boolean supportsType(TypeToken<?> type) {
+    public boolean supportsType(Type type) {
         Objects.requireNonNull(type, "type");
         if (supportsAdapterAutoGeneration(type)) {
             return true;
@@ -52,13 +46,19 @@ public final class JsonRegistry {
         return false;
     }
 
-    public boolean supportsAdapterAutoGeneration(TypeToken<?> type) {
+    public boolean supportsAdapterAutoGeneration(Type type) {
         Objects.requireNonNull(type, "type");
-        var rawType = type.getRawType();
-        return (rawType.isRecord() && TypeToken.get(rawType).equals(type));
+        if (type instanceof Class<?> c) {
+            return c.isRecord();
+// generic records support, see doc/json-generics.md
+//        } else if (type instanceof ParameterizedType p && p.getRawType() instanceof Class<?> raw) {
+//            return raw.isRecord();
+        } else {
+            return false;
+        }
     }
 
-    public <T> JsonTypeAdapter<T> getTypeAdapter(TypeToken<T> type) {
+    public <T> JsonTypeAdapter<T> getTypeAdapter(Type type) {
         Objects.requireNonNull(type, "type");
 
         // computeIfAbsent() cannot be used, if it behaves as it should, because recursively adding recognized types
@@ -88,7 +88,7 @@ public final class JsonRegistry {
             adapterMap.put(type, proxy);
 
             // finally, create the actual adapter and set it as the proxy's target
-            adapter = new RecordAdapter<>(type.getRawType(), this);
+            adapter = new RecordAdapter<>((Class<?>)type, this);
             //noinspection unchecked
             proxy.setTarget((JsonTypeAdapter<T>)adapter);
 

@@ -3,17 +3,17 @@ package name.martingeisse.grumpyjson;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.RecordComponent;
+import java.lang.reflect.Type;
 import java.util.Objects;
 
 public final class RecordAdapter<T> implements JsonTypeAdapter<T> {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private record ComponentAdapter(RecordComponent component, TypeToken typeToken, JsonTypeAdapter typeAdapter) {
+    private record ComponentAdapter(RecordComponent component, JsonTypeAdapter typeAdapter) {
 
         public void toJson(Object javaContainer, JsonObject jsonContainer) {
             Method accessor = component.getAccessor();
@@ -26,7 +26,7 @@ public final class RecordAdapter<T> implements JsonTypeAdapter<T> {
             if (componentValue == null) {
                 throw JsonGenerationException.fieldIsNull();
             }
-            jsonContainer.add(component.getName(), typeAdapter.toJson(componentValue, typeToken));
+            jsonContainer.add(component.getName(), typeAdapter.toJson(componentValue, component.getGenericType()));
         }
 
     }
@@ -50,11 +50,25 @@ public final class RecordAdapter<T> implements JsonTypeAdapter<T> {
         for (int i = 0; i < components.length; i++) {
             RecordComponent component = components[i];
             rawComponentTypes[i] = component.getType();
-            // TODO this does not seem right. For a MyRecord<T> with field type T or Something<T>, this will try to
-            // get a type adapter for the type variable T in advance, not for the type that is passed as an argument
-            // for T. At least if the record is known as MyRecord<T> and not MyRecord<ConcreteType>
-            JsonTypeAdapter<?> componentTypeAdapter = registry.getTypeAdapter(TypeToken.get(component.getGenericType()));
-            componentAdapters[i] = new ComponentAdapter(component, TypeToken.get(component.getGenericType()), componentTypeAdapter);
+            //
+            // This works for fields with fully-bound generic types, but will not pass any type parameter bindings
+            // from the record down to its components. IOW, this will work:
+            //
+            //   record Foo {List<String> field}
+            //
+            // when parsing a Foo record, but this won't
+            //
+            //   record Foo<T> {List<T> field}
+            //
+            // when parsing a Foo<String> record, because the current implementation will not corrently pass down the
+            // binding T->String to the field, and instead look up an adapter for "T" in the registry, which obviously
+            // does not exist. Fixing this is not fundamentally a hard problem, but a bit tricky to get right due
+            // to Java's weird way to handle generics, and might also require a distinction between records with/without
+            // type parameters, and in records with TPs, a distinction between fields that use type variables vs. those
+            // that don't, to avoid performance degradation when treating everything like the most complex possible case.
+            //
+            JsonTypeAdapter<?> componentTypeAdapter = registry.getTypeAdapter(component.getGenericType());
+            componentAdapters[i] = new ComponentAdapter(component, componentTypeAdapter);
         }
         try {
             this.constructor = clazz.getDeclaredConstructor(rawComponentTypes);
@@ -65,13 +79,13 @@ public final class RecordAdapter<T> implements JsonTypeAdapter<T> {
     }
 
     @Override
-    public boolean supportsType(TypeToken<?> type) {
+    public boolean supportsType(Type type) {
         Objects.requireNonNull(type, "type");
-        return type.getType().equals(clazz);
+        return type.equals(clazz);
     }
 
     @Override
-    public T fromJson(JsonElement json, TypeToken<? super T> type) throws JsonValidationException {
+    public T fromJson(JsonElement json, Type type) throws JsonValidationException {
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
 
@@ -79,7 +93,7 @@ public final class RecordAdapter<T> implements JsonTypeAdapter<T> {
     }
 
     @Override
-    public JsonElement toJson(T value, TypeToken<? super T> type) {
+    public JsonElement toJson(T value, Type type) {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(type, "type");
 
