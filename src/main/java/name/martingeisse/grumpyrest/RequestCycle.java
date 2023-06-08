@@ -19,6 +19,7 @@ public final class RequestCycle {
     private final HttpServletRequest request;
     private final HttpServletResponse response;
     private final ImmutableList<String> pathSegments;
+    private Route matchedRoute;
 
     public RequestCycle(RestApi api, HttpServletRequest request, HttpServletResponse response) {
         this.api = api;
@@ -47,6 +48,14 @@ public final class RequestCycle {
 
     public ImmutableList<String> getPathSegments() {
         return pathSegments;
+    }
+
+    public Route getMatchedRoute() {
+        return matchedRoute;
+    }
+
+    void setMatchedRoute(Route matchedRoute) {
+        this.matchedRoute = matchedRoute;
     }
 
     public <T> T parseBody(Class<T> clazz) throws JsonValidationException {

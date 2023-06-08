@@ -90,6 +90,7 @@ public final class RestApi {
         try {
             Route route = match(requestCycle);
             if (route != null) {
+                requestCycle.setMatchedRoute(route);
                 responseValue = route.handle(requestCycle);
             } else {
                 responseValue = StandardErrorResponder.UNKNOWN_URL;
