@@ -50,6 +50,9 @@ public final class RecordAdapter<T> implements JsonTypeAdapter<T> {
         for (int i = 0; i < components.length; i++) {
             RecordComponent component = components[i];
             rawComponentTypes[i] = component.getType();
+            // TODO this does not seem right. For a MyRecord<T> with field type T or Something<T>, this will try to
+            // get a type adapter for the type variable T in advance, not for the type that is passed as an argument
+            // for T. At least if the record is known as MyRecord<T> and not MyRecord<ConcreteType>
             JsonTypeAdapter<?> componentTypeAdapter = registry.getTypeAdapter(TypeToken.get(component.getGenericType()));
             componentAdapters[i] = new ComponentAdapter(component, TypeToken.get(component.getGenericType()), componentTypeAdapter);
         }
