@@ -1,4 +1,4 @@
-package name.martingeisse.grumpyjson.builtin;
+package name.martingeisse.grumpyjson.builtin.json;
 
 import com.google.gson.JsonElement;
 import name.martingeisse.grumpyjson.JsonTypeAdapter;

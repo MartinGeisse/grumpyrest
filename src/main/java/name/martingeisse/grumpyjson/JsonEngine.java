@@ -7,7 +7,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import name.martingeisse.grumpyjson.builtin.ImmutableListAdapter;
 import name.martingeisse.grumpyjson.builtin.IntAdapter;
-import name.martingeisse.grumpyjson.builtin.JsonElementAdapter;
+import name.martingeisse.grumpyjson.builtin.json.JsonElementAdapter;
 import name.martingeisse.grumpyjson.builtin.StringAdapter;
 
 import java.io.*;
