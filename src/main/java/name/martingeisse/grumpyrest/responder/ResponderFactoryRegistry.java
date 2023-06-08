@@ -1,5 +1,7 @@
 package name.martingeisse.grumpyrest.responder;
 
+import name.martingeisse.grumpyrest.ResponseValueWrapper;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,9 @@ public class ResponderFactoryRegistry {
     }
 
     public Responder createResponder(Object value) {
+        while (value instanceof ResponseValueWrapper wrapper) {
+            value = wrapper.getWrappedResponseValue();
+        }
         for (ResponderFactory factory : factories) {
             Responder responder = factory.createResponder(value);
             if (responder != null) {

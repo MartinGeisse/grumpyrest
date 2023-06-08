@@ -83,7 +83,7 @@ public final class RestApi {
         try {
             responder = responderFactoryRegistry.createResponder(responseValue);
         } catch (Exception e) {
-            LOGGER.error("could not create responder to response value", e);
+            LOGGER.error("could not create responder for response value", e);
             responder = new StatusOnlyResponder(500);
         }
 
