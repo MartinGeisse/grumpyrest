@@ -2,6 +2,9 @@ package name.martingeisse.grumpyjson.builtin.json;
 
 import java.util.Objects;
 
+/**
+ * To get a property that can be absent, null, or something, use JsonOptional<JsonNullable<YourType>>.
+ */
 public final class JsonOptional<T> {
 
     private final T value;
