@@ -23,7 +23,13 @@ public class JsonOptionalAdapter implements JsonTypeAdapter<JsonOptional<?>> {
     public JsonOptional<?> fromJson(JsonElement json, Type type) throws JsonValidationException {
         Type innerType = getInner(type);
         JsonTypeAdapter<?> innerAdapter = registry.getTypeAdapter(innerType);
-        return JsonOptional.ofValue(innerAdapter.fromJson(json, innerType));
+        try {
+            return JsonOptional.ofValue(innerAdapter.fromJson(json, innerType));
+        } catch (JsonValidationException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new JsonValidationException(e);
+        }
     }
 
     @Override
@@ -44,8 +50,15 @@ public class JsonOptionalAdapter implements JsonTypeAdapter<JsonOptional<?>> {
             return Optional.empty();
         }
         @SuppressWarnings("rawtypes") JsonTypeAdapter innerAdapter = registry.getTypeAdapter(innerType);
-        //noinspection unchecked
-        return Optional.of(innerAdapter.toJson(value.getValueOrNothingAsNull(), innerType));
+        try {
+            //noinspection unchecked
+            return Optional.of(innerAdapter.toJson(value.getValueOrNothingAsNull(), innerType));
+        } catch (JsonGenerationException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new JsonGenerationException(e);
+        }
+
     }
 
     private Type getInner(Type outer) {
