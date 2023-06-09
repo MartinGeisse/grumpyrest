@@ -2,17 +2,14 @@ package name.martingeisse.grumpyjson;
 
 import com.google.common.collect.ImmutableList;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.lang.reflect.RecordComponent;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.Objects;
 
-class RecordInfo<T> {
+final class RecordInfo<T> {
 
     private final Class<T> record;
     private final ImmutableList<ComponentInfo> componentInfos;
-    private final Constructor<?> constructor;
+    private final Constructor<T> constructor;
 
     RecordInfo(Class<T> record) {
         Objects.requireNonNull(record, "record");
@@ -30,23 +27,32 @@ class RecordInfo<T> {
             componentInfos[i] = new ComponentInfo(component);
         }
         try {
-            this.constructor = record.getDeclaredConstructor(rawComponentTypes);
+            constructor = record.getDeclaredConstructor(rawComponentTypes);
+            constructor.setAccessible(true);
         } catch (NoSuchMethodException e) {
             throw new RuntimeException("could not find canonical constructor for record type " + record);
         }
         this.componentInfos = ImmutableList.copyOf(componentInfos);
     }
 
-    public final Class<T> getRecord() {
+    public Class<T> getRecord() {
         return record;
     }
 
-    public final ImmutableList<ComponentInfo> getComponentInfos() {
+    public ImmutableList<ComponentInfo> getComponentInfos() {
         return componentInfos;
     }
 
-    public final Constructor<?> getConstructor() {
+    public Constructor<T> getConstructor() {
         return constructor;
+    }
+
+    public T invokeConstructor(Object[] arguments) {
+        try {
+            return constructor.newInstance(arguments);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     record ComponentInfo(RecordComponent component) {
