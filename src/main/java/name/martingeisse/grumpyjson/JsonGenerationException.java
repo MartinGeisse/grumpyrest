@@ -5,8 +5,6 @@ package name.martingeisse.grumpyjson;
  *
  * Such an error is always due to a bug (possible a bug in an earlier validation step), hence unexpected, so this
  * exception extends RuntimeException, not Exception.
- *
- * TODO field paths, multiple errors etc.
  */
 public class JsonGenerationException extends RuntimeException {
 

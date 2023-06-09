@@ -2,7 +2,10 @@ package name.martingeisse.grumpyjson;
 
 import com.google.common.collect.ImmutableList;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.lang.reflect.RecordComponent;
+import java.lang.reflect.Type;
 import java.util.Objects;
 
 final class RecordInfo<T> {
@@ -41,10 +44,6 @@ final class RecordInfo<T> {
 
     public ImmutableList<ComponentInfo> getComponentInfos() {
         return componentInfos;
-    }
-
-    public Constructor<T> getConstructor() {
-        return constructor;
     }
 
     public T invokeConstructor(Object[] arguments) {

@@ -2,8 +2,6 @@ package name.martingeisse.grumpyjson;
 
 /**
  * This exception type gets thrown when the incoming JSON does not match the expected structure.
- *
- * TODO field paths, multiple errors etc.
  */
 public class JsonValidationException extends Exception {
 
