@@ -1,0 +1,37 @@
+package name.martingeisse.grumpyjson.builtin;
+
+import com.google.gson.JsonPrimitive;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static name.martingeisse.grumpyjson.JsonTestUtil.*;
+
+public class StringAdapterTest {
+
+    private final StringAdapter adapter = new StringAdapter();
+
+    @Test
+    public void testValidationHappyCase() throws Exception {
+        Assertions.assertEquals("", adapter.fromJson(new JsonPrimitive(""), String.class));
+        Assertions.assertEquals("abc", adapter.fromJson(new JsonPrimitive("abc"), String.class));
+    }
+
+    @Test
+    public void testValidationWrongType() {
+        forNonPrimitive(json -> assertFailsValidation(adapter, json, String.class));
+        forNull(json -> assertFailsValidation(adapter, json, String.class));
+        forBooleans(json -> assertFailsValidation(adapter, json, String.class));
+        forNumbers(json -> assertFailsValidation(adapter, json, String.class));
+    }
+
+    @Test
+    public void testGenerationHappyCase() {
+        Assertions.assertEquals(new JsonPrimitive("foo"), adapter.toJson("foo", String.class));
+    }
+
+    @Test
+    public void testGenerationWithNull() {
+        assertFailsGenerationWithNpe(adapter, null, String.class);
+    }
+
+}

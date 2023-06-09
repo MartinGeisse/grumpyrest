@@ -12,9 +12,9 @@ public class IntegerAdapterTest {
 
     @Test
     public void testValidationHappyCase() throws Exception {
-        Assertions.assertEquals(adapter.fromJson(new JsonPrimitive(0), Integer.TYPE), 0);
-        Assertions.assertEquals(adapter.fromJson(new JsonPrimitive(123), Integer.TYPE), 123);
-        Assertions.assertEquals(adapter.fromJson(new JsonPrimitive(-123), Integer.TYPE), -123);
+        Assertions.assertEquals(0, adapter.fromJson(new JsonPrimitive(0), Integer.TYPE));
+        Assertions.assertEquals(123, adapter.fromJson(new JsonPrimitive(123), Integer.TYPE));
+        Assertions.assertEquals(-123, adapter.fromJson(new JsonPrimitive(-123), Integer.TYPE));
     }
 
     @Test
@@ -32,7 +32,7 @@ public class IntegerAdapterTest {
 
     @Test
     public void testValidationSmallLong() throws Exception {
-        Assertions.assertEquals(adapter.fromJson(new JsonPrimitive(12L), Integer.TYPE), 12);
+        Assertions.assertEquals(12, adapter.fromJson(new JsonPrimitive(12L), Integer.TYPE));
     }
 
     @Test
