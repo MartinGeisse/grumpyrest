@@ -6,12 +6,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import name.martingeisse.grumpyjson.JsonValidationException;
 import name.martingeisse.grumpyrest.finish.FinishRequestException;
+import name.martingeisse.grumpyrest.path.PathSegment;
 import name.martingeisse.grumpyrest.path.PathUtil;
+import name.martingeisse.grumpyrest.path.VariablePathSegment;
 import name.martingeisse.grumpyrest.responder.standard.StandardErrorResponder;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public final class RequestCycle {
 
@@ -20,6 +25,7 @@ public final class RequestCycle {
     private final HttpServletResponse response;
     private final ImmutableList<String> pathSegments;
     private Route matchedRoute;
+    private ImmutableList<PathArgument> pathArguments;
 
     public RequestCycle(RestApi api, HttpServletRequest request, HttpServletResponse response) {
         this.api = api;
@@ -55,7 +61,23 @@ public final class RequestCycle {
     }
 
     void setMatchedRoute(Route matchedRoute) {
+        Objects.requireNonNull(matchedRoute, "matchedRoute");
+
+        ImmutableList<PathSegment> matchedRouteSegments = matchedRoute.path().segments();
+        if (matchedRouteSegments.size() != pathSegments.size()) {
+            throw new IllegalArgumentException("matched route has different number of segments than the path of this request cycle");
+        }
+
+        List<PathArgument> newPathArguments = new ArrayList<>();
+        for (int i = 0; i < pathSegments.size(); i++) {
+            PathSegment routeSegment = matchedRouteSegments.get(i);
+            if (routeSegment instanceof VariablePathSegment variable) {
+                newPathArguments.add(new PathArgument(this, variable.getVariableName(), pathSegments.get(i)));
+            }
+        }
+
         this.matchedRoute = matchedRoute;
+        this.pathArguments = ImmutableList.copyOf(newPathArguments);
     }
 
     public <T> T parseBody(Class<T> clazz) throws JsonValidationException {
@@ -80,6 +102,13 @@ public final class RequestCycle {
         } catch (IOException e) {
             throw new FinishRequestException(StandardErrorResponder.IO_ERROR);
         }
+    }
+
+    public ImmutableList<PathArgument> getPathArguments() {
+        if (pathArguments == null) {
+            throw new IllegalStateException("no route matched yet");
+        }
+        return pathArguments;
     }
 
 }
