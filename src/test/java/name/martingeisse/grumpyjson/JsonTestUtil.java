@@ -83,6 +83,14 @@ public class JsonTestUtil {
         return array;
     }
 
+    public static JsonArray buildArray(JsonElement... elements) {
+        JsonArray array = new JsonArray();
+        for (JsonElement element : elements) {
+            array.add(element);
+        }
+        return array;
+    }
+
     public static void forArrays(Consumer<? super JsonElement> consumer) {
         consumer.accept(EMPTY_ARRAY);
         consumer.accept(SINGLE_INT_ARRAY);
