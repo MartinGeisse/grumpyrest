@@ -63,6 +63,7 @@ public class JsonOptionalAdapterTest {
 
     @Test
     public void testGenerationWithNull() {
+        //noinspection DataFlowIssue
         assertThrows(NullPointerException.class, () -> adapter.toOptionalJson(null, OPTIONAL_INTEGER_TYPE));
     }
 
