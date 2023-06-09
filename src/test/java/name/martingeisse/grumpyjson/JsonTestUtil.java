@@ -1,5 +1,6 @@
 package name.martingeisse.grumpyjson;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
@@ -178,6 +179,34 @@ public class JsonTestUtil {
     public static NullPointerException assertFailsGenerationWithNpe(JsonTypeAdapter<?> adapter, Object value, Type type) {
         //noinspection unchecked,rawtypes
         return Assertions.assertThrows(NullPointerException.class, () -> ((JsonTypeAdapter)adapter).toJson(value, type));
+    }
+
+    public static void assertFieldErrors(
+            JsonGenerationException exception,
+            FieldErrorNode.FlattenedError... expectedFlattenedErrors
+    ) {
+        assertFieldErrors(exception.fieldErrorNode, expectedFlattenedErrors);
+    }
+
+    public static void assertFieldErrors(
+            JsonValidationException exception,
+            FieldErrorNode.FlattenedError... expectedFlattenedErrors
+    ) {
+        assertFieldErrors(exception.fieldErrorNode, expectedFlattenedErrors);
+    }
+
+    public static void assertFieldErrors(
+            FieldErrorNode fieldErrorNode,
+            FieldErrorNode.FlattenedError... expectedFlattenedErrors
+    ) {
+        assertFieldErrors(fieldErrorNode.flatten(), expectedFlattenedErrors);
+    }
+
+    public static void assertFieldErrors(
+            ImmutableList<FieldErrorNode.FlattenedError> actualFlattenedErrors,
+            FieldErrorNode.FlattenedError... expectedFlattenedErrors
+    ) {
+        Assertions.assertEquals(ImmutableList.copyOf(expectedFlattenedErrors), actualFlattenedErrors);
     }
 
     // ----------------------------------------------------------------------------------------------------------------

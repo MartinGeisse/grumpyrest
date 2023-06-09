@@ -26,7 +26,7 @@ public interface JsonTypeAdapter<T> {
      * exception.
      */
     default T fromAbsentJson(Type type) throws JsonValidationException {
-        throw new JsonValidationException("missing property");
+        throw new JsonValidationException(ExceptionMessages.MISSING_PROPERTY);
     }
 
     /**

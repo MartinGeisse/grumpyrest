@@ -1,8 +1,5 @@
 package name.martingeisse.grumpyjson;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * This exception type gets thrown when the incoming JSON does not match the expected structure.
  *
@@ -10,25 +7,19 @@ import java.util.List;
  */
 public class JsonValidationException extends Exception {
 
-    private final List<String> reverseStackAccumulator = new ArrayList<>();
-
-    public JsonValidationException() {
-    }
+    public FieldErrorNode fieldErrorNode;
 
     public JsonValidationException(String message) {
-        super(message);
-    }
-
-    public JsonValidationException(String message, Throwable cause) {
-        super(message, cause);
+        this(FieldErrorNode.create(message));
     }
 
     public JsonValidationException(Throwable cause) {
-        super(cause);
+        this(FieldErrorNode.create(cause));
     }
 
-    public List<String> getReverseStackAccumulator() {
-        return reverseStackAccumulator;
+    public JsonValidationException(FieldErrorNode fieldErrorNode) {
+        super("exception during JSON validation");
+        this.fieldErrorNode = fieldErrorNode;
     }
 
 }

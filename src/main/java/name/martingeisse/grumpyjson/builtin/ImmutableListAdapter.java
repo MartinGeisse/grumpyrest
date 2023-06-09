@@ -31,15 +31,18 @@ public class ImmutableListAdapter implements JsonTypeAdapter<ImmutableList<?>> {
             Type elementType = TypeUtil.expectSingleParameterizedType(type, ImmutableList.class);
             @SuppressWarnings("rawtypes") JsonTypeAdapter elementTypeAdapter = registry.getTypeAdapter(elementType);
             List<Object> result = new ArrayList<>();
+            FieldErrorNode errorNode = null;
             for (int i = 0; i < array.size(); i++) {
                 try {
                     result.add(elementTypeAdapter.fromJson(array.get(i), elementType));
                 } catch (JsonValidationException e) {
-                    e.getReverseStackAccumulator().add(Integer.toString(i));
-                    throw e;
+                    errorNode = e.fieldErrorNode.in(Integer.toString(i)).and(errorNode);
                 } catch (Exception e) {
-                    throw new JsonValidationException(e);
+                    errorNode = FieldErrorNode.create(e).in(Integer.toString(i)).and(errorNode);
                 }
+            }
+            if (errorNode != null) {
+                throw new JsonValidationException(errorNode);
             }
             return ImmutableList.copyOf(result);
         }
@@ -51,16 +54,19 @@ public class ImmutableListAdapter implements JsonTypeAdapter<ImmutableList<?>> {
         Type elementType = TypeUtil.expectSingleParameterizedType(type, ImmutableList.class);
         @SuppressWarnings("rawtypes") JsonTypeAdapter elementTypeAdapter = registry.getTypeAdapter(elementType);
         JsonArray result = new JsonArray();
+        FieldErrorNode errorNode = null;
         for (int i = 0; i < value.size(); i++) {
             try {
                 //noinspection unchecked
                 result.add(elementTypeAdapter.toJson(value.get(i), elementType));
             } catch (JsonGenerationException e) {
-                e.getReverseStackAccumulator().add(Integer.toString(i));
-                throw e;
+                errorNode = e.fieldErrorNode.in(Integer.toString(i)).and(errorNode);
             } catch (Exception e) {
-                throw new JsonGenerationException(e);
+                errorNode = FieldErrorNode.create(e).in(Integer.toString(i)).and(errorNode);
             }
+        }
+        if (errorNode != null) {
+            throw new JsonGenerationException(errorNode);
         }
         return result;
     }

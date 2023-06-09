@@ -3,7 +3,6 @@ package name.martingeisse.grumpyjson;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Type;
 import java.util.*;
@@ -18,13 +17,15 @@ public final class RecordAdapter<T> implements JsonTypeAdapter<T> {
             try {
                 Object value = componentInfo.invokeGetter(javaContainer);
                 if (value == null) {
-                    throw JsonGenerationException.fieldIsNull();
+                    throw new JsonGenerationException("field is null");
                 }
                 JsonElement json = typeAdapter.toJson(value, componentInfo.getType());
                 jsonContainer.add(name, json);
             } catch (JsonGenerationException e) {
-                e.getReverseStackAccumulator().add(name);
+                e.fieldErrorNode = e.fieldErrorNode.in(name);
                 throw e;
+            } catch (Exception e) {
+                throw new JsonGenerationException(e);
             }
         }
 
@@ -39,7 +40,7 @@ public final class RecordAdapter<T> implements JsonTypeAdapter<T> {
                 Type type = componentInfo.getType();
                 return propertyJson == null ? typeAdapter.fromAbsentJson(type) : typeAdapter.fromJson(propertyJson, type);
             } catch (JsonValidationException e) {
-                e.getReverseStackAccumulator().add(name);
+                e.fieldErrorNode = e.fieldErrorNode.in(name);
                 throw e;
             }
         }
@@ -92,22 +93,34 @@ public final class RecordAdapter<T> implements JsonTypeAdapter<T> {
         if (json instanceof JsonObject jsonObject) {
             int numberOfPresentProperties = 0;
             Object[] fieldValues = new Object[componentAdapterList.size()];
+            FieldErrorNode errorNode = null;
+
             for (int i = 0; i < componentAdapterList.size(); i++) {
                 ComponentAdapter componentAdapter = componentAdapterList.get(i);
                 JsonElement propertyJson = componentAdapter.getFromJsonContainer(jsonObject);
                 if (propertyJson != null) {
                     numberOfPresentProperties++;
                 }
-                fieldValues[i] = componentAdapter.convertFromJson(propertyJson);
+                try {
+                    fieldValues[i] = componentAdapter.convertFromJson(propertyJson);
+                } catch (JsonValidationException e) {
+                    errorNode = e.fieldErrorNode.and(errorNode);
+                }
             }
+
             if (numberOfPresentProperties != jsonObject.size()) {
                 // this is more expensive, so only do this if there is really an error
                 Set<String> propertyNames = new HashSet<>(jsonObject.keySet());
                 for (ComponentAdapter componentAdapter : componentAdapterList) {
                     propertyNames.remove(componentAdapter.componentInfo().getName());
                 }
-                String propertyNamesText = StringUtils.join(propertyNames.toArray(), ", ");
-                throw new JsonValidationException("found unexpected properties: " + propertyNamesText);
+                for (String unexpectedProperty : propertyNames) {
+                    errorNode = FieldErrorNode.create(ExceptionMessages.UNEXPECTED_PROPERTY).in(unexpectedProperty).and(errorNode);
+                }
+            }
+
+            if (errorNode != null) {
+                throw new JsonValidationException(errorNode);
             }
             return recordInfo.invokeConstructor(fieldValues);
         }
@@ -119,8 +132,16 @@ public final class RecordAdapter<T> implements JsonTypeAdapter<T> {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(type, "type");
         JsonObject result = new JsonObject();
+        FieldErrorNode errorNode = null;
         for (ComponentAdapter adapter : componentAdapterList) {
-            adapter.toJson(value, result);
+            try {
+                adapter.toJson(value, result);
+            } catch (JsonGenerationException e) {
+                errorNode = e.fieldErrorNode.and(errorNode);
+            }
+        }
+        if (errorNode != null) {
+            throw new JsonGenerationException(errorNode);
         }
         return result;
     }
