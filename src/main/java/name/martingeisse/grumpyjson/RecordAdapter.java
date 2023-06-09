@@ -19,8 +19,8 @@ public final class RecordAdapter<T> implements JsonTypeAdapter<T> {
                 if (value == null) {
                     throw new JsonGenerationException("field is null");
                 }
-                JsonElement json = typeAdapter.toJson(value, componentInfo.getType());
-                jsonContainer.add(name, json);
+                Optional<JsonElement> optionalJson = typeAdapter.toOptionalJson(value, componentInfo.getType());
+                optionalJson.ifPresent(jsonElement -> jsonContainer.add(name, jsonElement));
             } catch (JsonGenerationException e) {
                 e.fieldErrorNode = e.fieldErrorNode.in(name);
                 throw e;
