@@ -6,6 +6,9 @@ import com.google.gson.JsonElement;
 import name.martingeisse.grumpyjson.*;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class ImmutableListAdapter implements JsonTypeAdapter<ImmutableList<?>> {
 
@@ -22,8 +25,25 @@ public class ImmutableListAdapter implements JsonTypeAdapter<ImmutableList<?>> {
 
     @Override
     public ImmutableList<?> fromJson(JsonElement json, Type type) throws JsonValidationException {
-        Type elementType = TypeUtil.expectSingleParameterizedType(type, ImmutableList.class);
-        return null;
+        Objects.requireNonNull(json, "json");
+        Objects.requireNonNull(type, "type");
+        if (json instanceof JsonArray array) {
+            Type elementType = TypeUtil.expectSingleParameterizedType(type, ImmutableList.class);
+            @SuppressWarnings("rawtypes") JsonTypeAdapter elementTypeAdapter = registry.getTypeAdapter(elementType);
+            List<Object> result = new ArrayList<>();
+            for (int i = 0; i < array.size(); i++) {
+                try {
+                    result.add(elementTypeAdapter.fromJson(array.get(i), elementType));
+                } catch (JsonValidationException e) {
+                    e.getReverseStackAccumulator().add(Integer.toString(i));
+                    throw e;
+                } catch (Exception e) {
+                    throw new JsonValidationException(e);
+                }
+            }
+            return ImmutableList.copyOf(result);
+        }
+        throw new JsonValidationException("expected int, found: " + json);
     }
 
     @Override

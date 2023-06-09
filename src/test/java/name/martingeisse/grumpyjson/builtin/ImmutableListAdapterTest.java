@@ -5,10 +5,11 @@ import com.google.common.reflect.TypeToken;
 import name.martingeisse.grumpyjson.JsonRegistry;
 import org.junit.jupiter.api.Test;
 
+import java.io.OutputStream;
 import java.lang.reflect.Type;
 
 import static name.martingeisse.grumpyjson.JsonTestUtil.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ImmutableListAdapterTest {
 
@@ -18,13 +19,10 @@ public class ImmutableListAdapterTest {
     private final JsonRegistry registry = createRegistry(new IntegerAdapter(), new StringAdapter());
     private final ImmutableListAdapter adapter = new ImmutableListAdapter(registry);
 
-    /*
-
     @Test
     public void testValidationHappyCase() throws Exception {
-        assertEquals(ImmutableList.of(12, 34), adapter.fromJson(buildIntArray(12, 34), new TypeToken<ImmutableList<?>>() {}.getType()));
         assertEquals(ImmutableList.of(12, 34), adapter.fromJson(buildIntArray(12, 34), INTEGER_LIST_TYPE));
-        // Assertions.assertEquals("abc", adapter.fromJson(new JsonPrimitive("abc"), String.class));
+        assertEquals(ImmutableList.of("foo", "bar"), adapter.fromJson(buildStringArray("foo", "bar"), STRING_LIST_TYPE));
     }
 
     @Test
@@ -67,8 +65,6 @@ public class ImmutableListAdapterTest {
     public void testValidationWrongElementType() {
         assertFailsValidation(adapter, buildIntArray(12, 34), STRING_LIST_TYPE);
     }
-
-     */
 
     @Test
     public void testGenerationHappyCase() {
