@@ -29,6 +29,13 @@ public final class JsonNullable<T> {
         return value;
     }
 
+    public T getValue() {
+        if (value == null) {
+            throw new IllegalStateException("this JsonNullable is null");
+        }
+        return value;
+    }
+
     public boolean isNonNull() {
         return value != null;
     }

@@ -21,7 +21,18 @@ public final class JsonOptional<T> {
         return new JsonOptional<>(null);
     }
 
-    public T getValueOrNull() {
+    public static <T> JsonOptional<T> ofValueOrNullAsNothing(T value) {
+        return new JsonOptional<>(value);
+    }
+
+    public T getValueOrNothingAsNull() {
+        return value;
+    }
+
+    public T getValue() {
+        if (value == null) {
+            throw new IllegalStateException("this JsonOptional is absent");
+        }
         return value;
     }
 

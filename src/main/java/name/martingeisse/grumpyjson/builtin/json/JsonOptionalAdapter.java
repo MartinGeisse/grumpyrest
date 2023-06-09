@@ -45,7 +45,7 @@ public class JsonOptionalAdapter implements JsonTypeAdapter<JsonOptional<?>> {
         }
         @SuppressWarnings("rawtypes") JsonTypeAdapter innerAdapter = registry.getTypeAdapter(innerType);
         //noinspection unchecked
-        return Optional.of(innerAdapter.toJson(value.getValueOrNull(), innerType));
+        return Optional.of(innerAdapter.toJson(value.getValueOrNothingAsNull(), innerType));
     }
 
     private Type getInner(Type outer) {
