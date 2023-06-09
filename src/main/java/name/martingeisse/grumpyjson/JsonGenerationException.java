@@ -13,9 +13,12 @@ import java.util.List;
  */
 public class JsonGenerationException extends RuntimeException {
 
+    private static final String DEFAULT_MESSAGE = "exception during JSON generation";
+
     private final List<String> reverseStackAccumulator = new ArrayList<>();
 
     public JsonGenerationException() {
+        super(DEFAULT_MESSAGE);
     }
 
     public JsonGenerationException(String message) {
@@ -27,7 +30,7 @@ public class JsonGenerationException extends RuntimeException {
     }
 
     public JsonGenerationException(Throwable cause) {
-        super(cause);
+        super(DEFAULT_MESSAGE, cause);
     }
 
     public List<String> getReverseStackAccumulator() {

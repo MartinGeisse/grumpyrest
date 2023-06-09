@@ -169,4 +169,16 @@ public class JsonTestUtil {
         Assertions.assertThrows(NullPointerException.class, () -> ((JsonTypeAdapter)adapter).toJson(value, type));
     }
 
+    // ----------------------------------------------------------------------------------------------------------------
+    // other
+    // ----------------------------------------------------------------------------------------------------------------
+
+    public static JsonRegistry createRegistry(JsonTypeAdapter<?>... adapters) {
+        JsonRegistry registry = new JsonRegistry();
+        for (JsonTypeAdapter<?> adapter : adapters) {
+            registry.addTypeAdapter(adapter);
+        }
+        return registry;
+    }
+
 }
