@@ -21,27 +21,35 @@ public class JsonNullableAdapter implements JsonTypeAdapter<JsonNullable<?>> {
 
     @Override
     public JsonNullable<?> fromJson(JsonElement json, Type type) throws JsonValidationException {
-        Type innerType = getInner(type);
+        Type innerType = TypeUtil.expectSingleParameterizedType(type, JsonNullable.class);
         if (json.isJsonNull()) {
             return JsonNullable.ofNull();
         }
         JsonTypeAdapter<?> innerAdapter = registry.getTypeAdapter(innerType);
-        return JsonNullable.ofValue(innerAdapter.fromJson(json, innerType));
+        try {
+            return JsonNullable.ofValue(innerAdapter.fromJson(json, innerType));
+        } catch (JsonValidationException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new JsonValidationException(e);
+        }
     }
 
     @Override
     public JsonElement toJson(JsonNullable<?> value, Type type) throws JsonGenerationException {
-        Type innerType = getInner(type);
+        Type innerType = TypeUtil.expectSingleParameterizedType(type, JsonNullable.class);
         if (value.isNull()) {
             return JsonNull.INSTANCE;
         }
         @SuppressWarnings("rawtypes") JsonTypeAdapter innerAdapter = registry.getTypeAdapter(innerType);
-        //noinspection unchecked
-        return innerAdapter.toJson(value.getValueOrNull(), innerType);
-    }
-
-    private Type getInner(Type outer) {
-        return TypeUtil.expectSingleParameterizedType(outer, JsonNullable.class);
+        try {
+            //noinspection unchecked
+            return innerAdapter.toJson(value.getValueOrNull(), innerType);
+        } catch (JsonGenerationException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new JsonGenerationException(e);
+        }
     }
 
 }
