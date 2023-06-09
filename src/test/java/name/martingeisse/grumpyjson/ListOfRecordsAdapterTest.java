@@ -18,7 +18,7 @@ public class ListOfRecordsAdapterTest {
 
     private record Record(int myInt, String myString) {}
 
-    private final TypeToken<ImmutableList<ListOfRecordsAdapterTest.Record>> listOfRecordsTypeToken = new TypeToken<>() {};
+    private final TypeToken<ImmutableList<Record>> listOfRecordsTypeToken = new TypeToken<>() {};
     private final Type listOfRecordsType = listOfRecordsTypeToken.getType();
 
     private final JsonRegistry registry = createRegistry(new IntegerAdapter(), new StringAdapter());
@@ -27,7 +27,7 @@ public class ListOfRecordsAdapterTest {
         registry.addTypeAdapter(new ImmutableListAdapter(registry));
     }
 
-    private final JsonTypeAdapter<ImmutableList<ListOfRecordsAdapterTest.Record>> listOfRecordsAdapter =
+    private final JsonTypeAdapter<ImmutableList<Record>> listOfRecordsAdapter =
             registry.getTypeAdapter(listOfRecordsType);
 
     @Test
