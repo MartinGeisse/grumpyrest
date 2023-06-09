@@ -1,5 +1,6 @@
 package name.martingeisse.grumpyjson;
 
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import org.junit.jupiter.api.Assertions;
@@ -151,27 +152,32 @@ public class JsonTestUtil {
     // assertion helpers
     // ----------------------------------------------------------------------------------------------------------------
 
-    public static void assertFailsValidation(JsonTypeAdapter<?> adapter, JsonElement json, TypeToken<?> typeToken) {
-        assertFailsValidation(adapter, json, typeToken.getType());
+    @CanIgnoreReturnValue
+    public static JsonValidationException assertFailsValidation(JsonTypeAdapter<?> adapter, JsonElement json, TypeToken<?> typeToken) {
+        return assertFailsValidation(adapter, json, typeToken.getType());
     }
 
-    public static void assertFailsValidation(JsonTypeAdapter<?> adapter, JsonElement json, Type type) {
+    @CanIgnoreReturnValue
+    public static JsonValidationException assertFailsValidation(JsonTypeAdapter<?> adapter, JsonElement json, Type type) {
         //noinspection rawtypes
-        Assertions.assertThrows(JsonValidationException.class, () -> ((JsonTypeAdapter)adapter).fromJson(json, type));
+        return Assertions.assertThrows(JsonValidationException.class, () -> ((JsonTypeAdapter)adapter).fromJson(json, type));
     }
 
-    public static void assertFailsGeneration(JsonTypeAdapter<?> adapter, Object value, TypeToken<?> typeToken) {
-        assertFailsGeneration(adapter, value, typeToken.getType());
+    @CanIgnoreReturnValue
+    public static JsonGenerationException assertFailsGeneration(JsonTypeAdapter<?> adapter, Object value, TypeToken<?> typeToken) {
+        return assertFailsGeneration(adapter, value, typeToken.getType());
     }
 
-    public static void assertFailsGeneration(JsonTypeAdapter<?> adapter, Object value, Type type) {
+    @CanIgnoreReturnValue
+    public static JsonGenerationException assertFailsGeneration(JsonTypeAdapter<?> adapter, Object value, Type type) {
         //noinspection unchecked,rawtypes
-        Assertions.assertThrows(JsonGenerationException.class, () -> ((JsonTypeAdapter)adapter).toJson(value, type));
+        return Assertions.assertThrows(JsonGenerationException.class, () -> ((JsonTypeAdapter)adapter).toJson(value, type));
     }
 
-    public static void assertFailsGenerationWithNpe(JsonTypeAdapter<?> adapter, Object value, Type type) {
+    @CanIgnoreReturnValue
+    public static NullPointerException assertFailsGenerationWithNpe(JsonTypeAdapter<?> adapter, Object value, Type type) {
         //noinspection unchecked,rawtypes
-        Assertions.assertThrows(NullPointerException.class, () -> ((JsonTypeAdapter)adapter).toJson(value, type));
+        return Assertions.assertThrows(NullPointerException.class, () -> ((JsonTypeAdapter)adapter).toJson(value, type));
     }
 
     // ----------------------------------------------------------------------------------------------------------------
