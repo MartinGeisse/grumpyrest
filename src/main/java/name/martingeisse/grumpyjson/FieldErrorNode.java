@@ -40,6 +40,11 @@ public abstract class FieldErrorNode {
 
     protected abstract void flatten(List<FlattenedError> errors, List<String> segments);
 
+    @Override
+    public String toString() {
+        return StringUtils.join(flatten().toArray(), "; ");
+    }
+
     public static final class Message extends FieldErrorNode {
 
         private final String message;

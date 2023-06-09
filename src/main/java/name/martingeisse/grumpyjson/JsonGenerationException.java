@@ -23,4 +23,8 @@ public class JsonGenerationException extends RuntimeException {
         this.fieldErrorNode = fieldErrorNode;
     }
 
+    @Override
+    public String getMessage() {
+        return super.getMessage() + ": " + fieldErrorNode;
+    }
 }
