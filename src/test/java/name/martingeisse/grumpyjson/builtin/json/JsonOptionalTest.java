@@ -33,4 +33,22 @@ public class JsonOptionalTest {
         assertNull(JsonOptional.ofValueOrNullAsNothing(null).getValueOrNothingAsNull());
     }
 
+    @SuppressWarnings("EqualsWithItself")
+    @Test
+    public void testEqualsHashCodeToString() {
+        assertEquals(JsonOptional.ofValue("foo"), JsonOptional.ofValue("foo"));
+        assertNotEquals(JsonOptional.ofValue("foo"), JsonOptional.ofValue("bar"));
+        assertNotEquals(JsonOptional.ofValue("foo"), JsonOptional.ofNothing());
+        assertNotEquals(JsonOptional.ofNothing(), JsonOptional.ofValue("foo"));
+        assertEquals(JsonOptional.ofNothing(), JsonOptional.ofNothing());
+
+        assertEquals(JsonOptional.ofValue("foo").hashCode(), JsonOptional.ofValue("foo").hashCode());
+        assertEquals(JsonOptional.ofNothing().hashCode(), JsonOptional.ofNothing().hashCode());
+
+        //noinspection ResultOfMethodCallIgnored -- just checking that it does not crash
+        JsonOptional.ofNothing().toString();
+
+        assertTrue(JsonOptional.ofValue("foo").toString().contains("foo"));
+    }
+
 }

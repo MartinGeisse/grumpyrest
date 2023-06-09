@@ -33,4 +33,22 @@ public class JsonNullableTest {
         assertNull(JsonNullable.ofValueOrNull(null).getValueOrNull());
     }
 
+    @SuppressWarnings("EqualsWithItself")
+    @Test
+    public void testEqualsHashCodeToString() {
+        assertEquals(JsonNullable.ofValue("foo"), JsonNullable.ofValue("foo"));
+        assertNotEquals(JsonNullable.ofValue("foo"), JsonNullable.ofValue("bar"));
+        assertNotEquals(JsonNullable.ofValue("foo"), JsonNullable.ofNull());
+        assertNotEquals(JsonNullable.ofNull(), JsonNullable.ofValue("foo"));
+        assertEquals(JsonNullable.ofNull(), JsonNullable.ofNull());
+
+        assertEquals(JsonNullable.ofValue("foo").hashCode(), JsonNullable.ofValue("foo").hashCode());
+        assertEquals(JsonNullable.ofNull().hashCode(), JsonNullable.ofNull().hashCode());
+
+        //noinspection ResultOfMethodCallIgnored -- just checking that it does not crash
+        JsonNullable.ofNull().toString();
+
+        assertTrue(JsonNullable.ofValue("foo").toString().contains("foo"));
+    }
+
 }
