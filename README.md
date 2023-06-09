@@ -26,3 +26,18 @@ Particular differences with typical REST frameworks:
   bend these rules for specific types or fields, use an appropriate type for that which defines a relaxed mapping.
   If you want to bend these rules for all of your JSON mapping, replace the built-in type adapters by your own which
   define a relaxed mapping.
+
+## What about performance?
+
+It _is_ anticipated that grumpyrest may provide tools to tackle potential performance problems, which rely on
+reactive programming and/or code generation. The goal of grumpyrest is not to totally avoid these things internally,
+but to allow the developers using it to totally avoid them in their application code.
+
+This means:
+* We will not add anything like that to grumpyrest until it is perfectly clear that it solves a performance problem
+  in modern Java which, for example, virtual threads cannot handle.
+* None of this affects application code, unless you choose to use it in application code (because the performance
+  problem lies there instead of inside grumpyrest).
+* Any such features can be turned of to exclude them as a potential source of bugs, as well as to single-step debug
+  into grumpyrest to understand what happens inside (e.g. to track down a specific bug). We all know what single-step
+  debugging into highly asynchronous / reactive or generated code is like.
