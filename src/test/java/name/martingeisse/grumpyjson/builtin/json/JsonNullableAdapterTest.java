@@ -18,10 +18,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class JsonNullableAdapterTest {
 
-    private static final Type NULLABLE_INTEGER_TYPE = new TypeToken<JsonNullable<Integer>>() {
-    }.getType();
-    private static final Type NULLABLE_STRING_TYPE = new TypeToken<JsonNullable<String>>() {
-    }.getType();
+    private static final Type NULLABLE_INTEGER_TYPE = new TypeToken<JsonNullable<Integer>>() {}.getType();
+    private static final Type NULLABLE_STRING_TYPE = new TypeToken<JsonNullable<String>>() {}.getType();
 
     private final JsonRegistry registry = createRegistry(new IntegerAdapter(), new StringAdapter());
     private final JsonNullableAdapter adapter = new JsonNullableAdapter(registry);
