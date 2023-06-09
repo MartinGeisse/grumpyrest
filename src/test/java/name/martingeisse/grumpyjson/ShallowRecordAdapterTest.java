@@ -70,6 +70,19 @@ public class ShallowRecordAdapterTest {
     }
 
     @Test
+    public void testMultipleFieldErrors() {
+        JsonObject json = new JsonObject();
+        json.addProperty("myInt", "foo");
+        json.addProperty("thisDoesNotBelongHere", 456);
+        JsonTestUtil.assertFieldErrors(
+                assertFailsValidation(adapter, json, Record.class),
+                new FieldErrorNode.FlattenedError(ExceptionMessages.UNEXPECTED_PROPERTY, "thisDoesNotBelongHere"),
+                new FieldErrorNode.FlattenedError("expected integer, found: \"foo\"", "myInt"),
+                new FieldErrorNode.FlattenedError(ExceptionMessages.MISSING_PROPERTY, "myString")
+        );
+    }
+
+    @Test
     public void testGenerationWithNull() {
         assertFailsGenerationWithNpe(adapter, null, String.class);
     }

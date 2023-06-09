@@ -1,12 +1,14 @@
 package name.martingeisse.grumpyjson;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import org.junit.jupiter.api.Assertions;
 
 import java.lang.reflect.Type;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class JsonTestUtil {
@@ -206,7 +208,9 @@ public class JsonTestUtil {
             ImmutableList<FieldErrorNode.FlattenedError> actualFlattenedErrors,
             FieldErrorNode.FlattenedError... expectedFlattenedErrors
     ) {
-        Assertions.assertEquals(ImmutableList.copyOf(expectedFlattenedErrors), actualFlattenedErrors);
+        Set<FieldErrorNode.FlattenedError> actualSet = ImmutableSet.copyOf(actualFlattenedErrors);
+        Set<FieldErrorNode.FlattenedError> expectedSet = ImmutableSet.copyOf(expectedFlattenedErrors);
+        Assertions.assertEquals(expectedSet, actualSet);
     }
 
     // ----------------------------------------------------------------------------------------------------------------
