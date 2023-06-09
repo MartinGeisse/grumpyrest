@@ -2,6 +2,6 @@ package name.martingeisse.grumpyrest;
 
 public interface Handler {
 
-    Object handle(RequestCycle requestCycle);
+    Object handle(RequestCycle requestCycle) throws Exception;
 
 }
