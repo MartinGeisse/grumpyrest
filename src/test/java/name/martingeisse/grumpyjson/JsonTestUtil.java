@@ -142,6 +142,11 @@ public class JsonTestUtil {
         forObjects(consumer);
     }
 
+    public static void forJsonElements(Consumer<JsonElement> consumer) {
+        forPrimitive(consumer);
+        forNonPrimitive(consumer);
+    }
+
     // ----------------------------------------------------------------------------------------------------------------
     // assertion helpers
     // ----------------------------------------------------------------------------------------------------------------
