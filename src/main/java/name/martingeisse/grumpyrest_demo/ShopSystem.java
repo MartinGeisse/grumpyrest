@@ -68,7 +68,17 @@ public final class ShopSystem {
             );
         });
 
-
+        api.addRoute("/products/:id", requestCycle -> {
+            int id = requestCycle.getPathArguments().get(0).getValue(Integer.class);
+            Product product = products.getRestEquivalent(id);
+            Category category = categories.get(product.categoryId());
+            return new ProductResponse(
+                    new CategoryLink(product.categoryId(), category.name()),
+                    product.name(),
+                    product.description(),
+                    product.unitPrice()
+            );
+        });
 
         return api;
     }
