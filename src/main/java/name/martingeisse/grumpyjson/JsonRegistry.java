@@ -1,5 +1,6 @@
 package name.martingeisse.grumpyjson;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,9 +51,8 @@ public final class JsonRegistry {
         Objects.requireNonNull(type, "type");
         if (type instanceof Class<?> c) {
             return c.isRecord();
-// generic records support, see doc/json-generics.md
-//        } else if (type instanceof ParameterizedType p && p.getRawType() instanceof Class<?> raw) {
-//            return raw.isRecord();
+        } else if (type instanceof ParameterizedType p && p.getRawType() instanceof Class<?> raw) {
+            return raw.isRecord();
         } else {
             return false;
         }
@@ -88,7 +88,14 @@ public final class JsonRegistry {
             adapterMap.put(type, proxy);
 
             // finally, create the actual adapter and set it as the proxy's target
-            adapter = new RecordAdapter<>((Class<?>)type, this);
+            if (type instanceof Class<?> clazz) {
+                adapter = new RecordAdapter<>(clazz, this);
+            } else if (type instanceof ParameterizedType parameterizedType) {
+                adapter = new RecordAdapter<>((Class<?>)parameterizedType.getRawType(), this);
+            } else {
+                throw new RuntimeException("internal error: erroneously selected a record adapter for type " + type);
+            }
+
             //noinspection unchecked
             proxy.setTarget((JsonTypeAdapter<T>)adapter);
 

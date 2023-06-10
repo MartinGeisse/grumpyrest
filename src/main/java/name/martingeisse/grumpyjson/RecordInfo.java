@@ -1,27 +1,27 @@
 package name.martingeisse.grumpyjson;
 
 import com.google.common.collect.ImmutableList;
+import org.apache.commons.lang3.reflect.TypeUtils;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.lang.reflect.RecordComponent;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 final class RecordInfo {
 
-    private final Class<?> record;
+    private final Class<?> recordClass;
     private final ImmutableList<ComponentInfo> componentInfos;
     private final Constructor<?> constructor;
 
-    RecordInfo(Class<?> record) {
-        Objects.requireNonNull(record, "record");
-        if (!record.isRecord()) {
-            throw new IllegalArgumentException("not a record: " + record);
+    RecordInfo(Class<?> recordClass) {
+        Objects.requireNonNull(recordClass, "record");
+        if (!recordClass.isRecord()) {
+            throw new IllegalArgumentException("not a record: " + recordClass);
         }
-        this.record = record;
+        this.recordClass = recordClass;
 
-        RecordComponent[] components = record.getRecordComponents();
+        RecordComponent[] components = recordClass.getRecordComponents();
         Class<?>[] rawComponentTypes = new Class<?>[components.length];
         ComponentInfo[] componentInfos = new ComponentInfo[components.length];
         for (int i = 0; i < components.length; i++) {
@@ -30,16 +30,16 @@ final class RecordInfo {
             componentInfos[i] = new ComponentInfo(component);
         }
         try {
-            constructor = record.getDeclaredConstructor(rawComponentTypes);
+            constructor = recordClass.getDeclaredConstructor(rawComponentTypes);
             constructor.setAccessible(true);
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException("could not find canonical constructor for record type " + record);
+            throw new RuntimeException("could not find canonical constructor for record type " + recordClass);
         }
         this.componentInfos = ImmutableList.copyOf(componentInfos);
     }
 
     public Class<?> getRecordClass() {
-        return record;
+        return recordClass;
     }
 
     public ImmutableList<ComponentInfo> getComponentInfos() {
@@ -54,7 +54,13 @@ final class RecordInfo {
         }
     }
 
-    record ComponentInfo(RecordComponent component) {
+    public class ComponentInfo {
+
+        private final RecordComponent component;
+
+        public ComponentInfo(RecordComponent component) {
+            this.component = component;
+        }
 
         public String getName() {
             return component.getName();
@@ -74,6 +80,25 @@ final class RecordInfo {
                 return getter.invoke(container);
             } catch (Exception e) {
                 throw new JsonGenerationException("could not invoke getter " + getter + " on " + container);
+            }
+        }
+
+        public Type getConcreteType(Type concreteRecordType) {
+            if (concreteRecordType instanceof Class<?>) {
+                return component.getType();
+            } else if (concreteRecordType instanceof ParameterizedType parameterizedRecordType) {
+                TypeVariable<?>[] recordTypeParameters = recordClass.getTypeParameters();
+                Type[] recordTypeArguments = parameterizedRecordType.getActualTypeArguments();
+                if (recordTypeParameters.length != recordTypeArguments.length) {
+                    throw new RuntimeException("type parameter/argument length mismatch for record " + recordClass);
+                }
+                Map<TypeVariable<?>, Type> typeArgumentMap = new HashMap<>();
+                for (int i = 0; i < recordTypeParameters.length; i++) {
+                    typeArgumentMap.put(recordTypeParameters[i], recordTypeArguments[i]);
+                }
+                return TypeUtils.unrollVariables(typeArgumentMap, component.getGenericType());
+            } else {
+                throw new RuntimeException("cannot find concrete component type for record type " + concreteRecordType);
             }
         }
 
