@@ -109,7 +109,7 @@ public final class JsonRegistry {
 
         // if this failed, then we don't have an appropriate adapter
         if (adapter == null) {
-            throw new RuntimeException("no JSON type adapter found and can only auto-generate them for non-generic record types, found type: " + type);
+            throw new RuntimeException("no JSON type adapter found and can only auto-generate them for record types, found type: " + type);
         }
 
         //noinspection unchecked
