@@ -8,6 +8,7 @@ package name.martingeisse.grumpyrest;
 
 import name.martingeisse.grumpyjson.JsonEngine;
 import name.martingeisse.grumpyrest.path.Path;
+import name.martingeisse.grumpyrest.querystring.QuerystringParserRegistry;
 import name.martingeisse.grumpyrest.responder.Responder;
 import name.martingeisse.grumpyrest.responder.ResponderFactory;
 import name.martingeisse.grumpyrest.responder.ResponderFactoryRegistry;
@@ -32,6 +33,7 @@ public final class RestApi {
     private final ResponderFactoryRegistry responderFactoryRegistry = new ResponderFactoryRegistry();
     private final JsonEngine jsonEngine = new JsonEngine();
     private final FromStringParserRegistry fromStringParserRegistry = new FromStringParserRegistry();
+    private final QuerystringParserRegistry querystringParserRegistry = new QuerystringParserRegistry(fromStringParserRegistry);
 
     public RestApi() {
 
@@ -74,6 +76,12 @@ public final class RestApi {
 
     public FromStringParserRegistry getFromStringParserRegistry() {
         return fromStringParserRegistry;
+    }
+
+    // note: no addQuerystringParser() so people don't think they have to do that routinely to add new QS field types --
+    // that is only needed to add new whole-QS parsers.
+    public QuerystringParserRegistry getQuerystringParserRegistry() {
+        return querystringParserRegistry;
     }
 
     public JsonEngine getJsonEngine() {

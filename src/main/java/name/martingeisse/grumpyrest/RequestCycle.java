@@ -7,22 +7,23 @@
 package name.martingeisse.grumpyrest;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.reflect.TypeToken;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import name.martingeisse.grumpyjson.ExceptionMessages;
 import name.martingeisse.grumpyjson.JsonValidationException;
 import name.martingeisse.grumpyrest.finish.FinishRequestException;
 import name.martingeisse.grumpyrest.path.PathSegment;
 import name.martingeisse.grumpyrest.path.PathUtil;
 import name.martingeisse.grumpyrest.path.VariablePathSegment;
+import name.martingeisse.grumpyrest.querystring.QuerystringParsingException;
 import name.martingeisse.grumpyrest.responder.standard.StandardErrorResponder;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public final class RequestCycle {
 
@@ -115,6 +116,51 @@ public final class RequestCycle {
             throw new IllegalStateException("no route matched yet");
         }
         return pathArguments;
+    }
+
+    public <T> T parseQuerystring(Class<T> clazz) throws QuerystringParsingException {
+        return clazz.cast(parseQuerystring((Type)clazz));
+    }
+
+    public <T> T parseQuerystring(TypeToken<T> typeToken) throws QuerystringParsingException {
+        //noinspection unchecked
+        return (T)parseQuerystring(typeToken.getType());
+    }
+
+    public Object parseQuerystring(Type type) throws QuerystringParsingException {
+        Map<String, String[]> querystringMulti = request.getParameterMap();
+        Map<String, String> querystringSingle = new HashMap<>();
+        Map<String, String> errorMap = new HashMap<>();
+        for (Map.Entry<String, String[]> entry : querystringMulti.entrySet()) {
+            String[] values = entry.getValue();
+            for (String value : values) {
+                if (querystringSingle.put(entry.getKey(), value) != null) {
+                    errorMap.put(entry.getKey(), ExceptionMessages.DUPLICATE_PARAMETER);
+                }
+            }
+        }
+        Object result = null;
+        QuerystringParsingException originalException = null;
+        try {
+            result = api.getQuerystringParserRegistry().getParser(type).parse(querystringSingle, type);
+            if (result == null) {
+                throw new QuerystringParsingException(ImmutableMap.of("<root>", "querystring parser returned null"));
+            }
+        } catch (QuerystringParsingException e) {
+            originalException = e;
+            // duplicate-parameter errors take precedence here
+            for (Map.Entry<String, String> entry : e.getFieldErrors().entrySet()) {
+                errorMap.putIfAbsent(entry.getKey(), entry.getValue());
+            }
+        }
+        if (!errorMap.isEmpty()) {
+            throw new QuerystringParsingException(ImmutableMap.copyOf(errorMap));
+        }
+        if (result == null) {
+            // this can only happen if the originalException did not contain any errors
+            throw originalException;
+        }
+        return result;
     }
 
 }
