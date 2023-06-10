@@ -8,13 +8,13 @@ import java.lang.reflect.RecordComponent;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
-final class RecordInfo<T> {
+final class RecordInfo {
 
-    private final Class<T> record;
+    private final Class<?> record;
     private final ImmutableList<ComponentInfo> componentInfos;
-    private final Constructor<T> constructor;
+    private final Constructor<?> constructor;
 
-    RecordInfo(Class<T> record) {
+    RecordInfo(Class<?> record) {
         Objects.requireNonNull(record, "record");
         if (!record.isRecord()) {
             throw new IllegalArgumentException("not a record: " + record);
@@ -38,7 +38,7 @@ final class RecordInfo<T> {
         this.componentInfos = ImmutableList.copyOf(componentInfos);
     }
 
-    public Class<T> getRecord() {
+    public Class<?> getRecordClass() {
         return record;
     }
 
@@ -46,7 +46,7 @@ final class RecordInfo<T> {
         return componentInfos;
     }
 
-    public T invokeConstructor(Object[] arguments) {
+    public Object invokeConstructor(Object[] arguments) {
         try {
             return constructor.newInstance(arguments);
         } catch (Exception e) {
