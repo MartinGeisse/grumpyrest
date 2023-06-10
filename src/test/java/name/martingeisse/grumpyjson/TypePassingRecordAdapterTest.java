@@ -11,6 +11,12 @@ import org.junit.jupiter.api.Test;
 
 import static name.martingeisse.grumpyjson.JsonTestUtil.*;
 
+/**
+ * This actually tests two things:
+ * - generic records: a record that has a type parameter and uses it for a field
+ * - type-passing records: a record that has a type parameter and passes it on as a type argument
+ *   to another generic type
+ */
 public class TypePassingRecordAdapterTest {
 
     private record Inner<T>(T best, ImmutableList<T> others) {}
