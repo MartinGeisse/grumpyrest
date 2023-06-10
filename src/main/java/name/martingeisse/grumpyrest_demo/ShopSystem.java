@@ -101,4 +101,29 @@ public final class ShopSystem {
             int unitPrice
     ) {}
 
+    // the user comes from the URL
+    record AddToCartRequest(
+            int productId,
+            int quantity
+    ) {}
+
+    record GetCartResponse(
+            ImmutableList<GetCartResponseLineItem> lineItems
+    ) {}
+
+    record GetCartResponseLineItem(
+            int productId,
+            int quantity
+    ) {}
+
+    // the user comes from the URL
+    record PlaceOrderRequest() {}
+
+    // the user comes from the URL
+    record ClearCartRequest() {}
+
+    record GetOrderHistoryResponse(ImmutableList<GetOrderHistoryResponseOrder> orders) {}
+    record GetOrderHistoryResponseOrder(ImmutableList<GetOrderHistoryResponseLineItem> lineItems) {}
+    record GetOrderHistoryResponseLineItem(int quantity, String name, int unitPrice) {}
+
 }
