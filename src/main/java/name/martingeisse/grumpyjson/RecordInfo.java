@@ -14,13 +14,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-final class RecordInfo {
+public final class RecordInfo {
 
     private final Class<?> recordClass;
     private final ImmutableList<ComponentInfo> componentInfos;
     private final Constructor<?> constructor;
 
-    RecordInfo(Class<?> recordClass) {
+    public RecordInfo(Class<?> recordClass) {
         Objects.requireNonNull(recordClass, "record");
         if (!recordClass.isRecord()) {
             throw new IllegalArgumentException("not a record: " + recordClass);
