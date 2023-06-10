@@ -16,6 +16,8 @@ import static name.martingeisse.grumpyjson.JsonTestUtil.*;
  * - generic records: a record that has a type parameter and uses it for a field
  * - type-passing records: a record that has a type parameter and passes it on as a type argument
  *   to another generic type
+ *
+ * TODO: test with a Map, not a List, to make sure we handle multiple type parameters correctly
  */
 public class TypePassingRecordAdapterTest {
 
