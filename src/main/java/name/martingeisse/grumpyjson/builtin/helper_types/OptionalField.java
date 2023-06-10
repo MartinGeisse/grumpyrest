@@ -4,31 +4,31 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-package name.martingeisse.grumpyjson.builtin.json;
+package name.martingeisse.grumpyjson.builtin.helper_types;
 
 import java.util.Objects;
 
 /**
- * To get a property that can be absent, null, or something, use JsonOptional<JsonNullable<YourType>>.
+ * To get a property that can be absent, null, or something, use OptionalField<NullableField<YourType>>.
  */
-public final class JsonOptional<T> {
+public final class OptionalField<T> {
 
     private final T value;
 
-    private JsonOptional(T value) {
+    private OptionalField(T value) {
         this.value = value;
     }
 
-    public static <T> JsonOptional<T> ofValue(T value) {
-        return new JsonOptional<>(Objects.requireNonNull(value, "value"));
+    public static <T> OptionalField<T> ofValue(T value) {
+        return new OptionalField<>(Objects.requireNonNull(value, "value"));
     }
 
-    public static <T> JsonOptional<T> ofNothing() {
-        return new JsonOptional<>(null);
+    public static <T> OptionalField<T> ofNothing() {
+        return new OptionalField<>(null);
     }
 
-    public static <T> JsonOptional<T> ofValueOrNullAsNothing(T value) {
-        return new JsonOptional<>(value);
+    public static <T> OptionalField<T> ofValueOrNullAsNothing(T value) {
+        return new OptionalField<>(value);
     }
 
     public T getValueOrNothingAsNull() {
@@ -37,7 +37,7 @@ public final class JsonOptional<T> {
 
     public T getValue() {
         if (value == null) {
-            throw new IllegalStateException("this JsonOptional is absent");
+            throw new IllegalStateException("this OptionalField is absent");
         }
         return value;
     }
@@ -54,7 +54,7 @@ public final class JsonOptional<T> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        JsonOptional<?> that = (JsonOptional<?>) o;
+        OptionalField<?> that = (OptionalField<?>) o;
         return Objects.equals(value, that.value);
     }
 
@@ -65,7 +65,7 @@ public final class JsonOptional<T> {
 
     @Override
     public String toString() {
-        return "JsonOptional{value=" + value + '}';
+        return "OptionalField{value=" + value + '}';
     }
 
 }

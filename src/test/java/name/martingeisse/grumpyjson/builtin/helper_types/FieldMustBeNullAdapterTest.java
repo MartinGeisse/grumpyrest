@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-package name.martingeisse.grumpyjson.builtin.json;
+package name.martingeisse.grumpyjson.builtin.helper_types;
 
 import com.google.gson.JsonNull;
 import org.junit.jupiter.api.Assertions;
@@ -12,13 +12,13 @@ import org.junit.jupiter.api.Test;
 
 import static name.martingeisse.grumpyjson.JsonTestUtil.*;
 
-public class JsonMustBeNullAdapterTest {
+public class FieldMustBeNullAdapterTest {
 
-    private final JsonMustBeNullAdapter adapter = new JsonMustBeNullAdapter();
+    private final FieldMustBeNullAdapter adapter = new FieldMustBeNullAdapter();
 
     @Test
     public void testValidationHappyCase() throws Exception {
-        Assertions.assertEquals(JsonMustBeNull.INSTANCE, adapter.fromJson(JsonNull.INSTANCE, JsonMustBeNull.class));
+        Assertions.assertEquals(FieldMustBeNull.INSTANCE, adapter.fromJson(JsonNull.INSTANCE, FieldMustBeNull.class));
     }
 
     @Test
@@ -31,12 +31,12 @@ public class JsonMustBeNullAdapterTest {
 
     @Test
     public void testGenerationHappyCase() {
-        Assertions.assertEquals(JsonNull.INSTANCE, adapter.toJson(JsonMustBeNull.INSTANCE, JsonMustBeNull.class));
+        Assertions.assertEquals(JsonNull.INSTANCE, adapter.toJson(FieldMustBeNull.INSTANCE, FieldMustBeNull.class));
     }
 
     @Test
     public void testGenerationWithNull() {
-        assertFailsGenerationWithNpe(adapter, null, JsonMustBeNull.class);
+        assertFailsGenerationWithNpe(adapter, null, FieldMustBeNull.class);
     }
 
 }
