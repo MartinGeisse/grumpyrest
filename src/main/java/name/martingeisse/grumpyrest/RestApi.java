@@ -17,6 +17,7 @@ import name.martingeisse.grumpyrest.responder.standard.JsonResponderFactory;
 import name.martingeisse.grumpyrest.responder.standard.StandardErrorResponder;
 import name.martingeisse.grumpyrest.stringparser.FromStringParser;
 import name.martingeisse.grumpyrest.stringparser.FromStringParserRegistry;
+import name.martingeisse.grumpyrest.stringparser.standard.IntegerFromStringParser;
 import name.martingeisse.grumpyrest.stringparser.standard.StringFromStringParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,7 @@ public final class RestApi {
 
         // from-string parsers
         addFromStringParser(new StringFromStringParser());
+        addFromStringParser(new IntegerFromStringParser());
 
     }
 

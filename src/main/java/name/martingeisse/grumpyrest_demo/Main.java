@@ -6,8 +6,6 @@
  */
 package name.martingeisse.grumpyrest_demo;
 
-import com.google.gson.JsonObject;
-import name.martingeisse.grumpyrest.RestApi;
 import name.martingeisse.grumpyrest.servlet.RestServlet;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
@@ -37,17 +35,8 @@ public class Main {
     public static class MyServlet extends RestServlet {
 
         public MyServlet() {
-            super(createApi());
+            super(new ShopSystem().buildApi());
         }
-
-        private static RestApi createApi() {
-            RestApi api = new RestApi();
-            api.addRoute("/", requestCycle -> new JsonObject());
-            api.addRoute("/hello", requestCycle -> new GreetingResponse("Hello world!"));
-            return api;
-        }
-
-        private record GreetingResponse(String greeting) {}
 
     }
 
