@@ -85,7 +85,7 @@ final class RecordInfo {
 
         public Type getConcreteType(Type concreteRecordType) {
             if (concreteRecordType instanceof Class<?>) {
-                return component.getType();
+                return component.getGenericType();
             } else if (concreteRecordType instanceof ParameterizedType parameterizedRecordType) {
                 TypeVariable<?>[] recordTypeParameters = recordClass.getTypeParameters();
                 Type[] recordTypeArguments = parameterizedRecordType.getActualTypeArguments();

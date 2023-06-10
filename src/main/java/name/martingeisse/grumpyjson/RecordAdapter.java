@@ -123,7 +123,7 @@ public final class RecordAdapter<T> implements JsonTypeAdapter<T> {
                 }
                 Type concreteFieldType = componentInfo.getConcreteType(recordType);
                 @SuppressWarnings("rawtypes") JsonTypeAdapter adapter = registry.getTypeAdapter(concreteFieldType);
-                @SuppressWarnings("unchecked") Optional<JsonElement> optionalJson = adapter.toOptionalJson(value, componentInfo.getType());
+                @SuppressWarnings("unchecked") Optional<JsonElement> optionalJson = adapter.toOptionalJson(value, concreteFieldType);
                 optionalJson.ifPresent(jsonElement -> jsonObject.add(name, jsonElement));
             } catch (JsonGenerationException e) {
                 errorNode = e.fieldErrorNode.in(name).and(errorNode);
