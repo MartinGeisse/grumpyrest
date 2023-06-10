@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,34 +101,49 @@ public final class RestApi {
     }
 
     public void handle(RequestCycle requestCycle) throws IOException {
-
-        // run the handler
-        Object responseValue;
         try {
-            Route route = match(requestCycle);
-            if (route != null) {
-                requestCycle.setMatchedRoute(route);
-                responseValue = route.handle(requestCycle);
-            } else {
-                responseValue = StandardErrorResponder.UNKNOWN_URL;
+
+            // run the handler
+            Object responseValue;
+            try {
+                Route route = match(requestCycle);
+                if (route != null) {
+                    requestCycle.setMatchedRoute(route);
+                    responseValue = route.handle(requestCycle);
+                } else {
+                    responseValue = StandardErrorResponder.UNKNOWN_URL;
+                }
+            } catch (Exception e) {
+                responseValue = e;
             }
+
+            // run the responder factory
+            Responder responder;
+            try {
+                responder = responderFactoryRegistry.createResponder(requestCycle, responseValue);
+            } catch (Exception e) {
+                LOGGER.error("could not create responder for response value", e);
+                responder = StandardErrorResponder.INTERNAL_SERVER_ERROR;
+            }
+
+            // generate the response. Catching exceptions here is not useful because the response has already been started
+            // so we cannot change the status line anymore.
+            responder.respond(requestCycle);
+
         } catch (Exception e) {
-            responseValue = e;
+            // If we end up here, we cannot rely on the JSON serializer anymore (since that may the reason we ended
+            // up here), so we just send a plain 500. If possible, we send an error text, but even that may fail (e.g.
+            // something else requested a Writer even though everything here uses an OutputStream), so at least
+            // defend against that.
+            try {
+                var response = requestCycle.getResponse();
+                response.setStatus(500);
+                response.setContentType("application/text");
+                response.getOutputStream().write("internal server error\n".getBytes(StandardCharsets.UTF_8));
+            } catch (Exception e2) {
+                // ignore
+            }
         }
-
-        // run the responder factory
-        Responder responder;
-        try {
-            responder = responderFactoryRegistry.createResponder(requestCycle, responseValue);
-        } catch (Exception e) {
-            LOGGER.error("could not create responder for response value", e);
-            responder = StandardErrorResponder.INTERNAL_SERVER_ERROR;
-        }
-
-        // generate the response. Catching exceptions here is not useful because the response has already been started
-        // so we cannot change the status line anymore.
-        responder.respond(requestCycle);
-
     }
 
 }
