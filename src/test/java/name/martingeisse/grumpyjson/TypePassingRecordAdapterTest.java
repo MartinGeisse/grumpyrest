@@ -18,8 +18,6 @@ import static name.martingeisse.grumpyjson.JsonTestUtil.*;
  *   to another generic type
  * - type-taking record-typed fields: A field whose type is a generic record and which passes a type variable
  *   for the record's type parameter
- *
- * TODO: test with a Map, not a List, to make sure we handle multiple type parameters correctly
  */
 public class TypePassingRecordAdapterTest {
 
