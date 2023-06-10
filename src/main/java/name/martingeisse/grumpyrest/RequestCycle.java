@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import name.martingeisse.grumpyjson.ExceptionMessages;
 import name.martingeisse.grumpyjson.JsonValidationException;
-import name.martingeisse.grumpyrest.finish.FinishRequestException;
+import name.martingeisse.grumpyrest.responder.FinishRequestException;
 import name.martingeisse.grumpyrest.path.PathSegment;
 import name.martingeisse.grumpyrest.path.PathUtil;
 import name.martingeisse.grumpyrest.path.VariablePathSegment;
