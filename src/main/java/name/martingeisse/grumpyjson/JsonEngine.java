@@ -11,10 +11,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
-import name.martingeisse.grumpyjson.builtin.ImmutableListAdapter;
-import name.martingeisse.grumpyjson.builtin.IntegerAdapter;
-import name.martingeisse.grumpyjson.builtin.JsonElementAdapter;
-import name.martingeisse.grumpyjson.builtin.StringAdapter;
+import name.martingeisse.grumpyjson.builtin.*;
+import name.martingeisse.grumpyjson.builtin.helper_types.FieldMustBeNullAdapter;
+import name.martingeisse.grumpyjson.builtin.helper_types.NullableFieldAdapter;
+import name.martingeisse.grumpyjson.builtin.helper_types.OptionalFieldAdapter;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -28,10 +28,21 @@ public class JsonEngine {
     private final JsonRegistry registry = new JsonRegistry();
 
     public JsonEngine() {
-        addTypeAdapter(new JsonElementAdapter());
+
+        // Java types
+        addTypeAdapter(new BooleanAdapter());
         addTypeAdapter(new IntegerAdapter());
         addTypeAdapter(new StringAdapter());
+
+        // collection types
         addTypeAdapter(new ImmutableListAdapter(registry));
+
+        // helper types
+        addTypeAdapter(new FieldMustBeNullAdapter());
+        addTypeAdapter(new NullableFieldAdapter(registry));
+        addTypeAdapter(new OptionalFieldAdapter(registry));
+        addTypeAdapter(new JsonElementAdapter());
+
     }
 
     public <T> void addTypeAdapter(JsonTypeAdapter<T> adapter) {
