@@ -51,7 +51,7 @@ public final class ShopSystem {
 
         api.addRoute("/categories/:id", requestCycle -> {
             int id = requestCycle.getPathArguments().get(0).getValue(Integer.class);
-            Category category = categories.get(id);
+            Category category = categories.getRestEquivalent(id);
             Category parentCategory = category.parentId() < 0 ? null : categories.get(category.parentId());
             return new CategoryResponse(
                     category.name(),
