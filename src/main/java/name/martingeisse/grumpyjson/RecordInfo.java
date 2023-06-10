@@ -66,6 +66,7 @@ public final class RecordInfo {
 
         public ComponentInfo(RecordComponent component) {
             this.component = component;
+            component.getAccessor().setAccessible(true);
         }
 
         public String getName() {
