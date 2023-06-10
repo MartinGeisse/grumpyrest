@@ -11,7 +11,7 @@ package name.martingeisse.grumpyjson;
  */
 public class JsonValidationException extends Exception {
 
-    public FieldErrorNode fieldErrorNode;
+    public final FieldErrorNode fieldErrorNode;
 
     public JsonValidationException(String message) {
         this(FieldErrorNode.create(message));

@@ -14,7 +14,7 @@ package name.martingeisse.grumpyjson;
  */
 public class JsonGenerationException extends RuntimeException {
 
-    public FieldErrorNode fieldErrorNode;
+    public final FieldErrorNode fieldErrorNode;
 
     public JsonGenerationException(String message) {
         this(FieldErrorNode.create(message));
