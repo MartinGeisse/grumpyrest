@@ -6,6 +6,8 @@
  */
 package name.martingeisse.grumpyrest.stringparser;
 
+import name.martingeisse.grumpyjson.ExceptionMessages;
+
 import java.lang.reflect.Type;
 
 public interface FromStringParser {
@@ -19,5 +21,14 @@ public interface FromStringParser {
      * Parses value from a string.
      */
     Object parseFromString(String s, Type type) throws FromStringParserException;
+
+    /**
+     * Parses value from an absent string. This can be used to return a default for optional parameters.
+     *
+     * The standard implementation of this method is that missing values are not tolerated, and throws an exception.
+     */
+    default Object parseFromAbsentString(Type type) throws FromStringParserException {
+        throw new FromStringParserException(ExceptionMessages.MISSING_PARAMETER);
+    }
 
 }

@@ -18,5 +18,8 @@ public class ExceptionMessages {
     public static final String UNEXPECTED_PROPERTY = "unexpected property";
     public static final String MISSING_PROPERTY = "missing property";
 
+    public static final String MISSING_PARAMETER = "missing parameter";
+    public static final String UNEXPECTED_PARAMETER = "unexpected parameter";
+
 
 }
