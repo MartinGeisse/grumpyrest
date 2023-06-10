@@ -6,8 +6,13 @@
  */
 package name.martingeisse.grumpyrest_demo;
 
+import com.google.common.collect.ImmutableList;
+import name.martingeisse.grumpyjson.builtin.helper_types.NullableField;
 import name.martingeisse.grumpyrest.RestApi;
 
+/**
+ *
+ */
 public final class ShopSystem {
 
     private final Table<Category> categories = new Table<>();
@@ -27,14 +32,14 @@ public final class ShopSystem {
         int garbageCategoryId = categories.insert(new Category("Garbage", uselessStuffCategory));
         int trinketsCategoryId = categories.insert(new Category("Trinkets", uselessStuffCategory));
 
-        products.insert(new Product(widgetsCategoryId, "Left-handed Hammer", 10));
-        products.insert(new Product(widgetsCategoryId, "Left-handed Screwdriver", 12));
-        products.insert(new Product(gadgetsCategoryId, "Portable Quantum-Tunneling Device", 250));
-        products.insert(new Product(gadgetsCategoryId, "Intelligent Self-Heating Coffee Cup", 24));
-        products.insert(new Product(uselessStuffCategory, "Useless Plastic Cube", 3));
-        products.insert(new Product(garbageCategoryId, "Empty Soda Can", 1));
-        products.insert(new Product(garbageCategoryId, "Plastic Wrapping", 1));
-        products.insert(new Product(trinketsCategoryId, "Ugly Necklace", 45));
+        products.insert(new Product(widgetsCategoryId, "Left-handed Hammer", "Excellent choice for left-handed people!", 10));
+        products.insert(new Product(widgetsCategoryId, "Left-handed Screwdriver", "Excellent choice for left-handed people!", 12));
+        products.insert(new Product(gadgetsCategoryId, "Portable Quantum-Tunneling Device", "You can use this to shorten your commute.", 250));
+        products.insert(new Product(gadgetsCategoryId, "Intelligent Self-Heating Coffee Cup", "Keeps your coffee at exactly the right temperature", 24));
+        products.insert(new Product(uselessStuffCategory, "Useless Plastic Cube", "Who even builds these things?", 3));
+        products.insert(new Product(garbageCategoryId, "Empty Soda Can", "We just collect them. You might get a refund for these in your country.", 1));
+        products.insert(new Product(garbageCategoryId, "Plastic Wrapping", "Somebody might still need it.", 1));
+        products.insert(new Product(trinketsCategoryId, "Ugly Necklace", "Bob says it isn't ugly.", 45));
 
         users.insert(new User("joe_user", "password123"));
         users.insert(new User("dude51", "correct horse battery staple"));
@@ -43,10 +48,47 @@ public final class ShopSystem {
 
     public RestApi buildApi() {
         RestApi api = new RestApi();
+
         api.addRoute("/categories/:id", requestCycle -> {
             int id = requestCycle.getPathArguments().get(0).getValue(Integer.class);
-            return id;
+            Category category = categories.get(id);
+            Category parentCategory = category.parentId() < 0 ? null : categories.get(category.parentId());
+            return new CategoryResponse(
+                    category.name(),
+                    parentCategory == null ? NullableField.ofNull() :
+                            NullableField.ofValue(new CategoryLink(category.parentId(), parentCategory.name())),
+                    categories.filterMap((otherId, otherCategory) -> otherCategory.parentId() == id
+                            ? new CategoryLink(otherId, otherCategory.name())
+                            : null
+                    ),
+                    products.filterMap((productId, product) -> product.categoryId() == id
+                            ? new ProductLink(productId, product.name())
+                            : null
+                    )
+            );
         });
+
+
+
         return api;
     }
+
+    record CategoryLink(int id, String name) {}
+
+    record ProductLink(int id, String name) {}
+
+    record CategoryResponse(
+            String name,
+            NullableField<CategoryLink> parentCategory,
+            ImmutableList<CategoryLink> childCategories,
+            ImmutableList<ProductLink> products
+    ) {}
+
+    record ProductResponse(
+            CategoryLink category,
+            String name,
+            String description,
+            int unitPrice
+    ) {}
+
 }

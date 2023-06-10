@@ -6,9 +6,14 @@
  */
 package name.martingeisse.grumpyrest_demo;
 
+import com.google.common.collect.ImmutableList;
+import org.apache.commons.lang3.tuple.Pair;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiFunction;
+import java.util.function.Predicate;
 
 /**
  * Simulates a database table. Note that unlike a relational database, the ID is not part of the row data but stored
@@ -58,6 +63,37 @@ public final class Table<T> {
             throw new IllegalArgumentException("invalid id: " + id);
         }
         rows.set(id, null);
+    }
+
+    /**
+     * Returns the first element that matches the filter, or null if none.
+     */
+    public synchronized Pair<Integer, T> getFirst(Predicate<T> filter) {
+        for (int i = 0; i < rows.size(); i++) {
+            T row = rows.get(i);
+            if (row != null && filter.test(row)) {
+                return Pair.of(i, row);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Filters the elements of this table and maps them to a different type. Return null from the body to filter out
+     * an element.
+     */
+    public synchronized <U> ImmutableList<U> filterMap(BiFunction<Integer, T, U> body) {
+        List<U> result = new ArrayList<>();
+        for (int i = 0; i < rows.size(); i++) {
+            T row = rows.get(i);
+            if (row != null) {
+                U resultElement = body.apply(i, row);
+                if (resultElement != null) {
+                    result.add(resultElement);
+                }
+            }
+        }
+        return ImmutableList.copyOf(result);
     }
 
 }
