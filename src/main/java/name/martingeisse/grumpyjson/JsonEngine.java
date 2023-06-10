@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 
 public class JsonEngine {
 
-    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private final Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
     private final JsonRegistry registry = new JsonRegistry();
 
     public JsonEngine() {
