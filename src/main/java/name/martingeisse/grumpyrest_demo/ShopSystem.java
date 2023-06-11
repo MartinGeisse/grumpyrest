@@ -85,6 +85,7 @@ public final class ShopSystem {
         RestApi api = new RestApi();
         addBrowsingRoutes(api);
         addCartRoutes(api);
+        addOrderRoutes(api);
         return api;
     }
 
@@ -209,13 +210,31 @@ public final class ShopSystem {
     // orders
     // ----------------------------------------------------------------------------------------------------------------
 
-    // the user comes from the URL
-    record PlaceOrderRequest() {}
+    private void addOrderRoutes(RestApi api) {
+        api.addRoute("/orders/:userId", this::handleGetOrderHistory);
+        api.addRoute("/orders/:userId/place", this::handlePlaceOrder);
+    }
 
     record GetOrderHistoryResponse(ImmutableList<GetOrderHistoryResponseOrder> orders) {}
-
     record GetOrderHistoryResponseOrder(ImmutableList<GetOrderHistoryResponseLineItem> lineItems) {}
-
     record GetOrderHistoryResponseLineItem(int quantity, String name, int unitPrice) {}
+    public GetOrderHistoryResponse handleGetOrderHistory(RequestCycle requestCycle) {
+        // TODO
+        throw new UnsupportedOperationException();
+    }
+
+    public Void handlePlaceOrder(RequestCycle requestCycle) throws Exception {
+        int userId = requestCycle.getPathArguments().get(0).getValue(Integer.class);
+        if (!cartLineItems.existsAny(c -> c.userId == userId)) {
+            throw new FinishRequestException(new StandardErrorResponder(400, "cart is empty"));
+        }
+        int orderId = orders.insert(new Order(userId));
+        cartLineItems.foreach((_ignored, cartLineItem) -> {
+            Product product = products.get(cartLineItem.productId);
+            orderLineItems.insert(new OrderLineItem(orderId, cartLineItem.quantity, product.name, product.unitPrice));
+        });
+        cartLineItems.deleteIf(c -> c.userId == userId);
+        return null;
+    }
 
 }

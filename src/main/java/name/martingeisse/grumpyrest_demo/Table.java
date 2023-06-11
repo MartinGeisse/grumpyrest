@@ -14,6 +14,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
@@ -36,7 +37,7 @@ public final class Table<T> {
         return (id >= 0 && id < rows.size());
     }
 
-    public boolean isValidId(int id) {
+    public synchronized boolean isValidId(int id) {
         return isIdInRange(id) && rows.get(id) != null;
     }
 
@@ -62,6 +63,15 @@ public final class Table<T> {
 
     public synchronized boolean exists(int id) {
         return getOrNull(id) != null;
+    }
+
+    public synchronized boolean existsAny(Predicate<T> filter) {
+        for (T row : rows) {
+            if (row != null && filter.test(row)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public synchronized void replace(int id, T row) {
@@ -117,6 +127,15 @@ public final class Table<T> {
             }
         }
         return ImmutableList.copyOf(result);
+    }
+
+    public synchronized void foreach(BiConsumer<Integer, T> consumer) {
+        for (int i = 0; i < rows.size(); i++) {
+            T row = rows.get(i);
+            if (row != null) {
+                consumer.accept(i, row);
+            }
+        }
     }
 
 }
