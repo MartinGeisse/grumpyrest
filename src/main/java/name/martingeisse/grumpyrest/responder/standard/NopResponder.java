@@ -15,6 +15,8 @@ import name.martingeisse.grumpyrest.responder.Responder;
  */
 public class NopResponder implements Responder {
 
+    public static final NopResponder INSTANCE = new NopResponder();
+
     @Override
     public void respond(RequestCycle requestCycle) {
     }
