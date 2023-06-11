@@ -7,9 +7,7 @@
 package name.martingeisse.grumpyjson;
 
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import name.martingeisse.grumpyjson.builtin.*;
 import name.martingeisse.grumpyjson.builtin.helper_types.FieldMustBeNullAdapter;
@@ -21,6 +19,8 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class JsonEngine {
 
@@ -120,12 +120,33 @@ public class JsonEngine {
     public Object parse(Reader source, Type type) throws JsonValidationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(type, "type");
-        JsonElement json = gson.fromJson(source, JsonElement.class);
+        JsonElement json;
+        try {
+            json = gson.fromJson(source, JsonElement.class);
+        } catch (JsonSyntaxException e) {
+            throw new JsonValidationException(mapGsonErrorMessage(e.getMessage()));
+        } catch (JsonIOException e) {
+            throw new JsonValidationException("I/O error while reading JSON");
+        }
         if (json == null) {
             // this happens if the source does not even contain malformed JSON, but just nothing (EOF)
             throw new JsonValidationException("no JSON to parse");
         }
         return registry.getTypeAdapter(type).fromJson(json, type);
+    }
+
+    // the message looks like this: "at line 1 column 20 path"
+    private static final Pattern GSON_SYNTAX_ERROR_LOCATION_PATTERN = Pattern.compile("at line (\\d+) column (\\d+) ");
+
+    /**
+     * This method transforms the error message so it does not reveal too much internals.
+     */
+    private static String mapGsonErrorMessage(String message) {
+        Matcher matcher = GSON_SYNTAX_ERROR_LOCATION_PATTERN.matcher(message);
+        if (matcher.find()) {
+            return "syntax error in JSON at line " + matcher.group(1) + ", column " + matcher.group(2);
+        }
+        return "syntax error in JSON";
     }
 
     // -----------------------------------------------------------------------
