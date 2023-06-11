@@ -27,6 +27,28 @@ Particular differences with typical REST frameworks:
   If you want to bend these rules for all of your JSON mapping, replace the built-in type adapters by your own which
   define a relaxed mapping.
 
+## How does this look in code?
+
+Here's a simple API that builds a greeting:
+
+    RestApi api = new RestApi();
+    api.addRoute("/make-greeting", requestCycle -> {
+        MakeGreetingRequest request = requestCycle.parseBody(MakeGreetingRequest.class);
+        if (request.addendum.isPresent()) {
+            return new MakeGreetingResponse("Hello, " + request.name + "! " + request.addendum.getValue());
+        } else {
+            return new MakeGreetingResponse("Hello, " + request.name + "!");
+        }
+    });
+
+Request 1: `{"name": "Joe"}`
+
+Response 1: `{"greeting": "Hello, Joe!"}`
+
+Request 2: `{"name": "Joe", "addendum": "Nice to meet you."}`
+
+Response 2: `{"greeting": "Hello, Joe! Nice to meet you."}`
+
 ## What about performance?
 
 It _is_ anticipated that grumpyrest may provide tools to tackle potential performance problems, which rely on
