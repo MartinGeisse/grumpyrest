@@ -6,6 +6,8 @@
  */
 package name.martingeisse.grumpyjson;
 
+import java.util.Objects;
+
 /**
  * This exception type gets thrown when the state of the objects being serialized is not possible to map to JSON.
  *
@@ -26,7 +28,7 @@ public class JsonGenerationException extends RuntimeException {
 
     public JsonGenerationException(FieldErrorNode fieldErrorNode) {
         super("exception during JSON generation");
-        this.fieldErrorNode = fieldErrorNode;
+        this.fieldErrorNode = Objects.requireNonNull(fieldErrorNode, "fieldErrorNode");
     }
 
     @Override

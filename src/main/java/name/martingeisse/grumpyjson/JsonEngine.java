@@ -120,7 +120,12 @@ public class JsonEngine {
     public Object parse(Reader source, Type type) throws JsonValidationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(type, "type");
-        return registry.getTypeAdapter(type).fromJson(gson.fromJson(source, JsonElement.class), type);
+        JsonElement json = gson.fromJson(source, JsonElement.class);
+        if (json == null) {
+            // this happens if the source does not even contain malformed JSON, but just nothing (EOF)
+            throw new JsonValidationException("no JSON to parse");
+        }
+        return registry.getTypeAdapter(type).fromJson(json, type);
     }
 
     // -----------------------------------------------------------------------

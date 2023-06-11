@@ -87,16 +87,28 @@ public final class RequestCycle {
         this.pathArguments = ImmutableList.copyOf(newPathArguments);
     }
 
-    public <T> T parseBody(Class<T> clazz) throws JsonValidationException {
-        return api.getJsonEngine().parse(prepareParse(), clazz);
+    public <T> T parseBody(Class<T> clazz) {
+        try {
+            return api.getJsonEngine().parse(prepareParse(), clazz);
+        } catch (JsonValidationException e) {
+            throw new FinishRequestException(StandardErrorResponder.requestBodyValidationFailed(e));
+        }
     }
 
-    public <T> T parseBody(TypeToken<T> typeToken) throws JsonValidationException {
-        return api.getJsonEngine().parse(prepareParse(), typeToken);
+    public <T> T parseBody(TypeToken<T> typeToken) {
+        try {
+            return api.getJsonEngine().parse(prepareParse(), typeToken);
+        } catch (JsonValidationException e) {
+            throw new FinishRequestException(StandardErrorResponder.requestBodyValidationFailed(e));
+        }
     }
 
-    public Object parseBody(Type type) throws JsonValidationException {
-        return api.getJsonEngine().parse(prepareParse(), type);
+    public Object parseBody(Type type) {
+        try {
+            return api.getJsonEngine().parse(prepareParse(), type);
+        } catch (JsonValidationException e) {
+            throw new FinishRequestException(StandardErrorResponder.requestBodyValidationFailed(e));
+        }
     }
 
     private InputStream prepareParse() {
@@ -144,7 +156,7 @@ public final class RequestCycle {
         try {
             result = api.getQuerystringParserRegistry().getParser(type).parse(querystringSingle, type);
             if (result == null) {
-                throw new QuerystringParsingException(ImmutableMap.of("<root>", "querystring parser returned null"));
+                throw new QuerystringParsingException(ImmutableMap.of("(root)", "querystring parser returned null"));
             }
         } catch (QuerystringParsingException e) {
             originalException = e;

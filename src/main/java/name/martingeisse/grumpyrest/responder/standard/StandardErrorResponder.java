@@ -7,10 +7,14 @@
 package name.martingeisse.grumpyrest.responder.standard;
 
 import com.google.common.collect.ImmutableList;
+import name.martingeisse.grumpyjson.FieldErrorNode;
+import name.martingeisse.grumpyjson.JsonValidationException;
 import name.martingeisse.grumpyrest.RequestCycle;
 import name.martingeisse.grumpyrest.responder.Responder;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public record StandardErrorResponder(int status, String message, ImmutableList<Field> fields) implements Responder {
 
@@ -41,6 +45,20 @@ public record StandardErrorResponder(int status, String message, ImmutableList<F
      * The standard response for "something went wrong in the server", usually an uncaught exception.
      */
     public static final StandardErrorResponder INTERNAL_SERVER_ERROR = new StandardErrorResponder(500, "internal server error");
+
+    /**
+     * Generates an error responder for failed request body validation. The error lists the fields that failed
+     * validation and their error messages.
+     */
+    public static StandardErrorResponder requestBodyValidationFailed(JsonValidationException e) {
+        List<Field> translatedErrors = new ArrayList<>();
+        for (FieldErrorNode.FlattenedError flattenedError : e.fieldErrorNode.flatten()) {
+            translatedErrors.add(new Field(flattenedError.getPathAsString(), flattenedError.message()));
+        }
+        return new StandardErrorResponder(400, "invalid request body", ImmutableList.copyOf(translatedErrors));
+    }
+
+    // ----------------------------------------------------------------------------------------------------------------
 
     public StandardErrorResponder(int status, String message) {
         this(status, message, ImmutableList.of());

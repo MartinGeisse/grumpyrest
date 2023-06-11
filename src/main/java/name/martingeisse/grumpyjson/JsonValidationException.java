@@ -6,6 +6,8 @@
  */
 package name.martingeisse.grumpyjson;
 
+import java.util.Objects;
+
 /**
  * This exception type gets thrown when the incoming JSON does not match the expected structure.
  */
@@ -23,7 +25,7 @@ public class JsonValidationException extends Exception {
 
     public JsonValidationException(FieldErrorNode fieldErrorNode) {
         super("exception during JSON validation");
-        this.fieldErrorNode = fieldErrorNode;
+        this.fieldErrorNode = Objects.requireNonNull(fieldErrorNode, "fieldErrorNode");
     }
 
     @Override

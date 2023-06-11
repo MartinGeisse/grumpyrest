@@ -75,6 +75,15 @@ public final class Table<T> {
         rows.set(id, null);
     }
 
+    public synchronized void deleteIf(Predicate<T> filter) {
+        for (int i = 0; i < rows.size(); i++) {
+            T row = rows.get(i);
+            if (row != null && filter.test(row)) {
+                rows.set(i, null);
+            }
+        }
+    }
+
     /**
      * Returns the first element that matches the filter, or null if none.
      */

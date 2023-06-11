@@ -130,7 +130,7 @@ public abstract class FieldErrorNode {
         }
 
         public String getPathAsString() {
-            return fieldPath.isEmpty() ? "<root>" : StringUtils.join(fieldPath.toArray(), '.');
+            return fieldPath.isEmpty() ? "(root)" : StringUtils.join(fieldPath.toArray(), '.');
         }
 
         @Override
