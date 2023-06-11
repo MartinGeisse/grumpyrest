@@ -33,6 +33,7 @@ public final class ShopSystem {
     // in a real application, don't store passwords like that!
     public record User(String username, String password) {}
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final Table<User> users = new Table<>();
 
     public record CartLineItem(int userId, int productId, int quantity) {}
@@ -95,6 +96,7 @@ public final class ShopSystem {
 
     record CategoryLink(int id, String name) {}
 
+    @SuppressWarnings("unused")
     private CategoryLink getCategoryLink(int id) {
         return new CategoryLink(id, categories.get(id).name);
     }
@@ -115,10 +117,10 @@ public final class ShopSystem {
     }
 
     record CategoryResponse(
-            String name,
-            NullableField<CategoryLink> parentCategory,
-            ImmutableList<CategoryLink> childCategories,
-            ImmutableList<ProductLink> products
+        String name,
+        NullableField<CategoryLink> parentCategory,
+        ImmutableList<CategoryLink> childCategories,
+        ImmutableList<ProductLink> products
     ) {}
 
     public CategoryResponse handleGetCategory(RequestCycle requestCycle) throws Exception {
@@ -126,25 +128,25 @@ public final class ShopSystem {
         Category category = categories.getRestEquivalent(id);
         Category parentCategory = category.parentId() < 0 ? null : categories.get(category.parentId());
         return new CategoryResponse(
-                category.name(),
-                parentCategory == null ? NullableField.ofNull() :
-                        NullableField.ofValue(new CategoryLink(category.parentId(), parentCategory.name())),
-                categories.filterMap((otherId, otherCategory) -> otherCategory.parentId() == id
-                        ? new CategoryLink(otherId, otherCategory.name())
-                        : null
-                ),
-                products.filterMap((productId, product) -> product.categoryId() == id
-                        ? new ProductLink(productId, product.name())
-                        : null
-                )
+            category.name(),
+            parentCategory == null ? NullableField.ofNull() :
+                NullableField.ofValue(new CategoryLink(category.parentId(), parentCategory.name())),
+            categories.filterMap((otherId, otherCategory) -> otherCategory.parentId() == id
+                ? new CategoryLink(otherId, otherCategory.name())
+                : null
+            ),
+            products.filterMap((productId, product) -> product.categoryId() == id
+                ? new ProductLink(productId, product.name())
+                : null
+            )
         );
     }
 
     record ProductResponse(
-            CategoryLink category,
-            String name,
-            String description,
-            int unitPrice
+        CategoryLink category,
+        String name,
+        String description,
+        int unitPrice
     ) {}
 
     public ProductResponse handleGetProduct(RequestCycle requestCycle) throws Exception {
@@ -152,10 +154,10 @@ public final class ShopSystem {
         Product product = products.getRestEquivalent(id);
         Category category = categories.get(product.categoryId());
         return new ProductResponse(
-                new CategoryLink(product.categoryId(), category.name()),
-                product.name(),
-                product.description(),
-                product.unitPrice()
+            new CategoryLink(product.categoryId(), category.name()),
+            product.name(),
+            product.description(),
+            product.unitPrice()
         );
     }
 
@@ -170,18 +172,21 @@ public final class ShopSystem {
     }
 
     record GetCartResponse(ImmutableList<GetCartResponseLineItem> lineItems) {}
+
     record GetCartResponseLineItem(ShopSystem.ProductLink productLink, int quantity) {}
+
     public GetCartResponse handleGetCart(RequestCycle requestCycle) throws Exception {
         int userId = requestCycle.getPathArguments().get(0).getValue(Integer.class);
         return new GetCartResponse(ImmutableList.copyOf(cartLineItems.filterMap((_id, cartLineItem) ->
-                cartLineItem.userId == userId
-                        ? new GetCartResponseLineItem(getProductLink(cartLineItem.productId), cartLineItem.quantity)
-                        : null
+            cartLineItem.userId == userId
+                ? new GetCartResponseLineItem(getProductLink(cartLineItem.productId), cartLineItem.quantity)
+                : null
         )));
     }
 
     // the user comes from the URL, in a later version probably from the authentication header
     record AddToCartRequest(int productId, int quantity) {}
+
     public Void handleAddToCart(RequestCycle requestCycle) throws Exception {
         int userId = requestCycle.getPathArguments().get(0).getValue(Integer.class);
         AddToCartRequest request = requestCycle.parseBody(AddToCartRequest.class);
@@ -193,7 +198,7 @@ public final class ShopSystem {
             cartLineItems.insert(new CartLineItem(userId, request.productId, request.quantity));
         } else {
             cartLineItems.replace(existingCartLineItem.getLeft(), new CartLineItem(userId, request.productId,
-                    existingCartLineItem.getRight().quantity + request.quantity));
+                existingCartLineItem.getRight().quantity + request.quantity));
         }
         return null;
     }
@@ -216,11 +221,18 @@ public final class ShopSystem {
     }
 
     record GetOrderHistoryResponse(ImmutableList<GetOrderHistoryResponseOrder> orders) {}
+
     record GetOrderHistoryResponseOrder(ImmutableList<GetOrderHistoryResponseLineItem> lineItems) {}
+
     record GetOrderHistoryResponseLineItem(int quantity, String name, int unitPrice) {}
-    public GetOrderHistoryResponse handleGetOrderHistory(RequestCycle requestCycle) {
-        // TODO
-        throw new UnsupportedOperationException();
+
+    public GetOrderHistoryResponse handleGetOrderHistory(RequestCycle requestCycle) throws Exception {
+        int userId = requestCycle.getPathArguments().get(0).getValue(Integer.class);
+        return new GetOrderHistoryResponse(orders.filterMap((orderId, order) ->
+            order.userId != userId ? null : new GetOrderHistoryResponseOrder(orderLineItems.filterMap((_ignored, lineItem) ->
+                lineItem.orderId != orderId ? null : new GetOrderHistoryResponseLineItem(lineItem.quantity, lineItem.name, lineItem.unitPrice)
+            ))
+        ));
     }
 
     public Void handlePlaceOrder(RequestCycle requestCycle) throws Exception {
