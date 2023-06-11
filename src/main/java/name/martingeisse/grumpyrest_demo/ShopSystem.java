@@ -165,7 +165,7 @@ public final class ShopSystem {
     private void addCartRoutes(RestApi api) {
         api.addRoute("/cart/:userId", this::handleGetCart);
         api.addRoute("/cart/:userId/add", this::handleAddToCart);
-        // api.addRoute("/products/:id", this::handleGetProduct);
+        api.addRoute("/cart/:userId/clear", this::handleClearCart);
     }
 
     record GetCartResponse(ImmutableList<GetCartResponseLineItem> lineItems) {}
@@ -199,7 +199,6 @@ public final class ShopSystem {
 
 
     // the user comes from the URL
-    record ClearCartRequest() {}
     public Void handleClearCart(RequestCycle requestCycle) throws Exception {
         int userId = requestCycle.getPathArguments().get(0).getValue(Integer.class);
         cartLineItems.deleteIf(c -> c.userId == userId);
