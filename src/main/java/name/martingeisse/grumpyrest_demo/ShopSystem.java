@@ -8,6 +8,7 @@ package name.martingeisse.grumpyrest_demo;
 
 import com.google.common.collect.ImmutableList;
 import name.martingeisse.grumpyjson.builtin.helper_types.NullableField;
+import name.martingeisse.grumpyrest.RequestCycle;
 import name.martingeisse.grumpyrest.RestApi;
 
 /**
@@ -15,11 +16,30 @@ import name.martingeisse.grumpyrest.RestApi;
  */
 public final class ShopSystem {
 
+    // ----------------------------------------------------------------------------------------------------------------
+    // database
+    // ----------------------------------------------------------------------------------------------------------------
+
+    public record Category(String name, int parentId) {}
     private final Table<Category> categories = new Table<>();
+
+    public record Product(int categoryId, String name, String description, int unitPrice) {}
     private final Table<Product> products = new Table<>();
+
+    // in a real application, don't store passwords like that!
+    public record User(String username, String password) {}
     private final Table<User> users = new Table<>();
+
+    public record Order() {}
     private final Table<Order> orders = new Table<>();
+
+    // not linked to a Product anymore because the Product can change, but the OrderLineItem is unaffected by that
+    public record OrderLineItem(int orderId, int quantity, String name, int unitPrice) {}
     private final Table<OrderLineItem> orderLineItems = new Table<>();
+
+    // ----------------------------------------------------------------------------------------------------------------
+    // demo data
+    // ----------------------------------------------------------------------------------------------------------------
 
     public ShopSystem() {
         // insert some demo data
@@ -46,46 +66,31 @@ public final class ShopSystem {
 
     }
 
+    // ----------------------------------------------------------------------------------------------------------------
+    // API overview
+    // ----------------------------------------------------------------------------------------------------------------
+
     public RestApi buildApi() {
         RestApi api = new RestApi();
-
-        api.addRoute("/categories/:id", requestCycle -> {
-            int id = requestCycle.getPathArguments().get(0).getValue(Integer.class);
-            Category category = categories.getRestEquivalent(id);
-            Category parentCategory = category.parentId() < 0 ? null : categories.get(category.parentId());
-            return new CategoryResponse(
-                    category.name(),
-                    parentCategory == null ? NullableField.ofNull() :
-                            NullableField.ofValue(new CategoryLink(category.parentId(), parentCategory.name())),
-                    categories.filterMap((otherId, otherCategory) -> otherCategory.parentId() == id
-                            ? new CategoryLink(otherId, otherCategory.name())
-                            : null
-                    ),
-                    products.filterMap((productId, product) -> product.categoryId() == id
-                            ? new ProductLink(productId, product.name())
-                            : null
-                    )
-            );
-        });
-
-        api.addRoute("/products/:id", requestCycle -> {
-            int id = requestCycle.getPathArguments().get(0).getValue(Integer.class);
-            Product product = products.getRestEquivalent(id);
-            Category category = categories.get(product.categoryId());
-            return new ProductResponse(
-                    new CategoryLink(product.categoryId(), category.name()),
-                    product.name(),
-                    product.description(),
-                    product.unitPrice()
-            );
-        });
-
+        addBrowsingRoutes(api);
         return api;
     }
 
-    record CategoryLink(int id, String name) {}
+    // ----------------------------------------------------------------------------------------------------------------
+    // general-purpose API types
+    // ----------------------------------------------------------------------------------------------------------------
 
+    record CategoryLink(int id, String name) {}
     record ProductLink(int id, String name) {}
+
+    // ----------------------------------------------------------------------------------------------------------------
+    // browsing the store
+    // ----------------------------------------------------------------------------------------------------------------
+
+    private void addBrowsingRoutes(RestApi api) {
+        api.addRoute("/categories/:id", this::handleGetCategory);
+        api.addRoute("/products/:id", this::handleGetProduct);
+    }
 
     record CategoryResponse(
             String name,
@@ -93,6 +98,24 @@ public final class ShopSystem {
             ImmutableList<CategoryLink> childCategories,
             ImmutableList<ProductLink> products
     ) {}
+    public CategoryResponse handleGetCategory(RequestCycle requestCycle) throws Exception {
+        int id = requestCycle.getPathArguments().get(0).getValue(Integer.class);
+        Category category = categories.getRestEquivalent(id);
+        Category parentCategory = category.parentId() < 0 ? null : categories.get(category.parentId());
+        return new CategoryResponse(
+                category.name(),
+                parentCategory == null ? NullableField.ofNull() :
+                        NullableField.ofValue(new CategoryLink(category.parentId(), parentCategory.name())),
+                categories.filterMap((otherId, otherCategory) -> otherCategory.parentId() == id
+                        ? new CategoryLink(otherId, otherCategory.name())
+                        : null
+                ),
+                products.filterMap((productId, product) -> product.categoryId() == id
+                        ? new ProductLink(productId, product.name())
+                        : null
+                )
+        );
+    }
 
     record ProductResponse(
             CategoryLink category,
@@ -100,6 +123,21 @@ public final class ShopSystem {
             String description,
             int unitPrice
     ) {}
+    public ProductResponse handleGetProduct(RequestCycle requestCycle) throws Exception {
+        int id = requestCycle.getPathArguments().get(0).getValue(Integer.class);
+        Product product = products.getRestEquivalent(id);
+        Category category = categories.get(product.categoryId());
+        return new ProductResponse(
+                new CategoryLink(product.categoryId(), category.name()),
+                product.name(),
+                product.description(),
+                product.unitPrice()
+        );
+    }
+
+    // ----------------------------------------------------------------------------------------------------------------
+    // shopping cart
+    // ----------------------------------------------------------------------------------------------------------------
 
     // the user comes from the URL
     record AddToCartRequest(
@@ -117,10 +155,14 @@ public final class ShopSystem {
     ) {}
 
     // the user comes from the URL
-    record PlaceOrderRequest() {}
+    record ClearCartRequest() {}
+
+    // ----------------------------------------------------------------------------------------------------------------
+    // orders
+    // ----------------------------------------------------------------------------------------------------------------
 
     // the user comes from the URL
-    record ClearCartRequest() {}
+    record PlaceOrderRequest() {}
 
     record GetOrderHistoryResponse(ImmutableList<GetOrderHistoryResponseOrder> orders) {}
     record GetOrderHistoryResponseOrder(ImmutableList<GetOrderHistoryResponseLineItem> lineItems) {}
