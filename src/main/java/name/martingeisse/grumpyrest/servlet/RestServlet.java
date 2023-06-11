@@ -6,11 +6,11 @@
  */
 package name.martingeisse.grumpyrest.servlet;
 
-import name.martingeisse.grumpyrest.RestApi;
-import name.martingeisse.grumpyrest.RequestCycle;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import name.martingeisse.grumpyrest.RequestCycle;
+import name.martingeisse.grumpyrest.RestApi;
 
 import java.io.IOException;
 
@@ -24,8 +24,22 @@ public class RestServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        RequestCycle requestCycle = new RequestCycle(api, request, response);
-        api.handle(requestCycle);
+        api.handle(new RequestCycle(api, request, response));
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        api.handle(new RequestCycle(api, request, response));
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        api.handle(new RequestCycle(api, request, response));
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        api.handle(new RequestCycle(api, request, response));
     }
 
 }
