@@ -14,6 +14,7 @@ import name.martingeisse.grumpyrest.responder.ResponderFactory;
 import name.martingeisse.grumpyrest.responder.ResponderFactoryRegistry;
 import name.martingeisse.grumpyrest.responder.standard.IdentityResponderFactory;
 import name.martingeisse.grumpyrest.responder.standard.JsonResponderFactory;
+import name.martingeisse.grumpyrest.responder.standard.NullResponderFactory;
 import name.martingeisse.grumpyrest.responder.standard.StandardErrorResponder;
 import name.martingeisse.grumpyrest.stringparser.FromStringParser;
 import name.martingeisse.grumpyrest.stringparser.FromStringParserRegistry;
@@ -22,7 +23,6 @@ import name.martingeisse.grumpyrest.stringparser.standard.StringFromStringParser
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +42,7 @@ public final class RestApi {
         // responder factories
         addResponderFactory(new IdentityResponderFactory());
         addResponderFactory(new JsonResponderFactory());
+        addResponderFactory(new NullResponderFactory());
 
         // from-string parsers
         addFromStringParser(new StringFromStringParser());
@@ -100,7 +101,7 @@ public final class RestApi {
         return null;
     }
 
-    public void handle(RequestCycle requestCycle) throws IOException {
+    public void handle(RequestCycle requestCycle) {
         try {
 
             // run the handler
