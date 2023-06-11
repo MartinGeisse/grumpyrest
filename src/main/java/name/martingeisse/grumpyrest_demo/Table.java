@@ -60,6 +60,10 @@ public final class Table<T> {
         return isIdInRange(id) ? rows.get(id) : null;
     }
 
+    public synchronized boolean exists(int id) {
+        return getOrNull(id) != null;
+    }
+
     public synchronized void replace(int id, T row) {
         Objects.requireNonNull(row, "row");
         if (!isValidId(id)) {

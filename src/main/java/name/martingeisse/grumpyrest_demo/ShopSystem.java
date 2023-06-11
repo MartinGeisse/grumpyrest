@@ -10,6 +10,8 @@ import com.google.common.collect.ImmutableList;
 import name.martingeisse.grumpyjson.builtin.helper_types.NullableField;
 import name.martingeisse.grumpyrest.RequestCycle;
 import name.martingeisse.grumpyrest.RestApi;
+import name.martingeisse.grumpyrest.responder.FinishRequestException;
+import name.martingeisse.grumpyrest.responder.standard.StandardErrorResponder;
 
 /**
  *
@@ -182,6 +184,9 @@ public final class ShopSystem {
     public Void handleAddToCart(RequestCycle requestCycle) throws Exception {
         int userId = requestCycle.getPathArguments().get(0).getValue(Integer.class);
         AddToCartRequest request = requestCycle.parseBody(AddToCartRequest.class);
+        if (!products.exists(request.productId)) {
+            throw new FinishRequestException(new StandardErrorResponder(400, "unknown product id"));
+        }
         var existingCartLineItem = cartLineItems.getFirst(c -> c.userId == userId && c.productId == request.productId);
         if (existingCartLineItem == null) {
             cartLineItems.insert(new CartLineItem(userId, request.productId, request.quantity));
