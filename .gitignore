@@ -1,3 +1,5 @@
 /.idea
 /.gradle
-/build
+/grumpyjson/build
+/grumpyrest/build
+/grumpyrest-demo/build

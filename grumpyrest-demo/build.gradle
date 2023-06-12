@@ -39,6 +39,10 @@ repositories {
 
 dependencies {
 
+	// other sub-porojects
+	implementation project(':grumpyjson')
+	implementation project(':grumpyrest')
+
 	// common helper libraries
 	implementation 'org.apache.commons:commons-lang3:3.12.0'
 	implementation 'commons-io:commons-io:2.12.0'
@@ -66,5 +70,8 @@ dependencies {
 	implementation 'org.eclipse.jetty:jetty-jaas:11.0.15'
 	implementation 'org.eclipse.jetty:jetty-plus:11.0.15'
 	implementation 'org.eclipse.jetty.toolchain:jetty-test-helper:6.0'
+
+	// testing
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
 
 }
