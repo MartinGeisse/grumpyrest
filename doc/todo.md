@@ -1,8 +1,6 @@
 
 Maven integration.
 
-detach from Jetty
-
 I'd say making a better README.md is your #1 priority. 
 * example: https://github.com/getjackd/jackd
 
