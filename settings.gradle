@@ -1,0 +1,3 @@
+include 'grumpyjson'
+include 'grumpyrest'
+include 'grumpyrest-demo'
