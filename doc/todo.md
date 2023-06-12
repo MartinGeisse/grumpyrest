@@ -1,5 +1,5 @@
 
-Maven integration.
+Maven integration (needs documentation): ./gradlew publishToMavenLocal
 
 I'd say making a better README.md is your #1 priority. 
 * example: https://github.com/getjackd/jackd
