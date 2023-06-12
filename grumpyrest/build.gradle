@@ -53,7 +53,7 @@ dependencies {
 	compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 
 	// testing
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
 
 
 }

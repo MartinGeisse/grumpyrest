@@ -71,6 +71,6 @@ dependencies {
 	implementation 'org.eclipse.jetty.toolchain:jetty-test-helper:6.0'
 
 	// testing
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
 
 }
