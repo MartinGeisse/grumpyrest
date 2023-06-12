@@ -6,6 +6,33 @@ streams, and minimizes the use of reflection. Instead,
 * it calls constructors to create dependency objects, and passes constructor parameters to inject them
 * it uses threads to achieve parallelism, and in particular virtual threads for highly parallel I/O
 
+## Simple Example
+
+    record MakeGreetingRequest(String name, OptionalField<String> addendum) {}
+    record MakeGreetingResponse(String greeting) {}
+    
+    ...
+    
+    RestApi api = new RestApi();
+    api.addRoute("/make-greeting", requestCycle -> {
+        MakeGreetingRequest request = requestCycle.parseBody(MakeGreetingRequest.class);
+        if (request.addendum.isPresent()) {
+            return new MakeGreetingResponse("Hello, " + request.name + "! " + request.addendum.getValue());
+        } else {
+            return new MakeGreetingResponse("Hello, " + request.name + "!");
+        }
+    });
+
+Request 1: `{"name": "Joe"}`
+
+Response 1: `{"greeting": "Hello, Joe!"}`
+
+Request 2: `{"name": "Joe", "addendum": "Nice to meet you."}`
+
+Response 2: `{"greeting": "Hello, Joe! Nice to meet you."}`
+
+## Core Idea
+
 Particular differences with typical REST frameworks:
 * To mount an endpoint to a URL, you do not annotate the handler method. Instead, you call a mount method and pass the
   handler as a parameter.
@@ -26,28 +53,6 @@ Particular differences with typical REST frameworks:
   bend these rules for specific types or fields, use an appropriate type for that which defines a relaxed mapping.
   If you want to bend these rules for all of your JSON mapping, replace the built-in type adapters by your own which
   define a relaxed mapping.
-
-## How does this look in code?
-
-Here's a simple API that builds a greeting:
-
-    RestApi api = new RestApi();
-    api.addRoute("/make-greeting", requestCycle -> {
-        MakeGreetingRequest request = requestCycle.parseBody(MakeGreetingRequest.class);
-        if (request.addendum.isPresent()) {
-            return new MakeGreetingResponse("Hello, " + request.name + "! " + request.addendum.getValue());
-        } else {
-            return new MakeGreetingResponse("Hello, " + request.name + "!");
-        }
-    });
-
-Request 1: `{"name": "Joe"}`
-
-Response 1: `{"greeting": "Hello, Joe!"}`
-
-Request 2: `{"name": "Joe", "addendum": "Nice to meet you."}`
-
-Response 2: `{"greeting": "Hello, Joe! Nice to meet you."}`
 
 ## What about performance?
 
