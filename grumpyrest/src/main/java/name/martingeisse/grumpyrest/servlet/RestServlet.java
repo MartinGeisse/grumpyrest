@@ -12,8 +12,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import name.martingeisse.grumpyrest.RequestCycle;
 import name.martingeisse.grumpyrest.RestApi;
 
-import java.io.IOException;
-
 public class RestServlet extends HttpServlet {
 
     private final RestApi api;
