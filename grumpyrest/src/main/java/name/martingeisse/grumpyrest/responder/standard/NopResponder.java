@@ -6,7 +6,7 @@
  */
 package name.martingeisse.grumpyrest.responder.standard;
 
-import name.martingeisse.grumpyrest.RequestCycle;
+import name.martingeisse.grumpyrest.ResponseTransmitter;
 import name.martingeisse.grumpyrest.responder.Responder;
 
 /**
@@ -18,7 +18,7 @@ public class NopResponder implements Responder {
     public static final NopResponder INSTANCE = new NopResponder();
 
     @Override
-    public void respond(RequestCycle requestCycle) {
+    public void respond(ResponseTransmitter responseTransmitter) {
     }
 
 }

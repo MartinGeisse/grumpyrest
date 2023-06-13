@@ -9,7 +9,7 @@ package name.martingeisse.grumpyrest.responder.standard;
 import com.google.common.collect.ImmutableList;
 import name.martingeisse.grumpyjson.FieldErrorNode;
 import name.martingeisse.grumpyjson.JsonValidationException;
-import name.martingeisse.grumpyrest.RequestCycle;
+import name.martingeisse.grumpyrest.ResponseTransmitter;
 import name.martingeisse.grumpyrest.responder.Responder;
 
 import java.io.IOException;
@@ -69,13 +69,10 @@ public record StandardErrorResponder(int status, String message, ImmutableList<F
     }
 
     @Override
-    public void respond(RequestCycle requestCycle) throws IOException {
-        var servletResponse = requestCycle.getServletResponse();
-        servletResponse.setStatus(status);
-        servletResponse.setContentType("application/json");
-
-        Body body = new Body(message, fields);
-        requestCycle.getApi().getJsonEngine().writeTo(body, servletResponse.getOutputStream());
+    public void respond(ResponseTransmitter responseTransmitter) throws IOException {
+        responseTransmitter.setStatus(status);
+        responseTransmitter.setContentType("application/json");
+        responseTransmitter.writeJson(new Body(message, fields));
     }
 
     public record Field(String path, String message) {}

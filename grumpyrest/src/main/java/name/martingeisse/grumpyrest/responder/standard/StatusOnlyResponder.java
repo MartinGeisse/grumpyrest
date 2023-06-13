@@ -1,6 +1,6 @@
 package name.martingeisse.grumpyrest.responder.standard;
 
-import name.martingeisse.grumpyrest.RequestCycle;
+import name.martingeisse.grumpyrest.ResponseTransmitter;
 import name.martingeisse.grumpyrest.responder.Responder;
 
 /**
@@ -15,8 +15,8 @@ public final class StatusOnlyResponder implements Responder {
     }
 
     @Override
-    public void respond(RequestCycle requestCycle) {
-        requestCycle.getServletResponse().setStatus(status);
+    public void respond(ResponseTransmitter responseTransmitter) {
+        responseTransmitter.setStatus(status);
     }
 
 }
