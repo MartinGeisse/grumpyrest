@@ -15,9 +15,10 @@ public interface HttpResponse {
     /**
      * Transmits this response using the specified response transmitter.
      *
-     * Note: If the implementation has to access other things from the {@link RequestCycle}, then these have to be
-     * passed to the implementation by another mechanism. This interface tries to keep the dependency between the
-     * two minimal.
+     * Note: This method only takes the response transmitter. If the implementation has to access other things from the
+     * {@link RequestCycle} to transmit itself, e.g. access request parameters on-the-fly, then these things have to be
+     * passed to the implementation by another mechanism. This interface tries to keep the dependency between the two
+     * minimal.
      */
     void transmit(ResponseTransmitter responseTransmitter) throws IOException;
 
