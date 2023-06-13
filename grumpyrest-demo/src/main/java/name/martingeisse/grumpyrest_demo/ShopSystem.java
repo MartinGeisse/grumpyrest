@@ -8,7 +8,7 @@ package name.martingeisse.grumpyrest_demo;
 
 import com.google.common.collect.ImmutableList;
 import name.martingeisse.grumpyjson.builtin.helper_types.NullableField;
-import name.martingeisse.grumpyrest.RequestCycle;
+import name.martingeisse.grumpyrest.Request;
 import name.martingeisse.grumpyrest.RestApi;
 import name.martingeisse.grumpyrest.response.FinishRequestException;
 import name.martingeisse.grumpyrest.response.standard.StandardErrorResponse;
@@ -123,8 +123,8 @@ public final class ShopSystem {
         ImmutableList<ProductLink> products
     ) {}
 
-    public CategoryResponse handleGetCategory(RequestCycle requestCycle) throws Exception {
-        int id = requestCycle.getPathArguments().get(0).getValue(Integer.class);
+    public CategoryResponse handleGetCategory(Request request) throws Exception {
+        int id = request.getPathArguments().get(0).getValue(Integer.class);
         Category category = categories.getRestEquivalent(id);
         Category parentCategory = category.parentId() < 0 ? null : categories.get(category.parentId());
         return new CategoryResponse(
@@ -149,8 +149,8 @@ public final class ShopSystem {
         int unitPrice
     ) {}
 
-    public ProductResponse handleGetProduct(RequestCycle requestCycle) throws Exception {
-        int id = requestCycle.getPathArguments().get(0).getValue(Integer.class);
+    public ProductResponse handleGetProduct(Request request) throws Exception {
+        int id = request.getPathArguments().get(0).getValue(Integer.class);
         Product product = products.getRestEquivalent(id);
         Category category = categories.get(product.categoryId());
         return new ProductResponse(
@@ -175,8 +175,8 @@ public final class ShopSystem {
 
     record GetCartResponseLineItem(ShopSystem.ProductLink productLink, int quantity) {}
 
-    public GetCartResponse handleGetCart(RequestCycle requestCycle) throws Exception {
-        int userId = requestCycle.getPathArguments().get(0).getValue(Integer.class);
+    public GetCartResponse handleGetCart(Request request) throws Exception {
+        int userId = request.getPathArguments().get(0).getValue(Integer.class);
         return new GetCartResponse(ImmutableList.copyOf(cartLineItems.filterMap((_id, cartLineItem) ->
             cartLineItem.userId == userId
                 ? new GetCartResponseLineItem(getProductLink(cartLineItem.productId), cartLineItem.quantity)
@@ -187,26 +187,26 @@ public final class ShopSystem {
     // the user comes from the URL, in a later version probably from the authentication header
     record AddToCartRequest(int productId, int quantity) {}
 
-    public Void handleAddToCart(RequestCycle requestCycle) throws Exception {
-        int userId = requestCycle.getPathArguments().get(0).getValue(Integer.class);
-        AddToCartRequest request = requestCycle.parseBody(AddToCartRequest.class);
-        if (!products.exists(request.productId)) {
+    public Void handleAddToCart(Request request) throws Exception {
+        int userId = request.getPathArguments().get(0).getValue(Integer.class);
+        AddToCartRequest requestBody = request.parseBody(AddToCartRequest.class);
+        if (!products.exists(requestBody.productId)) {
             throw new FinishRequestException(new StandardErrorResponse(400, "unknown product id"));
         }
-        var existingCartLineItem = cartLineItems.getFirst(c -> c.userId == userId && c.productId == request.productId);
+        var existingCartLineItem = cartLineItems.getFirst(c -> c.userId == userId && c.productId == requestBody.productId);
         if (existingCartLineItem == null) {
-            cartLineItems.insert(new CartLineItem(userId, request.productId, request.quantity));
+            cartLineItems.insert(new CartLineItem(userId, requestBody.productId, requestBody.quantity));
         } else {
-            cartLineItems.replace(existingCartLineItem.getLeft(), new CartLineItem(userId, request.productId,
-                existingCartLineItem.getRight().quantity + request.quantity));
+            cartLineItems.replace(existingCartLineItem.getLeft(), new CartLineItem(userId, requestBody.productId,
+                existingCartLineItem.getRight().quantity + requestBody.quantity));
         }
         return null;
     }
 
 
     // the user comes from the URL
-    public Void handleClearCart(RequestCycle requestCycle) throws Exception {
-        int userId = requestCycle.getPathArguments().get(0).getValue(Integer.class);
+    public Void handleClearCart(Request request) throws Exception {
+        int userId = request.getPathArguments().get(0).getValue(Integer.class);
         cartLineItems.deleteIf(c -> c.userId == userId);
         return null;
     }
@@ -226,8 +226,8 @@ public final class ShopSystem {
 
     record GetOrderHistoryResponseLineItem(int quantity, String name, int unitPrice) {}
 
-    public GetOrderHistoryResponse handleGetOrderHistory(RequestCycle requestCycle) throws Exception {
-        int userId = requestCycle.getPathArguments().get(0).getValue(Integer.class);
+    public GetOrderHistoryResponse handleGetOrderHistory(Request request) throws Exception {
+        int userId = request.getPathArguments().get(0).getValue(Integer.class);
         return new GetOrderHistoryResponse(orders.filterMap((orderId, order) ->
             order.userId != userId ? null : new GetOrderHistoryResponseOrder(orderLineItems.filterMap((_ignored, lineItem) ->
                 lineItem.orderId != orderId ? null : new GetOrderHistoryResponseLineItem(lineItem.quantity, lineItem.name, lineItem.unitPrice)
@@ -235,8 +235,8 @@ public final class ShopSystem {
         ));
     }
 
-    public Void handlePlaceOrder(RequestCycle requestCycle) throws Exception {
-        int userId = requestCycle.getPathArguments().get(0).getValue(Integer.class);
+    public Void handlePlaceOrder(Request request) throws Exception {
+        int userId = request.getPathArguments().get(0).getValue(Integer.class);
         if (!cartLineItems.existsAny(c -> c.userId == userId)) {
             throw new FinishRequestException(new StandardErrorResponse(400, "cart is empty"));
         }
