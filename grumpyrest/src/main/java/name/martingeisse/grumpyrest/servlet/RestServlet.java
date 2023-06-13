@@ -23,23 +23,23 @@ public class RestServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        api.handle(new RequestCycle(api, request, response));
+    protected void doGet(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws IOException {
+        api.handle(new RequestCycle(api, servletRequest, servletResponse));
     }
 
     @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        api.handle(new RequestCycle(api, request, response));
+    protected void doPut(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws IOException {
+        api.handle(new RequestCycle(api, servletRequest, servletResponse));
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        api.handle(new RequestCycle(api, request, response));
+    protected void doPost(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws IOException {
+        api.handle(new RequestCycle(api, servletRequest, servletResponse));
     }
 
     @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        api.handle(new RequestCycle(api, request, response));
+    protected void doDelete(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws IOException {
+        api.handle(new RequestCycle(api, servletRequest, servletResponse));
     }
 
 }

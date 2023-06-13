@@ -16,7 +16,7 @@ public final class StatusOnlyResponder implements Responder {
 
     @Override
     public void respond(RequestCycle requestCycle) {
-        requestCycle.getResponse().setStatus(status);
+        requestCycle.getServletResponse().setStatus(status);
     }
 
 }

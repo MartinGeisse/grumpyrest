@@ -70,12 +70,12 @@ public record StandardErrorResponder(int status, String message, ImmutableList<F
 
     @Override
     public void respond(RequestCycle requestCycle) throws IOException {
-        var response = requestCycle.getResponse();
-        response.setStatus(status);
-        response.setContentType("application/json");
+        var servletResponse = requestCycle.getServletResponse();
+        servletResponse.setStatus(status);
+        servletResponse.setContentType("application/json");
 
         Body body = new Body(message, fields);
-        requestCycle.getApi().getJsonEngine().writeTo(body, response.getOutputStream());
+        requestCycle.getApi().getJsonEngine().writeTo(body, servletResponse.getOutputStream());
     }
 
     public record Field(String path, String message) {}

@@ -22,11 +22,11 @@ public final class JsonResponderFactory implements ResponderFactory {
 
     private Responder createResponderForSupportedValue(Object value) {
         return requestCycle -> {
-            var response = requestCycle.getResponse();
-            response.setStatus(200);
-            response.setContentType("application/json");
+            var servletResponse = requestCycle.getServletResponse();
+            servletResponse.setStatus(200);
+            servletResponse.setContentType("application/json");
             // use an OutputStream because we don't rely on the servlet container to handle the encoding correctly
-            requestCycle.getApi().getJsonEngine().writeTo(value, response.getOutputStream());
+            requestCycle.getApi().getJsonEngine().writeTo(value, servletResponse.getOutputStream());
         };
     }
 

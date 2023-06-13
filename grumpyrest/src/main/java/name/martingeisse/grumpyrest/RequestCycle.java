@@ -28,18 +28,18 @@ import java.util.*;
 public final class RequestCycle {
 
     private final RestApi api;
-    private final HttpServletRequest request;
-    private final HttpServletResponse response;
+    private final HttpServletRequest servletRequest;
+    private final HttpServletResponse servletResponse;
     private final ImmutableList<String> pathSegments;
     private Route matchedRoute;
     private ImmutableList<PathArgument> pathArguments;
 
-    public RequestCycle(RestApi api, HttpServletRequest request, HttpServletResponse response) {
+    public RequestCycle(RestApi api, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
         this.api = api;
-        this.request = request;
-        this.response = response;
+        this.servletRequest = servletRequest;
+        this.servletResponse = servletResponse;
 
-        String pathText = request.getServletPath();
+        String pathText = servletRequest.getServletPath();
         if (pathText == null) {
             this.pathSegments = ImmutableList.of();
         } else {
@@ -51,12 +51,12 @@ public final class RequestCycle {
         return api;
     }
 
-    public HttpServletRequest getRequest() {
-        return request;
+    public HttpServletRequest getServletRequest() {
+        return servletRequest;
     }
 
-    public HttpServletResponse getResponse() {
-        return response;
+    public HttpServletResponse getServletResponse() {
+        return servletResponse;
     }
 
     public ImmutableList<String> getPathSegments() {
@@ -112,12 +112,12 @@ public final class RequestCycle {
     }
 
     private InputStream prepareParse() {
-        String contentType = request.getContentType();
+        String contentType = servletRequest.getContentType();
         if (contentType == null || !contentType.equals("application/json")) {
             throw new FinishRequestException(StandardErrorResponder.JSON_EXPECTED);
         }
         try {
-            return request.getInputStream();
+            return servletRequest.getInputStream();
         } catch (IOException e) {
             throw new FinishRequestException(StandardErrorResponder.IO_ERROR);
         }
@@ -140,7 +140,7 @@ public final class RequestCycle {
     }
 
     public Object parseQuerystring(Type type) throws QuerystringParsingException {
-        Map<String, String[]> querystringMulti = request.getParameterMap();
+        Map<String, String[]> querystringMulti = servletRequest.getParameterMap();
         Map<String, String> querystringSingle = new HashMap<>();
         Map<String, String> errorMap = new HashMap<>();
         for (Map.Entry<String, String[]> entry : querystringMulti.entrySet()) {
