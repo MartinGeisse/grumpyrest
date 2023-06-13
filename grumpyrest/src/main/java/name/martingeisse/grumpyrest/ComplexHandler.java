@@ -6,7 +6,7 @@
  */
 package name.martingeisse.grumpyrest;
 
-public interface Handler {
+public interface ComplexHandler {
 
     Object handle(RequestCycle requestCycle) throws Exception;
 

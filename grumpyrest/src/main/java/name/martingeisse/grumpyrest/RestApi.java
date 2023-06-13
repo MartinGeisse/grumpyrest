@@ -54,12 +54,20 @@ public final class RestApi {
         routes.add(route);
     }
 
-    public void addRoute(Path path, Handler handler) {
+    public void addRoute(Path path, ComplexHandler handler) {
         addRoute(new Route(path, handler));
     }
 
-    public void addRoute(String path, Handler handler) {
-        addRoute(Path.parse(path), handler);
+    public void addRoute(String path, ComplexHandler handler) {
+        addRoute(new Route(path, handler));
+    }
+
+    public void addRoute(Path path, SimpleHandler handler) {
+        addRoute(new Route(path, handler));
+    }
+
+    public void addRoute(String path, SimpleHandler handler) {
+        addRoute(new Route(path, handler));
     }
 
     public List<Route> getRoutes() {

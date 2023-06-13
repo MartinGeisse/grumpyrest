@@ -8,7 +8,19 @@ package name.martingeisse.grumpyrest;
 
 import name.martingeisse.grumpyrest.path.Path;
 
-public record Route(Path path, Handler handler) {
+public record Route(Path path, ComplexHandler handler) {
+
+    public Route(String path, ComplexHandler handler) {
+        this(Path.parse(path), handler);
+    }
+
+    public Route(Path path, SimpleHandler handler) {
+        this(path, (RequestCycle requestCycle) -> handler.handle(requestCycle.getHighlevelRequest()));
+    }
+
+    public Route(String path, SimpleHandler handler) {
+        this(Path.parse(path), handler);
+    }
 
     public Object handle(RequestCycle requestCycle) throws Exception {
         return handler.handle(requestCycle);

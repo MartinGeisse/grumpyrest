@@ -36,6 +36,8 @@ public final class RequestCycle {
     private final ImmutableList<String> pathSegments;
     private Route matchedRoute;
     private ImmutableList<PathArgument> pathArguments;
+
+    private final Request highlevelRequest;
     private final ResponseTransmitter responseTransmitter;
 
     public RequestCycle(RestApi api, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
@@ -50,44 +52,8 @@ public final class RequestCycle {
             this.pathSegments = ImmutableList.copyOf(PathUtil.splitIntoSegments(pathText));
         }
 
-        this.responseTransmitter = new ResponseTransmitter() {
-
-            @Override
-            public void setStatus(int status) {
-                servletResponse.setStatus(status);
-            }
-
-            @Override
-            public void setContentType(String contentType) {
-                servletResponse.setContentType(contentType);
-            }
-
-            @Override
-            public void addCustomHeader(String name, String value) {
-                servletResponse.addHeader(name, value);
-            }
-
-            @Override
-            public OutputStream getOutputStream() throws IOException {
-                return servletResponse.getOutputStream();
-            }
-
-            @Override
-            public void writeJson(Object value) throws JsonGenerationException, IOException {
-                api.getJsonEngine().writeTo(value, servletResponse.getOutputStream());
-            }
-
-            @Override
-            public void writeJson(Object value, TypeToken<?> typeToken) throws JsonGenerationException, IOException {
-                api.getJsonEngine().writeTo(value, typeToken, servletResponse.getOutputStream());
-            }
-
-            @Override
-            public void writeJson(Object value, Type type) throws JsonGenerationException, IOException {
-                api.getJsonEngine().writeTo(value, type, servletResponse.getOutputStream());
-            }
-
-        };
+        this.highlevelRequest = new MyRequest();
+        this.responseTransmitter = new MyResponseTransmitter();
     }
 
     public RestApi getApi() {
@@ -108,6 +74,10 @@ public final class RequestCycle {
 
     public Route getMatchedRoute() {
         return matchedRoute;
+    }
+
+    public Request getHighlevelRequest() {
+        return highlevelRequest;
     }
 
     public ResponseTransmitter getResponseTransmitter() {
@@ -220,6 +190,138 @@ public final class RequestCycle {
             throw originalException;
         }
         return result;
+    }
+
+    private final class MyResponseTransmitter implements ResponseTransmitter {
+
+        @Override
+        public void setStatus(int status) {
+            servletResponse.setStatus(status);
+        }
+
+        @Override
+        public void setContentType(String contentType) {
+            servletResponse.setContentType(contentType);
+        }
+
+        @Override
+        public void addCustomHeader(String name, String value) {
+            servletResponse.addHeader(name, value);
+        }
+
+        @Override
+        public OutputStream getOutputStream() throws IOException {
+            return servletResponse.getOutputStream();
+        }
+
+        @Override
+        public void writeJson(Object value) throws JsonGenerationException, IOException {
+            api.getJsonEngine().writeTo(value, servletResponse.getOutputStream());
+        }
+
+        @Override
+        public void writeJson(Object value, TypeToken<?> typeToken) throws JsonGenerationException, IOException {
+            api.getJsonEngine().writeTo(value, typeToken, servletResponse.getOutputStream());
+        }
+
+        @Override
+        public void writeJson(Object value, Type type) throws JsonGenerationException, IOException {
+            api.getJsonEngine().writeTo(value, type, servletResponse.getOutputStream());
+        }
+
+    }
+
+    private class MyRequest implements Request {
+
+        public ImmutableList<PathArgument> getPathArguments() {
+            if (pathArguments == null) {
+                throw new IllegalStateException("no route matched yet");
+            }
+            return pathArguments;
+        }
+
+        public Object parseQuerystring(Type type) throws QuerystringParsingException {
+            Map<String, String[]> querystringMulti = servletRequest.getParameterMap();
+            Map<String, String> querystringSingle = new HashMap<>();
+            Map<String, String> errorMap = new HashMap<>();
+            for (Map.Entry<String, String[]> entry : querystringMulti.entrySet()) {
+                String[] values = entry.getValue();
+                for (String value : values) {
+                    if (querystringSingle.put(entry.getKey(), value) != null) {
+                        errorMap.put(entry.getKey(), ExceptionMessages.DUPLICATE_PARAMETER);
+                    }
+                }
+            }
+            Object result = null;
+            QuerystringParsingException originalException = null;
+            try {
+                result = api.getQuerystringParserRegistry().getParser(type).parse(querystringSingle, type);
+                if (result == null) {
+                    throw new QuerystringParsingException(ImmutableMap.of("(root)", "querystring parser returned null"));
+                }
+            } catch (QuerystringParsingException e) {
+                originalException = e;
+                // duplicate-parameter errors take precedence here
+                for (Map.Entry<String, String> entry : e.getFieldErrors().entrySet()) {
+                    errorMap.putIfAbsent(entry.getKey(), entry.getValue());
+                }
+            }
+            if (!errorMap.isEmpty()) {
+                throw new QuerystringParsingException(ImmutableMap.copyOf(errorMap));
+            }
+            if (result == null) {
+                // this can only happen if the originalException did not contain any errors
+                throw originalException;
+            }
+            return result;
+        }
+
+        public <T> T parseBody(Class<T> clazz) {
+            try {
+                return api.getJsonEngine().parse(prepareParse(), clazz);
+            } catch (JsonValidationException e) {
+                throw new FinishRequestException(StandardErrorResponse.requestBodyValidationFailed(e));
+            }
+        }
+
+        public <T> T parseBody(TypeToken<T> typeToken) {
+            try {
+                return api.getJsonEngine().parse(prepareParse(), typeToken);
+            } catch (JsonValidationException e) {
+                throw new FinishRequestException(StandardErrorResponse.requestBodyValidationFailed(e));
+            }
+        }
+
+        public Object parseBody(Type type) {
+            try {
+                return api.getJsonEngine().parse(prepareParse(), type);
+            } catch (JsonValidationException e) {
+                throw new FinishRequestException(StandardErrorResponse.requestBodyValidationFailed(e));
+            }
+        }
+
+        private InputStream prepareParse() {
+            String contentType = servletRequest.getContentType();
+            if (contentType == null || !contentType.equals("application/json")) {
+                throw new FinishRequestException(StandardErrorResponse.JSON_EXPECTED);
+            }
+            try {
+                return servletRequest.getInputStream();
+            } catch (IOException e) {
+                throw new FinishRequestException(StandardErrorResponse.IO_ERROR);
+            }
+        }
+
+
+        public <T> T parseQuerystring(Class<T> clazz) throws QuerystringParsingException {
+            return clazz.cast(parseQuerystring((Type)clazz));
+        }
+
+        public <T> T parseQuerystring(TypeToken<T> typeToken) throws QuerystringParsingException {
+            //noinspection unchecked
+            return (T)parseQuerystring(typeToken.getType());
+        }
+
     }
 
 }
