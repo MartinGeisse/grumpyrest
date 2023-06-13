@@ -12,6 +12,7 @@ import com.google.gson.reflect.TypeToken;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import name.martingeisse.grumpyjson.ExceptionMessages;
+import name.martingeisse.grumpyjson.JsonGenerationException;
 import name.martingeisse.grumpyjson.JsonValidationException;
 import name.martingeisse.grumpyrest.responder.FinishRequestException;
 import name.martingeisse.grumpyrest.path.PathSegment;
@@ -22,6 +23,7 @@ import name.martingeisse.grumpyrest.responder.standard.StandardErrorResponder;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -33,6 +35,7 @@ public final class RequestCycle {
     private final ImmutableList<String> pathSegments;
     private Route matchedRoute;
     private ImmutableList<PathArgument> pathArguments;
+    private final ResponseTransmitter responseTransmitter;
 
     public RequestCycle(RestApi api, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
         this.api = api;
@@ -45,6 +48,45 @@ public final class RequestCycle {
         } else {
             this.pathSegments = ImmutableList.copyOf(PathUtil.splitIntoSegments(pathText));
         }
+
+        this.responseTransmitter = new ResponseTransmitter() {
+
+            @Override
+            public void setStatus(int status) {
+                servletResponse.setStatus(status);
+            }
+
+            @Override
+            public void setContentType(String contentType) {
+                servletResponse.setContentType(contentType);
+            }
+
+            @Override
+            public void addCustomHeader(String name, String value) {
+                servletResponse.addHeader(name, value);
+            }
+
+            @Override
+            public OutputStream getOutputStream() throws IOException {
+                return servletResponse.getOutputStream();
+            }
+
+            @Override
+            public void writeJson(Object value) throws JsonGenerationException, IOException {
+                api.getJsonEngine().writeTo(value, servletResponse.getOutputStream());
+            }
+
+            @Override
+            public void writeJson(Object value, TypeToken<?> typeToken) throws JsonGenerationException, IOException {
+                api.getJsonEngine().writeTo(value, typeToken, servletResponse.getOutputStream());
+            }
+
+            @Override
+            public void writeJson(Object value, Type type) throws JsonGenerationException, IOException {
+                api.getJsonEngine().writeTo(value, type, servletResponse.getOutputStream());
+            }
+
+        };
     }
 
     public RestApi getApi() {
@@ -65,6 +107,10 @@ public final class RequestCycle {
 
     public Route getMatchedRoute() {
         return matchedRoute;
+    }
+
+    public ResponseTransmitter getResponseTransmitter() {
+        return responseTransmitter;
     }
 
     void setMatchedRoute(Route matchedRoute) {
