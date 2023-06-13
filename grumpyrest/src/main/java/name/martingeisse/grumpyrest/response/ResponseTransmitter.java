@@ -1,16 +1,14 @@
-package name.martingeisse.grumpyrest;
+package name.martingeisse.grumpyrest.response;
 
 import com.google.gson.reflect.TypeToken;
 import name.martingeisse.grumpyjson.JsonGenerationException;
-import name.martingeisse.grumpyrest.responder.Responder;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
-import java.util.Objects;
 
 /**
- * This interface is used by the {@link Responder} to transmit itself to the client.
+ * This interface is used by the {@link HttpResponse} to transmit itself to the client.
  */
 public interface ResponseTransmitter {
 

@@ -7,8 +7,8 @@
 package name.martingeisse.grumpyrest_demo;
 
 import com.google.common.collect.ImmutableList;
-import name.martingeisse.grumpyrest.responder.FinishRequestException;
-import name.martingeisse.grumpyrest.responder.standard.StandardErrorResponder;
+import name.martingeisse.grumpyrest.response.FinishRequestException;
+import name.martingeisse.grumpyrest.response.standard.StandardErrorResponse;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -52,7 +52,7 @@ public final class Table<T> {
     public synchronized T getRestEquivalent(int id) {
         T result = getOrNull(id);
         if (result == null) {
-            throw new FinishRequestException(StandardErrorResponder.ID_NOT_FOUND);
+            throw new FinishRequestException(StandardErrorResponse.ID_NOT_FOUND);
         }
         return result;
     }

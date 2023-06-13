@@ -14,12 +14,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import name.martingeisse.grumpyjson.ExceptionMessages;
 import name.martingeisse.grumpyjson.JsonGenerationException;
 import name.martingeisse.grumpyjson.JsonValidationException;
-import name.martingeisse.grumpyrest.responder.FinishRequestException;
+import name.martingeisse.grumpyrest.response.FinishRequestException;
 import name.martingeisse.grumpyrest.path.PathSegment;
 import name.martingeisse.grumpyrest.path.PathUtil;
 import name.martingeisse.grumpyrest.path.VariablePathSegment;
 import name.martingeisse.grumpyrest.querystring.QuerystringParsingException;
-import name.martingeisse.grumpyrest.responder.standard.StandardErrorResponder;
+import name.martingeisse.grumpyrest.response.ResponseTransmitter;
+import name.martingeisse.grumpyrest.response.standard.StandardErrorResponse;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -137,7 +138,7 @@ public final class RequestCycle {
         try {
             return api.getJsonEngine().parse(prepareParse(), clazz);
         } catch (JsonValidationException e) {
-            throw new FinishRequestException(StandardErrorResponder.requestBodyValidationFailed(e));
+            throw new FinishRequestException(StandardErrorResponse.requestBodyValidationFailed(e));
         }
     }
 
@@ -145,7 +146,7 @@ public final class RequestCycle {
         try {
             return api.getJsonEngine().parse(prepareParse(), typeToken);
         } catch (JsonValidationException e) {
-            throw new FinishRequestException(StandardErrorResponder.requestBodyValidationFailed(e));
+            throw new FinishRequestException(StandardErrorResponse.requestBodyValidationFailed(e));
         }
     }
 
@@ -153,19 +154,19 @@ public final class RequestCycle {
         try {
             return api.getJsonEngine().parse(prepareParse(), type);
         } catch (JsonValidationException e) {
-            throw new FinishRequestException(StandardErrorResponder.requestBodyValidationFailed(e));
+            throw new FinishRequestException(StandardErrorResponse.requestBodyValidationFailed(e));
         }
     }
 
     private InputStream prepareParse() {
         String contentType = servletRequest.getContentType();
         if (contentType == null || !contentType.equals("application/json")) {
-            throw new FinishRequestException(StandardErrorResponder.JSON_EXPECTED);
+            throw new FinishRequestException(StandardErrorResponse.JSON_EXPECTED);
         }
         try {
             return servletRequest.getInputStream();
         } catch (IOException e) {
-            throw new FinishRequestException(StandardErrorResponder.IO_ERROR);
+            throw new FinishRequestException(StandardErrorResponse.IO_ERROR);
         }
     }
 

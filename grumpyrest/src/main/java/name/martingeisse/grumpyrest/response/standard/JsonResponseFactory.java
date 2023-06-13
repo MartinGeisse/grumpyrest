@@ -4,23 +4,23 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-package name.martingeisse.grumpyrest.responder.standard;
+package name.martingeisse.grumpyrest.response.standard;
 
 import name.martingeisse.grumpyrest.RequestCycle;
-import name.martingeisse.grumpyrest.responder.Responder;
-import name.martingeisse.grumpyrest.responder.ResponderFactory;
+import name.martingeisse.grumpyrest.response.HttpResponse;
+import name.martingeisse.grumpyrest.response.HttpResponseFactory;
 
-public final class JsonResponderFactory implements ResponderFactory {
+public final class JsonResponseFactory implements HttpResponseFactory {
 
     @Override
-    public Responder createResponder(RequestCycle requestCycle, Object value) {
+    public HttpResponse createHttpResponse(RequestCycle requestCycle, Object value) {
         if (value == null || !requestCycle.getApi().getJsonEngine().supportsType(value.getClass())) {
             return null;
         }
-        return createResponderForSupportedValue(value);
+        return createResponseForSupportedValue(value);
     }
 
-    private Responder createResponderForSupportedValue(Object value) {
+    private HttpResponse createResponseForSupportedValue(Object value) {
         return responseTransmitter -> {
             responseTransmitter.setStatus(200);
             responseTransmitter.setContentType("application/json");
