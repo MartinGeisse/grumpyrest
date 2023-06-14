@@ -4,3 +4,5 @@ I'd say making a better README.md is your #1 priority.
 
 compare to Takes
 * https://github.com/yegor256/takes
+
+specify path/querystring parameter defaults by the caller, not the parser
