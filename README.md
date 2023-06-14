@@ -41,6 +41,6 @@ start on how to use it anyway.
 
 # Further Reading
 
-The [howto file](./doc/howto.md) should explain common tasks, but unfortunately doesn't exist yet.
+The [howto file](./doc/howto.md) explains common tasks.
 
 Read the [concept file](./doc/concept.md) to understand the idea behind grumpyrest.
