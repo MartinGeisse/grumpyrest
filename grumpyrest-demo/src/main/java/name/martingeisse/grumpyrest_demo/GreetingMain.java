@@ -45,12 +45,13 @@ public class GreetingMain {
 
         private static RestApi buildApi() {
             RestApi api = new RestApi();
-            api.addRoute("/make-greeting", requestCycle -> {
-                MakeGreetingRequest request = requestCycle.parseBody(MakeGreetingRequest.class);
-                if (request.addendum.isPresent()) {
-                    return new MakeGreetingResponse("Hello, " + request.name + "! " + request.addendum.getValue());
+            api.addRoute("/", request -> "Hello World!");
+            api.addRoute("/make-greeting", request -> {
+                MakeGreetingRequest requestBody = request.parseBody(MakeGreetingRequest.class);
+                if (requestBody.addendum.isPresent()) {
+                    return new MakeGreetingResponse("Hello, " + requestBody.name + "! " + requestBody.addendum.getValue());
                 } else {
-                    return new MakeGreetingResponse("Hello, " + request.name + "!");
+                    return new MakeGreetingResponse("Hello, " + requestBody.name + "!");
                 }
             });
             return api;

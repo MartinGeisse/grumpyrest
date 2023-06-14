@@ -33,18 +33,11 @@ Response 2: `{"greeting": "Hello, Joe! Nice to meet you."}`
 
 # Using grumpyrest
 
-grumpyrest is not yet available on Maven Central. To use it, run the following command in its main folder (the one
-containing the `settings.gradle` file):
+See [Quick Start](./doc/howto/quick-start.md) to get an example project up and running quickly. Also, the
+grumpyrest-demo subproject shows how to use it.
 
-    ./gradlew publishToMavenLocal
-
-This will build and publish the libraries to your local Maven repo in `~/.m2`
-
-You can then refer to it as `name.martingeisse:grumpyrest:0.1`
-
-# Quick Start
-
-For now, the grumpyrest-demo subproject is the easiest way to get an example up and running.
+It is not on Maven Central yet, unfortunately, so I cannot just give the Maven coordinates here. See the quick
+start on how to use it anyway.
 
 # Further Reading
 
