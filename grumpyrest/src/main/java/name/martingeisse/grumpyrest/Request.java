@@ -1,14 +1,14 @@
 package name.martingeisse.grumpyrest;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.reflect.TypeToken;
 import name.martingeisse.grumpyrest.querystring.QuerystringParsingException;
 
 import java.lang.reflect.Type;
+import java.util.List;
 
 public interface Request {
 
-    ImmutableList<PathArgument> getPathArguments();
+    List<PathArgument> getPathArguments();
 
     <T> T parseQuerystring(Class<T> clazz) throws QuerystringParsingException;
     <T> T parseQuerystring(TypeToken<T> typeToken) throws QuerystringParsingException;

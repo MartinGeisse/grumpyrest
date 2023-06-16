@@ -6,13 +6,15 @@
  */
 package name.martingeisse.grumpyrest.path;
 
-import com.google.common.collect.ImmutableList;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public record Path(ImmutableList<PathSegment> segments) {
+public record Path(List<PathSegment> segments) {
+
+    public Path {
+        segments = List.copyOf(segments);
+    }
 
     // TODO allow match extra incoming segments
 
@@ -23,10 +25,10 @@ public record Path(ImmutableList<PathSegment> segments) {
         for (String segmentSpec : segmentSpecs) {
             segments.add(PathSegment.parse(segmentSpec));
         }
-        return new Path(ImmutableList.copyOf(segments));
+        return new Path(segments);
     }
 
-    public boolean matchesSegments(ImmutableList<String> argumentSegments) {
+    public boolean matchesSegments(List<String> argumentSegments) {
         Objects.requireNonNull(argumentSegments);
         if (argumentSegments.size() != segments.size()) {
             return false;

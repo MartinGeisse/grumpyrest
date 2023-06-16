@@ -32,9 +32,9 @@ public final class RequestCycle {
     private final RestApi api;
     private final HttpServletRequest servletRequest;
     private final HttpServletResponse servletResponse;
-    private final ImmutableList<String> pathSegments;
+    private final List<String> pathSegments;
     private Route matchedRoute;
-    private ImmutableList<PathArgument> pathArguments;
+    private List<PathArgument> pathArguments;
 
     private final Request highlevelRequest;
     private final ResponseTransmitter responseTransmitter;
@@ -46,9 +46,9 @@ public final class RequestCycle {
 
         String pathText = servletRequest.getServletPath();
         if (pathText == null) {
-            this.pathSegments = ImmutableList.of();
+            this.pathSegments = List.of();
         } else {
-            this.pathSegments = ImmutableList.copyOf(PathUtil.splitIntoSegments(pathText));
+            this.pathSegments = List.of(PathUtil.splitIntoSegments(pathText));
         }
 
         this.highlevelRequest = new MyRequest();
@@ -67,7 +67,7 @@ public final class RequestCycle {
         return servletResponse;
     }
 
-    public ImmutableList<String> getPathSegments() {
+    public List<String> getPathSegments() {
         return pathSegments;
     }
 
@@ -86,7 +86,7 @@ public final class RequestCycle {
     void setMatchedRoute(Route matchedRoute) {
         Objects.requireNonNull(matchedRoute, "matchedRoute");
 
-        ImmutableList<PathSegment> matchedRouteSegments = matchedRoute.path().segments();
+        List<PathSegment> matchedRouteSegments = matchedRoute.path().segments();
         if (matchedRouteSegments.size() != pathSegments.size()) {
             throw new IllegalArgumentException("matched route has different number of segments than the path of this request cycle");
         }
@@ -100,7 +100,7 @@ public final class RequestCycle {
         }
 
         this.matchedRoute = matchedRoute;
-        this.pathArguments = ImmutableList.copyOf(newPathArguments);
+        this.pathArguments = List.copyOf(newPathArguments);
     }
 
     public <T> T parseBody(Class<T> clazz) {
@@ -139,7 +139,7 @@ public final class RequestCycle {
         }
     }
 
-    public ImmutableList<PathArgument> getPathArguments() {
+    public List<PathArgument> getPathArguments() {
         if (pathArguments == null) {
             throw new IllegalStateException("no route matched yet");
         }
@@ -232,7 +232,7 @@ public final class RequestCycle {
 
     private class MyRequest implements Request {
 
-        public ImmutableList<PathArgument> getPathArguments() {
+        public List<PathArgument> getPathArguments() {
             if (pathArguments == null) {
                 throw new IllegalStateException("no route matched yet");
             }
