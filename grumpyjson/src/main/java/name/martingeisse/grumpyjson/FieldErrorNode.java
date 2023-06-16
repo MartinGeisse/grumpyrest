@@ -6,7 +6,6 @@
  */
 package name.martingeisse.grumpyjson;
 
-import com.google.common.collect.ImmutableList;
 import name.martingeisse.grumpyjson.util.StringUtil;
 
 import java.util.ArrayList;
@@ -93,11 +92,11 @@ public abstract class FieldErrorNode {
      *
      * @return the flattened errors
      */
-    public final ImmutableList<FlattenedError> flatten() {
+    public final List<FlattenedError> flatten() {
         List<FlattenedError> errors = new ArrayList<>();
         List<String> segments = new ArrayList<>();
         flatten(errors, segments);
-        return ImmutableList.copyOf(errors);
+        return List.copyOf(errors);
     }
 
     protected abstract void flatten(List<FlattenedError> errors, List<String> segments);
@@ -136,7 +135,7 @@ public abstract class FieldErrorNode {
 
         @Override
         protected void flatten(List<FlattenedError> errors, List<String> segments) {
-            errors.add(new FlattenedError(message, ImmutableList.copyOf(segments)));
+            errors.add(new FlattenedError(message, segments));
         }
 
     }
