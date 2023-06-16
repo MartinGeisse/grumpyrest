@@ -51,9 +51,11 @@ repositories {
 
 dependencies {
 
+	// compile-time annotations for static code analysis
+	implementation 'com.google.errorprone:error_prone_annotations:2.19.1'
+
 	// common helper libraries
 	implementation 'org.apache.commons:commons-lang3:3.12.0'
-	implementation 'com.google.guava:guava:31.1-jre'
 
 	// logging
 	implementation 'org.slf4j:slf4j-api:2.0.7'
