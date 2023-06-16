@@ -17,8 +17,8 @@ public class TypeUtil {
      * for these parameters -- instead, obtaining the type arguments to do something with them. This method implements
      * this pattern.
      * <p>
-     * For example, the ImmutableList&lt;...&gt; type adapter wants to know if the requested type is
-     * ImmutableList&lt;...&gt;, that is, is a parameterized type with the raw class ImmutableList and exactly one type
+     * For example, the List&lt;...&gt; type adapter wants to know if the requested type is
+     * List&lt;...&gt;, that is, is a parameterized type with the raw class List and exactly one type
      * argument. (Note that a helper method with a simplified return type exists for the special case of one type
      * argument). It would then call this method, and in return get the type arguments which contain the element type
      * of the list.

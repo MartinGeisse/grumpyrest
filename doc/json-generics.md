@@ -19,7 +19,7 @@ What kinds of list can be supported?
   We probably do not have to detect this case explicitly -- in a non-degenerate case, this will end up asking the
   registry for a type adapter for type "T" which the registry won't have.
 - GenericArrayType types, i.e. List<String>[], T[], List<T>[] -- the first one would work. We simply avoid this case by
-  not using arrays, but ImmutableList.
+  not using arrays but lists.
 
 What we have to do is therefore:
 - support only Class<?> and ParameterizedType, and the latter only if recursively supported

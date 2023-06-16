@@ -6,7 +6,6 @@
  */
 package name.martingeisse.grumpyrest_demo;
 
-import com.google.common.collect.ImmutableList;
 import name.martingeisse.grumpyrest.response.FinishRequestException;
 import name.martingeisse.grumpyrest.response.standard.StandardErrorResponse;
 import org.apache.commons.lang3.tuple.Pair;
@@ -115,7 +114,7 @@ public final class Table<T> {
      * Filters the elements of this table and maps them to a different type. Return null from the body to filter out
      * an element.
      */
-    public synchronized <U> ImmutableList<U> filterMap(BiFunction<Integer, T, U> body) {
+    public synchronized <U> List<U> filterMap(BiFunction<Integer, T, U> body) {
         List<U> result = new ArrayList<>();
         for (int i = 0; i < rows.size(); i++) {
             T row = rows.get(i);
@@ -126,7 +125,7 @@ public final class Table<T> {
                 }
             }
         }
-        return ImmutableList.copyOf(result);
+        return List.copyOf(result);
     }
 
     public synchronized void foreach(BiConsumer<Integer, T> consumer) {

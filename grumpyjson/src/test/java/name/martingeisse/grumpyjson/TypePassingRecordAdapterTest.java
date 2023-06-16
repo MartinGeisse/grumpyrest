@@ -6,14 +6,15 @@
  */
 package name.martingeisse.grumpyjson;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import name.martingeisse.grumpyjson.builtin.ImmutableListAdapter;
+import name.martingeisse.grumpyjson.builtin.ListAdapter;
 import name.martingeisse.grumpyjson.builtin.StringAdapter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static name.martingeisse.grumpyjson.JsonTestUtil.*;
 
@@ -27,13 +28,13 @@ import static name.martingeisse.grumpyjson.JsonTestUtil.*;
  */
 public class TypePassingRecordAdapterTest {
 
-    private record Inner<T>(T best, ImmutableList<T> others) {}
+    private record Inner<T>(T best, List<T> others) {}
     private record Middle<T>(Inner<T> inner) {}
     private record Outer(Middle<String> middle) {}
 
     private final JsonRegistry registry = createRegistry(new StringAdapter());
     {
-        registry.addTypeAdapter(new ImmutableListAdapter(registry));
+        registry.addTypeAdapter(new ListAdapter(registry));
     }
     private final JsonTypeAdapter<Outer> outerAdapter = registry.getTypeAdapter(Outer.class);
 
@@ -44,7 +45,7 @@ public class TypePassingRecordAdapterTest {
         JsonObject middleJson = buildCustomObject("inner", innerJson);
         JsonObject outerJson = buildCustomObject("middle", middleJson);
 
-        ImmutableList<String> otherStrings = ImmutableList.of("bar", "baz");
+        List<String> otherStrings = List.of("bar", "baz");
         Inner<String> innerRecord = new Inner<>("foo", otherStrings);
         Middle<String> middleRecord = new Middle<>(innerRecord);
         Outer outerRecord = new Outer(middleRecord);

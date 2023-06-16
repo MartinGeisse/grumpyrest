@@ -6,15 +6,15 @@
  */
 package name.martingeisse.grumpyjson;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonObject;
-import name.martingeisse.grumpyjson.builtin.ImmutableListAdapter;
 import name.martingeisse.grumpyjson.builtin.IntegerAdapter;
+import name.martingeisse.grumpyjson.builtin.ListAdapter;
 import name.martingeisse.grumpyjson.builtin.StringAdapter;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Type;
+import java.util.List;
 
 import static name.martingeisse.grumpyjson.JsonTestUtil.buildArray;
 import static name.martingeisse.grumpyjson.JsonTestUtil.createRegistry;
@@ -24,16 +24,16 @@ public class ListOfRecordsAdapterTest {
 
     private record Record(int myInt, String myString) {}
 
-    private final TypeToken<ImmutableList<Record>> listOfRecordsTypeToken = new TypeToken<>() {};
+    private final TypeToken<List<Record>> listOfRecordsTypeToken = new TypeToken<>() {};
     private final Type listOfRecordsType = listOfRecordsTypeToken.getType();
 
     private final JsonRegistry registry = createRegistry(new IntegerAdapter(), new StringAdapter());
 
     {
-        registry.addTypeAdapter(new ImmutableListAdapter(registry));
+        registry.addTypeAdapter(new ListAdapter(registry));
     }
 
-    private final JsonTypeAdapter<ImmutableList<Record>> listOfRecordsAdapter =
+    private final JsonTypeAdapter<List<Record>> listOfRecordsAdapter =
             registry.getTypeAdapter(listOfRecordsType);
 
     @Test
@@ -50,13 +50,13 @@ public class ListOfRecordsAdapterTest {
         Record record1 = new Record(12, "foo");
         Record record2 = new Record(34, "bar");
 
-        assertEquals(buildArray(), listOfRecordsAdapter.toJson(ImmutableList.of(), listOfRecordsType));
-        assertEquals(buildArray(object1), listOfRecordsAdapter.toJson(ImmutableList.of(record1), listOfRecordsType));
-        assertEquals(buildArray(object1, object2), listOfRecordsAdapter.toJson(ImmutableList.of(record1, record2), listOfRecordsType));
+        assertEquals(buildArray(), listOfRecordsAdapter.toJson(List.of(), listOfRecordsType));
+        assertEquals(buildArray(object1), listOfRecordsAdapter.toJson(List.of(record1), listOfRecordsType));
+        assertEquals(buildArray(object1, object2), listOfRecordsAdapter.toJson(List.of(record1, record2), listOfRecordsType));
 
-        assertEquals(ImmutableList.of(), listOfRecordsAdapter.fromJson(buildArray(), listOfRecordsType));
-        assertEquals(ImmutableList.of(record1), listOfRecordsAdapter.fromJson(buildArray(object1), listOfRecordsType));
-        assertEquals(ImmutableList.of(record1, record2), listOfRecordsAdapter.fromJson(buildArray(object1, object2), listOfRecordsType));
+        assertEquals(List.of(), listOfRecordsAdapter.fromJson(buildArray(), listOfRecordsType));
+        assertEquals(List.of(record1), listOfRecordsAdapter.fromJson(buildArray(object1), listOfRecordsType));
+        assertEquals(List.of(record1, record2), listOfRecordsAdapter.fromJson(buildArray(object1, object2), listOfRecordsType));
     }
 
 }

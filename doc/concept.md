@@ -59,15 +59,13 @@ A mapping exists between Java records and JSON objects:
 A mapping for non-record objects could be defined, but the strong guarantees about their shape that come from the
 language make the mapping very easy. Also, I just like that they are immutable.
 
-JSON arrays can be mapped to Guava's ImmutableList:
+A JSON array can be mapped to a List:
 
-    ImmutableList.of(1, 2, 3)
+    List.of(1, 2, 3)
 
 <->
 
     [1, 2, 3]
-
-Again, normal List / ArrayList could be mapped too, but I just like ImmutableList.
 
 JSON primitives are mapped to Java's built-in types, both boxed and unboxed. No coercion takes place, so for example
 the number 123 cannot be parsed into a String-typed field (unless you override the type adapter for type String to

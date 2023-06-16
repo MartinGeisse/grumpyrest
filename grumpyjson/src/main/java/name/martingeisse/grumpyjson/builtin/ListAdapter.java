@@ -6,7 +6,6 @@
  */
 package name.martingeisse.grumpyjson.builtin;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import name.martingeisse.grumpyjson.*;
@@ -16,26 +15,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-// TODO if possible, remove guava dependency
-public class ImmutableListAdapter implements JsonTypeAdapter<ImmutableList<?>> {
+/**
+ * This adapter handles type List&lt;...&gt;. It does not handle subclasses such as ArrayList or ImmutableList
+ * because there is no generic way to create instances of such classes while parsing, and the added value of having
+ * such types in simple data transfer classes isn't that great anyway.
+ */
+public class ListAdapter implements JsonTypeAdapter<List<?>> {
 
     private final JsonRegistry registry;
 
-    public ImmutableListAdapter(JsonRegistry registry) {
+    public ListAdapter(JsonRegistry registry) {
         this.registry = registry;
     }
 
     @Override
     public boolean supportsType(Type type) {
-        return TypeUtil.isSingleParameterizedType(type, ImmutableList.class) != null;
+        return TypeUtil.isSingleParameterizedType(type, List.class) != null;
     }
 
     @Override
-    public ImmutableList<?> fromJson(JsonElement json, Type type) throws JsonValidationException {
+    public List<?> fromJson(JsonElement json, Type type) throws JsonValidationException {
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
         if (json instanceof JsonArray array) {
-            Type elementType = TypeUtil.expectSingleParameterizedType(type, ImmutableList.class);
+            Type elementType = TypeUtil.expectSingleParameterizedType(type, List.class);
             @SuppressWarnings("rawtypes") JsonTypeAdapter elementTypeAdapter = registry.getTypeAdapter(elementType);
             List<Object> result = new ArrayList<>();
             FieldErrorNode errorNode = null;
@@ -51,14 +54,14 @@ public class ImmutableListAdapter implements JsonTypeAdapter<ImmutableList<?>> {
             if (errorNode != null) {
                 throw new JsonValidationException(errorNode);
             }
-            return ImmutableList.copyOf(result);
+            return List.copyOf(result);
         }
         throw new JsonValidationException("expected int, found: " + json);
     }
 
     @Override
-    public JsonElement toJson(ImmutableList<?> value, Type type) throws JsonGenerationException {
-        Type elementType = TypeUtil.expectSingleParameterizedType(type, ImmutableList.class);
+    public JsonElement toJson(List<?> value, Type type) throws JsonGenerationException {
+        Type elementType = TypeUtil.expectSingleParameterizedType(type, List.class);
         @SuppressWarnings("rawtypes") JsonTypeAdapter elementTypeAdapter = registry.getTypeAdapter(elementType);
         JsonArray result = new JsonArray();
         FieldErrorNode errorNode = null;

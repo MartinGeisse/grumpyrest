@@ -35,7 +35,7 @@ public class JsonEngine {
         addTypeAdapter(new StringAdapter());
 
         // collection types
-        addTypeAdapter(new ImmutableListAdapter(registry));
+        addTypeAdapter(new ListAdapter(registry));
 
         // helper types
         addTypeAdapter(new FieldMustBeNullAdapter());

@@ -6,12 +6,13 @@
  */
 package name.martingeisse.grumpyrest_demo;
 
-import com.google.common.collect.ImmutableList;
 import name.martingeisse.grumpyjson.builtin.helper_types.NullableField;
 import name.martingeisse.grumpyrest.Request;
 import name.martingeisse.grumpyrest.RestApi;
 import name.martingeisse.grumpyrest.response.FinishRequestException;
 import name.martingeisse.grumpyrest.response.standard.StandardErrorResponse;
+
+import java.util.List;
 
 /**
  *
@@ -119,8 +120,8 @@ public final class ShopSystem {
     record CategoryResponse(
         String name,
         NullableField<CategoryLink> parentCategory,
-        ImmutableList<CategoryLink> childCategories,
-        ImmutableList<ProductLink> products
+        List<CategoryLink> childCategories,
+        List<ProductLink> products
     ) {}
 
     public CategoryResponse handleGetCategory(Request request) throws Exception {
@@ -171,13 +172,13 @@ public final class ShopSystem {
         api.addRoute("/cart/:userId/clear", this::handleClearCart);
     }
 
-    record GetCartResponse(ImmutableList<GetCartResponseLineItem> lineItems) {}
+    record GetCartResponse(List<GetCartResponseLineItem> lineItems) {}
 
     record GetCartResponseLineItem(ProductLink productLink, int quantity) {}
 
     public GetCartResponse handleGetCart(Request request) throws Exception {
         int userId = request.getPathArguments().get(0).getValue(Integer.class);
-        return new GetCartResponse(ImmutableList.copyOf(cartLineItems.filterMap((_id, cartLineItem) ->
+        return new GetCartResponse(List.copyOf(cartLineItems.filterMap((_id, cartLineItem) ->
             cartLineItem.userId == userId
                 ? new GetCartResponseLineItem(getProductLink(cartLineItem.productId), cartLineItem.quantity)
                 : null
@@ -220,9 +221,9 @@ public final class ShopSystem {
         api.addRoute("/orders/:userId/place", this::handlePlaceOrder);
     }
 
-    record GetOrderHistoryResponse(ImmutableList<GetOrderHistoryResponseOrder> orders) {}
+    record GetOrderHistoryResponse(List<GetOrderHistoryResponseOrder> orders) {}
 
-    record GetOrderHistoryResponseOrder(ImmutableList<GetOrderHistoryResponseLineItem> lineItems) {}
+    record GetOrderHistoryResponseOrder(List<GetOrderHistoryResponseLineItem> lineItems) {}
 
     record GetOrderHistoryResponseLineItem(int quantity, String name, int unitPrice) {}
 
