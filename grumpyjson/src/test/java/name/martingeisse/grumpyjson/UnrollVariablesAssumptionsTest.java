@@ -6,7 +6,6 @@
  */
 package name.martingeisse.grumpyjson;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.reflect.TypeToken;
 import org.apache.commons.lang3.reflect.TypeUtils;
 import org.junit.jupiter.api.Test;
@@ -14,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.List;
+import java.util.Map;
 
 import static org.apache.commons.lang3.reflect.TypeUtils.unrollVariables;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,18 +36,18 @@ public class UnrollVariablesAssumptionsTest {
     @Test
     public void test() {
 
-        assertEquals(String.class, unrollVariables(ImmutableMap.of(), String.class));
+        assertEquals(String.class, unrollVariables(Map.of(), String.class));
 
         {
             TypeToken<List<String>> token = new TypeToken<>() {};
             Type type = token.getType();
-            assertEquals(type, unrollVariables(ImmutableMap.of(), type));
+            assertEquals(type, unrollVariables(Map.of(), type));
         }
 
         {
             Type unboundListType = TypeUtils.parameterize(List.class, typeVariableA); // List<A>
             Type StringListType = TypeUtils.parameterize(List.class, String.class); // List<String>
-            assertEquals(StringListType, unrollVariables(ImmutableMap.of(typeVariableA, String.class), unboundListType));
+            assertEquals(StringListType, unrollVariables(Map.of(typeVariableA, String.class), unboundListType));
         }
 
     }
