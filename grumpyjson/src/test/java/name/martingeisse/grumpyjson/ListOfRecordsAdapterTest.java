@@ -6,7 +6,7 @@
  */
 package name.martingeisse.grumpyjson;
 
-import com.google.common.reflect.TypeToken;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.JsonObject;
 import name.martingeisse.grumpyjson.builtin.IntegerAdapter;
 import name.martingeisse.grumpyjson.builtin.ListAdapter;
