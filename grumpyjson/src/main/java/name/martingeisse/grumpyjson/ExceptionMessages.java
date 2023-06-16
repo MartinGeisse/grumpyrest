@@ -15,11 +15,32 @@ public class ExceptionMessages {
     private ExceptionMessages() {
     }
 
+    /**
+     * Error message for an unexpected property in a JSON object.
+     */
     public static final String UNEXPECTED_PROPERTY = "unexpected property";
+
+    /**
+     * Error message for an missing property in a JSON object.
+     */
     public static final String MISSING_PROPERTY = "missing property";
 
+    // TODO move to grumpyrest subproject
+    /**
+     * Error message for a missing parameter, such as in the request path or querystring.
+     */
     public static final String MISSING_PARAMETER = "missing parameter";
+
+    // TODO move to grumpyrest subproject
+    /**
+     * Error message for an unexpected parameter, such as in the request path or querystring.
+     */
     public static final String UNEXPECTED_PARAMETER = "unexpected parameter";
+
+    // TODO move to grumpyrest subproject
+    /**
+     * Error message for a duplicate parameter, such as in the request path or querystring.
+     */
     public static final String DUPLICATE_PARAMETER = "duplicate parameter";
 
 

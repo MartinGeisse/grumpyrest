@@ -12,6 +12,12 @@ import name.martingeisse.grumpyjson.*;
 
 import java.lang.reflect.Type;
 
+/**
+ * The {@link JsonTypeAdapter} for {@link NullableField}.
+ * <p>
+ * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
+ * calling {@link JsonRegistry#clearTypeAdapters()}.
+ */
 public class NullableFieldAdapter implements JsonTypeAdapter<NullableField<?>> {
 
     private final JsonRegistry registry;

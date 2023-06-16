@@ -12,6 +12,12 @@ import name.martingeisse.grumpyjson.*;
 import java.lang.reflect.Type;
 import java.util.Optional;
 
+/**
+ * The {@link JsonTypeAdapter} for {@link OptionalField}.
+ * <p>
+ * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
+ * calling {@link JsonRegistry#clearTypeAdapters()}.
+ */
 public class OptionalFieldAdapter implements JsonTypeAdapter<OptionalField<?>> {
 
     private final JsonRegistry registry;

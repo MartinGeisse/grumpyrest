@@ -11,7 +11,12 @@ import com.google.gson.JsonElement;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
-public final class AdapterProxy<T> implements JsonTypeAdapter<T> {
+/**
+ * Represents a {@link JsonTypeAdapter} in the registry while the type adapter is being built, to support cyclic types.
+ *
+ * @param <T> the payload type of the adapter being built
+ */
+final class AdapterProxy<T> implements JsonTypeAdapter<T> {
 
     private JsonTypeAdapter<T> target;
 

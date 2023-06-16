@@ -7,11 +7,18 @@
 package name.martingeisse.grumpyjson.builtin;
 
 import com.google.gson.JsonElement;
+import name.martingeisse.grumpyjson.JsonRegistry;
 import name.martingeisse.grumpyjson.JsonTypeAdapter;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
 
+/**
+ * A {@link JsonTypeAdapter} for {@link JsonElement}.
+ * <p>
+ * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
+ * calling {@link JsonRegistry#clearTypeAdapters()}.
+ */
 public final class JsonElementAdapter implements JsonTypeAdapter<JsonElement> {
 
     @Override

@@ -8,12 +8,21 @@ package name.martingeisse.grumpyjson.builtin;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import name.martingeisse.grumpyjson.JsonRegistry;
 import name.martingeisse.grumpyjson.JsonTypeAdapter;
 import name.martingeisse.grumpyjson.JsonValidationException;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
 
+/**
+ * A {@link JsonTypeAdapter} for the primitive type boolean and its boxed type, {@link Boolean}.
+ * <p>
+ * This maps to and from JSON boolean values.
+ * <p>
+ * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
+ * calling {@link JsonRegistry#clearTypeAdapters()}.
+ */
 public class BooleanAdapter implements JsonTypeAdapter<Boolean> {
 
     @Override

@@ -8,12 +8,22 @@ package name.martingeisse.grumpyjson.builtin;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import name.martingeisse.grumpyjson.JsonRegistry;
 import name.martingeisse.grumpyjson.JsonTypeAdapter;
 import name.martingeisse.grumpyjson.JsonValidationException;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
 
+/**
+ * A {@link JsonTypeAdapter} for type {@link String}.
+ * <p>
+ * This maps to and from JSON strings. No other mapping exists; in particular, JSON numbers are not converted to
+ * strings by this adapter.
+ * <p>
+ * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
+ * calling {@link JsonRegistry#clearTypeAdapters()}.
+ */
 public class StringAdapter implements JsonTypeAdapter<String> {
 
     @Override
