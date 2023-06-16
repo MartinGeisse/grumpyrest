@@ -50,7 +50,7 @@ public final class QuerystringToRecordParser implements QuerystringParser {
         Objects.requireNonNull(querystring, "querystring");
         Objects.requireNonNull(recordType, "recordType");
 
-        ImmutableList<RecordInfo.ComponentInfo> componentInfos = recordInfo.getComponentInfos();
+        List<RecordInfo.ComponentInfo> componentInfos = recordInfo.getComponentInfos();
         int numberOfPresentParameters = 0;
         Object[] fieldValues = new Object[componentInfos.size()];
         Map<String, String> fieldErrors = new HashMap<>();

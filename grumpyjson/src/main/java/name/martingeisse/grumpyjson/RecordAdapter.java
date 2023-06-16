@@ -6,16 +6,12 @@
  */
 package name.martingeisse.grumpyjson;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A RecordAdapter is build for the raw type (class) of a record, so a single RecordAdapter handles all parameterized
@@ -67,7 +63,7 @@ public final class RecordAdapter<T> implements JsonTypeAdapter<T> {
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(recordType, "recordType");
         if (json instanceof JsonObject jsonObject) {
-            ImmutableList<RecordInfo.ComponentInfo> componentInfos = recordInfo.getComponentInfos();
+            List<RecordInfo.ComponentInfo> componentInfos = recordInfo.getComponentInfos();
             int numberOfPresentProperties = 0;
             Object[] fieldValues = new Object[componentInfos.size()];
             FieldErrorNode errorNode = null;

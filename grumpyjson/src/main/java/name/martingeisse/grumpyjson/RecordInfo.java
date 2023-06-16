@@ -11,13 +11,14 @@ import org.apache.commons.lang3.reflect.TypeUtils;
 
 import java.lang.reflect.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public final class RecordInfo {
 
     private final Class<?> recordClass;
-    private final ImmutableList<ComponentInfo> componentInfos;
+    private final List<ComponentInfo> componentInfos;
     private final Constructor<?> constructor;
 
     public RecordInfo(Class<?> recordClass) {
@@ -41,14 +42,14 @@ public final class RecordInfo {
         } catch (NoSuchMethodException e) {
             throw new RuntimeException("could not find canonical constructor for record type " + recordClass);
         }
-        this.componentInfos = ImmutableList.copyOf(componentInfos);
+        this.componentInfos = List.of(componentInfos);
     }
 
     public Class<?> getRecordClass() {
         return recordClass;
     }
 
-    public ImmutableList<ComponentInfo> getComponentInfos() {
+    public List<ComponentInfo> getComponentInfos() {
         return componentInfos;
     }
 
