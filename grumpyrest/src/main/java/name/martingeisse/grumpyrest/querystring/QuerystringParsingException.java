@@ -6,7 +6,6 @@
  */
 package name.martingeisse.grumpyrest.querystring;
 
-import com.google.common.collect.ImmutableMap;
 import name.martingeisse.grumpyrest.stringparser.FromStringParserException;
 
 import java.util.Map;

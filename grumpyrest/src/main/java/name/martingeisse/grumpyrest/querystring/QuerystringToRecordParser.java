@@ -6,8 +6,6 @@
  */
 package name.martingeisse.grumpyrest.querystring;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import name.martingeisse.grumpyjson.ExceptionMessages;
 import name.martingeisse.grumpyjson.RecordInfo;
 import name.martingeisse.grumpyrest.stringparser.FromStringParser;
@@ -89,7 +87,7 @@ public final class QuerystringToRecordParser implements QuerystringParser {
         }
 
         if (!fieldErrors.isEmpty()) {
-            throw new QuerystringParsingException(ImmutableMap.copyOf(fieldErrors));
+            throw new QuerystringParsingException(Map.copyOf(fieldErrors));
         }
         return recordInfo.invokeConstructor(fieldValues);
     }

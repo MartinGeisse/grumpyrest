@@ -7,18 +7,17 @@
 package name.martingeisse.grumpyrest;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.gson.reflect.TypeToken;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import name.martingeisse.grumpyjson.ExceptionMessages;
 import name.martingeisse.grumpyjson.JsonGenerationException;
 import name.martingeisse.grumpyjson.JsonValidationException;
-import name.martingeisse.grumpyrest.response.FinishRequestException;
 import name.martingeisse.grumpyrest.path.PathSegment;
 import name.martingeisse.grumpyrest.path.PathUtil;
 import name.martingeisse.grumpyrest.path.VariablePathSegment;
 import name.martingeisse.grumpyrest.querystring.QuerystringParsingException;
+import name.martingeisse.grumpyrest.response.FinishRequestException;
 import name.martingeisse.grumpyrest.response.ResponseTransmitter;
 import name.martingeisse.grumpyrest.response.standard.StandardErrorResponse;
 
@@ -173,7 +172,7 @@ public final class RequestCycle {
         try {
             result = api.getQuerystringParserRegistry().getParser(type).parse(querystringSingle, type);
             if (result == null) {
-                throw new QuerystringParsingException(ImmutableMap.of("(root)", "querystring parser returned null"));
+                throw new QuerystringParsingException(Map.of("(root)", "querystring parser returned null"));
             }
         } catch (QuerystringParsingException e) {
             originalException = e;
@@ -183,7 +182,7 @@ public final class RequestCycle {
             }
         }
         if (!errorMap.isEmpty()) {
-            throw new QuerystringParsingException(ImmutableMap.copyOf(errorMap));
+            throw new QuerystringParsingException(Map.copyOf(errorMap));
         }
         if (result == null) {
             // this can only happen if the originalException did not contain any errors
@@ -257,7 +256,7 @@ public final class RequestCycle {
             try {
                 result = api.getQuerystringParserRegistry().getParser(type).parse(querystringSingle, type);
                 if (result == null) {
-                    throw new QuerystringParsingException(ImmutableMap.of("(root)", "querystring parser returned null"));
+                    throw new QuerystringParsingException(Map.of("(root)", "querystring parser returned null"));
                 }
             } catch (QuerystringParsingException e) {
                 originalException = e;
@@ -267,7 +266,7 @@ public final class RequestCycle {
                 }
             }
             if (!errorMap.isEmpty()) {
-                throw new QuerystringParsingException(ImmutableMap.copyOf(errorMap));
+                throw new QuerystringParsingException(Map.copyOf(errorMap));
             }
             if (result == null) {
                 // this can only happen if the originalException did not contain any errors
