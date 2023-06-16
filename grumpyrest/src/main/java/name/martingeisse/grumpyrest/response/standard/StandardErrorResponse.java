@@ -6,17 +6,20 @@
  */
 package name.martingeisse.grumpyrest.response.standard;
 
-import com.google.common.collect.ImmutableList;
 import name.martingeisse.grumpyjson.FieldErrorNode;
 import name.martingeisse.grumpyjson.JsonValidationException;
-import name.martingeisse.grumpyrest.response.ResponseTransmitter;
 import name.martingeisse.grumpyrest.response.Response;
+import name.martingeisse.grumpyrest.response.ResponseTransmitter;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public record StandardErrorResponse(int status, String message, ImmutableList<Field> fields) implements Response {
+public record StandardErrorResponse(int status, String message, List<Field> fields) implements Response {
+
+    public StandardErrorResponse {
+        fields = List.copyOf(fields);
+    }
 
     /**
      * This gets responded (if even possible) when reading the request failed with a network error.
@@ -55,17 +58,17 @@ public record StandardErrorResponse(int status, String message, ImmutableList<Fi
         for (FieldErrorNode.FlattenedError flattenedError : e.fieldErrorNode.flatten()) {
             translatedErrors.add(new Field(flattenedError.getPathAsString(), flattenedError.message()));
         }
-        return new StandardErrorResponse(400, "invalid request body", ImmutableList.copyOf(translatedErrors));
+        return new StandardErrorResponse(400, "invalid request body", translatedErrors);
     }
 
     // ----------------------------------------------------------------------------------------------------------------
 
     public StandardErrorResponse(int status, String message) {
-        this(status, message, ImmutableList.of());
+        this(status, message, List.of());
     }
 
     public StandardErrorResponse(int status, String message, Field field) {
-        this(status, message, ImmutableList.of(field));
+        this(status, message, List.of(field));
     }
 
     @Override
@@ -76,5 +79,9 @@ public record StandardErrorResponse(int status, String message, ImmutableList<Fi
     }
 
     public record Field(String path, String message) {}
-    public record Body(String message, ImmutableList<Field> fields) {}
+    public record Body(String message, List<Field> fields) {
+        public Body {
+            fields = List.copyOf(fields);
+        }
+    }
 }

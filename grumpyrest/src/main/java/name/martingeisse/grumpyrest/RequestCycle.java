@@ -6,7 +6,6 @@
  */
 package name.martingeisse.grumpyrest;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.reflect.TypeToken;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
