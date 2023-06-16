@@ -6,9 +6,9 @@
  */
 package name.martingeisse.grumpyjson.builtin.helper_types;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
+import com.google.gson.reflect.TypeToken;
 import name.martingeisse.grumpyjson.JsonGenerationException;
 import name.martingeisse.grumpyjson.JsonRegistry;
 import name.martingeisse.grumpyjson.JsonValidationException;

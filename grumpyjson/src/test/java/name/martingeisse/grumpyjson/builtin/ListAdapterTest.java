@@ -6,7 +6,7 @@
  */
 package name.martingeisse.grumpyjson.builtin;
 
-import com.google.common.reflect.TypeToken;
+import com.google.gson.reflect.TypeToken;
 import name.martingeisse.grumpyjson.JsonRegistry;
 import org.junit.jupiter.api.Test;
 
