@@ -11,18 +11,27 @@ java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(20)
 	}
+	withJavadocJar()
+	withSourcesJar()
 }
 
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
 }
 
-sourceSets.main.java.srcDir 'src/main/generated'
 sourceSets.main.resources.srcDir 'src/main/java'
-sourceSets.main.resources.srcDir 'src/main/generated'
+sourceSets.test.resources.srcDir 'src/test/java'
+
+sourcesJar {
+	duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+}
 
 test {
 	useJUnitPlatform()
+}
+
+javadoc {
+	source = sourceSets.main.allJava
 }
 
 publishing {

@@ -12,6 +12,8 @@ java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(20)
 	}
+	withJavadocJar()
+	withSourcesJar()
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -22,9 +24,12 @@ application {
 	mainClass = 'name.martingeisse.grumpyrest_demo.Main'
 }
 
-sourceSets.main.java.srcDir 'src/main/generated'
 sourceSets.main.resources.srcDir 'src/main/java'
-sourceSets.main.resources.srcDir 'src/main/generated'
+sourceSets.test.resources.srcDir 'src/test/java'
+
+sourcesJar {
+	duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+}
 
 test {
 	useJUnitPlatform()
