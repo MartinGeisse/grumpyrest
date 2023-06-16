@@ -173,7 +173,7 @@ public final class ShopSystem {
 
     record GetCartResponse(ImmutableList<GetCartResponseLineItem> lineItems) {}
 
-    record GetCartResponseLineItem(ShopSystem.ProductLink productLink, int quantity) {}
+    record GetCartResponseLineItem(ProductLink productLink, int quantity) {}
 
     public GetCartResponse handleGetCart(Request request) throws Exception {
         int userId = request.getPathArguments().get(0).getValue(Integer.class);
