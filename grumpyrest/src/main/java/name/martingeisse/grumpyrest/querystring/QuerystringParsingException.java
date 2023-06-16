@@ -9,20 +9,22 @@ package name.martingeisse.grumpyrest.querystring;
 import com.google.common.collect.ImmutableMap;
 import name.martingeisse.grumpyrest.stringparser.FromStringParserException;
 
+import java.util.Map;
+
 /**
  * Represents one or more errors from parsing the querystring. This is different from a {@link FromStringParserException}
  * in that the latter only describes a problem with a single field.
  */
 public class QuerystringParsingException extends Exception {
 
-    private final ImmutableMap<String, String> fieldErrors;
+    private final Map<String, String> fieldErrors;
 
-    public QuerystringParsingException(ImmutableMap<String, String> fieldErrors) {
+    public QuerystringParsingException(Map<String, String> fieldErrors) {
         super("exception during querystring parsing");
-        this.fieldErrors = fieldErrors;
+        this.fieldErrors = Map.copyOf(fieldErrors);
     }
 
-    public final ImmutableMap<String, String> getFieldErrors() {
+    public final Map<String, String> getFieldErrors() {
         return fieldErrors;
     }
 
