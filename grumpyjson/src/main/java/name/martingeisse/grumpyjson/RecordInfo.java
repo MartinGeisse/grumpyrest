@@ -6,7 +6,6 @@
  */
 package name.martingeisse.grumpyjson;
 
-import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.reflect.TypeUtils;
 
 import java.lang.reflect.*;
