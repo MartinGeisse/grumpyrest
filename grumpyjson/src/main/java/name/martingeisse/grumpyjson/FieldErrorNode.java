@@ -230,7 +230,11 @@ public abstract class FieldErrorNode {
      * @param message the error message
      * @param fieldPath the field names, from root to leaf
      */
-    public record FlattenedError(String message, ImmutableList<String> fieldPath) {
+    public record FlattenedError(String message, List<String> fieldPath) {
+
+        public FlattenedError {
+            fieldPath = List.copyOf(fieldPath);
+        }
 
         /**
          * this constructor is very useful in unit tests
@@ -239,7 +243,7 @@ public abstract class FieldErrorNode {
          * @param pathSegments the field names, from root to leaf
          */
         public FlattenedError(String message, String... pathSegments) {
-            this(message, ImmutableList.copyOf(pathSegments));
+            this(message, List.of(pathSegments));
         }
 
         /**
