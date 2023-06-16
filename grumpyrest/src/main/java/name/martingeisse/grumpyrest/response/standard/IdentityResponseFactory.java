@@ -7,17 +7,17 @@
 package name.martingeisse.grumpyrest.response.standard;
 
 import name.martingeisse.grumpyrest.RequestCycle;
-import name.martingeisse.grumpyrest.response.HttpResponse;
-import name.martingeisse.grumpyrest.response.HttpResponseFactory;
+import name.martingeisse.grumpyrest.response.Response;
+import name.martingeisse.grumpyrest.response.ResponseFactory;
 
 /**
- * This simply accepts response values that implement {@link HttpResponse} themselves.
+ * This simply accepts response values that implement {@link Response} themselves.
  */
-public final class IdentityResponseFactory implements HttpResponseFactory {
+public final class IdentityResponseFactory implements ResponseFactory {
 
     @Override
-    public HttpResponse createHttpResponse(RequestCycle requestCycle, Object value) {
-        return (value instanceof HttpResponse httpResponse) ? httpResponse : null;
+    public Response createResponse(RequestCycle requestCycle, Object value) {
+        return (value instanceof Response response) ? response : null;
     }
 
 }

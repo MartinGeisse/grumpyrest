@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Type;
 
 /**
- * This interface is used by the {@link HttpResponse} to transmit itself to the client.
+ * This interface is used by the {@link Response} to transmit itself to the client.
  */
 public interface ResponseTransmitter {
 

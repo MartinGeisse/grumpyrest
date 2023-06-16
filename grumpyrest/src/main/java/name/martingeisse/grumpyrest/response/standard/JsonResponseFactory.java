@@ -7,20 +7,20 @@
 package name.martingeisse.grumpyrest.response.standard;
 
 import name.martingeisse.grumpyrest.RequestCycle;
-import name.martingeisse.grumpyrest.response.HttpResponse;
-import name.martingeisse.grumpyrest.response.HttpResponseFactory;
+import name.martingeisse.grumpyrest.response.Response;
+import name.martingeisse.grumpyrest.response.ResponseFactory;
 
-public final class JsonResponseFactory implements HttpResponseFactory {
+public final class JsonResponseFactory implements ResponseFactory {
 
     @Override
-    public HttpResponse createHttpResponse(RequestCycle requestCycle, Object value) {
+    public Response createResponse(RequestCycle requestCycle, Object value) {
         if (value == null || !requestCycle.getApi().getJsonEngine().supportsType(value.getClass())) {
             return null;
         }
         return createResponseForSupportedValue(value);
     }
 
-    private HttpResponse createResponseForSupportedValue(Object value) {
+    private Response createResponseForSupportedValue(Object value) {
         return responseTransmitter -> {
             responseTransmitter.setStatus(200);
             responseTransmitter.setContentType("application/json");

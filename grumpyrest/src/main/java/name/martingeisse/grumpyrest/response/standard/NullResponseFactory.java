@@ -7,15 +7,15 @@
 package name.martingeisse.grumpyrest.response.standard;
 
 import name.martingeisse.grumpyrest.RequestCycle;
-import name.martingeisse.grumpyrest.response.HttpResponse;
-import name.martingeisse.grumpyrest.response.HttpResponseFactory;
+import name.martingeisse.grumpyrest.response.Response;
+import name.martingeisse.grumpyrest.response.ResponseFactory;
 
 /**
  * Produces an empty 200 response when null is returned as a response value.
  */
-public class NullResponseFactory implements HttpResponseFactory {
+public class NullResponseFactory implements ResponseFactory {
     @Override
-    public HttpResponse createHttpResponse(RequestCycle requestCycle, Object value) {
+    public Response createResponse(RequestCycle requestCycle, Object value) {
         if (value == null) {
             return new StatusOnlyResponse(200);
         } else {

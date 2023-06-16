@@ -10,7 +10,7 @@ import name.martingeisse.grumpyrest.RequestCycle;
 
 import java.io.IOException;
 
-public interface HttpResponse {
+public interface Response {
 
     /**
      * Transmits this response using the specified response transmitter.

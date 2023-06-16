@@ -8,11 +8,11 @@ package name.martingeisse.grumpyrest.response;
 
 import name.martingeisse.grumpyrest.RequestCycle;
 
-public interface HttpResponseFactory {
+public interface ResponseFactory {
 
     /**
      * Returns null on failure, causing the next factory to be tried.
      */
-    HttpResponse createHttpResponse(RequestCycle requestCycle, Object value);
+    Response createResponse(RequestCycle requestCycle, Object value);
 
 }

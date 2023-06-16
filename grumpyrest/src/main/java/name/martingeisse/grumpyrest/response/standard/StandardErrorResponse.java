@@ -10,13 +10,13 @@ import com.google.common.collect.ImmutableList;
 import name.martingeisse.grumpyjson.FieldErrorNode;
 import name.martingeisse.grumpyjson.JsonValidationException;
 import name.martingeisse.grumpyrest.response.ResponseTransmitter;
-import name.martingeisse.grumpyrest.response.HttpResponse;
+import name.martingeisse.grumpyrest.response.Response;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public record StandardErrorResponse(int status, String message, ImmutableList<Field> fields) implements HttpResponse {
+public record StandardErrorResponse(int status, String message, ImmutableList<Field> fields) implements Response {
 
     /**
      * This gets responded (if even possible) when reading the request failed with a network error.

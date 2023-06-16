@@ -9,9 +9,9 @@ package name.martingeisse.grumpyrest;
 import name.martingeisse.grumpyjson.JsonEngine;
 import name.martingeisse.grumpyrest.path.Path;
 import name.martingeisse.grumpyrest.querystring.QuerystringParserRegistry;
-import name.martingeisse.grumpyrest.response.HttpResponse;
-import name.martingeisse.grumpyrest.response.HttpResponseFactory;
-import name.martingeisse.grumpyrest.response.HttpResponseFactoryRegistry;
+import name.martingeisse.grumpyrest.response.Response;
+import name.martingeisse.grumpyrest.response.ResponseFactory;
+import name.martingeisse.grumpyrest.response.ResponseFactoryRegistry;
 import name.martingeisse.grumpyrest.response.standard.IdentityResponseFactory;
 import name.martingeisse.grumpyrest.response.standard.JsonResponseFactory;
 import name.martingeisse.grumpyrest.response.standard.NullResponseFactory;
@@ -32,7 +32,7 @@ public final class RestApi {
     private static final Logger LOGGER = LoggerFactory.getLogger(RestApi.class);
 
     private final List<Route> routes = new ArrayList<>();
-    private final HttpResponseFactoryRegistry httpResponseFactoryRegistry = new HttpResponseFactoryRegistry();
+    private final ResponseFactoryRegistry responseFactoryRegistry = new ResponseFactoryRegistry();
     private final JsonEngine jsonEngine = new JsonEngine();
     private final FromStringParserRegistry fromStringParserRegistry = new FromStringParserRegistry();
     private final QuerystringParserRegistry querystringParserRegistry = new QuerystringParserRegistry(fromStringParserRegistry);
@@ -40,9 +40,9 @@ public final class RestApi {
     public RestApi() {
 
         // HTTP response factories
-        addHttpResponseFactory(new IdentityResponseFactory());
-        addHttpResponseFactory(new JsonResponseFactory());
-        addHttpResponseFactory(new NullResponseFactory());
+        addResponseFactory(new IdentityResponseFactory());
+        addResponseFactory(new JsonResponseFactory());
+        addResponseFactory(new NullResponseFactory());
 
         // from-string parsers
         addFromStringParser(new StringFromStringParser());
@@ -74,12 +74,12 @@ public final class RestApi {
         return routes;
     }
 
-    public void addHttpResponseFactory(HttpResponseFactory httpResponseFactory) {
-        httpResponseFactoryRegistry.add(httpResponseFactory);
+    public void addResponseFactory(ResponseFactory responseFactory) {
+        responseFactoryRegistry.add(responseFactory);
     }
 
-    public HttpResponseFactoryRegistry getHttpResponseFactoryRegistry() {
-        return httpResponseFactoryRegistry;
+    public ResponseFactoryRegistry getResponseFactoryRegistry() {
+        return responseFactoryRegistry;
     }
 
     public void addFromStringParser(FromStringParser parser) {
@@ -127,17 +127,17 @@ public final class RestApi {
             }
 
             // run the HTTP response factory
-            HttpResponse httpResponse;
+            Response response;
             try {
-                httpResponse = httpResponseFactoryRegistry.createHttpResponse(requestCycle, responseValue);
+                response = responseFactoryRegistry.createResponse(requestCycle, responseValue);
             } catch (Exception e) {
                 LOGGER.error("could not create HTTP response for response value", e);
-                httpResponse = StandardErrorResponse.INTERNAL_SERVER_ERROR;
+                response = StandardErrorResponse.INTERNAL_SERVER_ERROR;
             }
 
             // Transmit the response. Catching exceptions here is not useful because the response body has already been
             // started so we cannot change the status line anymore.
-            httpResponse.transmit(requestCycle.getResponseTransmitter());
+            response.transmit(requestCycle.getResponseTransmitter());
 
         } catch (Exception e) {
             // If we end up here, we cannot rely on the JSON serializer anymore (since that may the reason we ended
