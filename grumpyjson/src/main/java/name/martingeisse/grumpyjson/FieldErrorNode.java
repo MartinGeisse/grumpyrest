@@ -7,7 +7,7 @@
 package name.martingeisse.grumpyjson;
 
 import com.google.common.collect.ImmutableList;
-import org.apache.commons.lang3.StringUtils;
+import name.martingeisse.grumpyjson.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +111,7 @@ public abstract class FieldErrorNode {
      */
     @Override
     public String toString() {
-        return StringUtils.join(flatten().toArray(), "; ");
+        return StringUtil.join(flatten(), "; ");
     }
 
     /**
@@ -248,7 +248,7 @@ public abstract class FieldErrorNode {
          * @return the field path
          */
         public String getPathAsString() {
-            return fieldPath.isEmpty() ? "(root)" : StringUtils.join(fieldPath.toArray(), '.');
+            return fieldPath.isEmpty() ? "(root)" : StringUtil.join(fieldPath, ".");
         }
 
         @Override
