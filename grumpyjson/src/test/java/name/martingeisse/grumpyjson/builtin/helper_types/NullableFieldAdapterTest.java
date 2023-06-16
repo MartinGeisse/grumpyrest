@@ -41,7 +41,7 @@ public class NullableFieldAdapterTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testUnboundTypeParameter() {
-        // see ImmuableAdapterListTest for information on *why* things are expected to behave this way
+        // see ListAdapterTest for information on *why* things are expected to behave this way
         assertFalse(adapter.supportsType(NullableField.class));
         assertFalse(adapter.supportsType(new TypeToken<NullableField>() {
         }.getType()));

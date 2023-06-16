@@ -42,7 +42,7 @@ public class OptionalFieldAdapterTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testUnboundTypeParameter() {
-        // see ImmuableAdapterListTest for information on *why* things are expected to behave this way
+        // see ListAdapterTest for information on *why* things are expected to behave this way
         assertFalse(adapter.supportsType(OptionalField.class));
         assertFalse(adapter.supportsType(new TypeToken<OptionalField>() {}.getType()));
         assertTrue(adapter.supportsType(new TypeToken<OptionalField<?>>() {}.getType()));
