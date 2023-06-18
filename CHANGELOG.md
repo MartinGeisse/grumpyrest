@@ -1,9 +1,13 @@
 
-# WIP
+# WIP 92b457923e510761cba702faba75a4155c6ff48e
 
 * Split into sub-packages: grumpyjson, grumpyrest, grumptyrest-demo.
-* added maven-publish plugin to allow publishing to the local maven Repo at ~/.m2
-* some work to clean up the documentation
+* Removed unnecessary dependencies; now uses JDK immutable collections such as List.copyOf() instead of Guava.
+* added maven-publish plugin to allow publishing to the local maven Repo at `~/.m2` including sources and javadoc
+* clean up the documentation
+* added lots of javadoc, more to come
+* combined javadoc is now available online
+* started abstracting the objects provided by grumpyrest  from the servlet API to simplify mocking them in tests
 
 # Version 0.1
 
