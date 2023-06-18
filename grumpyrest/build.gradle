@@ -33,7 +33,8 @@ test {
 }
 
 javadoc {
-	source = sourceSets.main.allJava
+	source sourceSets.main.allJava
+	source project(":grumpyjson").sourceSets.main.allJava
 }
 
 publishing {
