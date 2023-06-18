@@ -17,6 +17,7 @@ import name.martingeisse.grumpyrest.path.PathUtil;
 import name.martingeisse.grumpyrest.path.VariablePathSegment;
 import name.martingeisse.grumpyrest.querystring.QuerystringParsingException;
 import name.martingeisse.grumpyrest.response.FinishRequestException;
+import name.martingeisse.grumpyrest.response.Response;
 import name.martingeisse.grumpyrest.response.ResponseTransmitter;
 import name.martingeisse.grumpyrest.response.standard.StandardErrorResponse;
 
@@ -26,6 +27,12 @@ import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.*;
 
+/**
+ * Hold the run-time state of processing a single request. Application code will normally not have to deal with a
+ * request cycle directly, but rather implement a {@link SimpleHandler} that takes a {@link Request} and returns either
+ * a {@link Response}, or a value that gets converted to such a response. Only if this scheme is not flexible enough
+ * will the application implement a {@link ComplexHandler} and deal with the request cycle directly.
+ */
 public final class RequestCycle {
 
     private final RestApi api;
@@ -94,7 +101,7 @@ public final class RequestCycle {
         for (int i = 0; i < pathSegments.size(); i++) {
             PathSegment routeSegment = matchedRouteSegments.get(i);
             if (routeSegment instanceof VariablePathSegment variable) {
-                newPathArguments.add(new PathArgument(this, variable.getVariableName(), pathSegments.get(i)));
+                newPathArguments.add(new PathArgument(variable.getVariableName(), pathSegments.get(i), api.getFromStringParserRegistry()));
             }
         }
 
