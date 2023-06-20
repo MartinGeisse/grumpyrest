@@ -1,5 +1,5 @@
 
-# WIP 92b457923e510761cba702faba75a4155c6ff48e
+# WIP 69d866c9018f516fd93e4fb414ae37500e0e2e09
 
 * Split into sub-packages: grumpyjson, grumpyrest, grumptyrest-demo.
 * Removed unnecessary dependencies; now uses JDK immutable collections such as List.copyOf() instead of Guava.
@@ -8,6 +8,8 @@
 * added lots of javadoc, more to come
 * combined javadoc is now available online
 * started abstracting the objects provided by grumpyrest  from the servlet API to simplify mocking them in tests
+* added option to include/exclude the context path and servlet path in the request path as seen by the API
+* uncaught exceptions are now logged
 
 # Version 0.1
 
