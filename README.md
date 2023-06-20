@@ -41,8 +41,6 @@ start on how to use it anyway.
 
 # Further Reading
 
-[howto file](./doc/howto.md) -- explains common tasks
+The [howto file](./doc/howto.md) explains common tasks.
 
-[Javadoc](https://martingeisse.github.io/javadoc/grumpyrest)
-
-[concept file](./doc/concept.md) -- to understand the idea behind grumpyrest
+Read the [concept file](./doc/concept.md) to understand the idea behind grumpyrest.
