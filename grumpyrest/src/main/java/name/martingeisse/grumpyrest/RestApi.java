@@ -9,6 +9,7 @@ package name.martingeisse.grumpyrest;
 import name.martingeisse.grumpyjson.JsonEngine;
 import name.martingeisse.grumpyrest.path.Path;
 import name.martingeisse.grumpyrest.querystring.QuerystringParserRegistry;
+import name.martingeisse.grumpyrest.response.NoResponseFactoryException;
 import name.martingeisse.grumpyrest.response.Response;
 import name.martingeisse.grumpyrest.response.ResponseFactory;
 import name.martingeisse.grumpyrest.response.ResponseFactoryRegistry;
@@ -130,6 +131,14 @@ public final class RestApi {
             Response response;
             try {
                 response = responseFactoryRegistry.createResponse(requestCycle, responseValue);
+            } catch (NoResponseFactoryException e) {
+                response = StandardErrorResponse.INTERNAL_SERVER_ERROR;
+                Object rejectedResponseValue = e.getResponseValue();
+                if (rejectedResponseValue instanceof Throwable t) {
+                    LOGGER.error("unexpected exception and no response factory registered for it", t);
+                } else {
+                    LOGGER.error("could not create HTTP response for response value", e);
+                }
             } catch (Exception e) {
                 LOGGER.error("could not create HTTP response for response value", e);
                 response = StandardErrorResponse.INTERNAL_SERVER_ERROR;

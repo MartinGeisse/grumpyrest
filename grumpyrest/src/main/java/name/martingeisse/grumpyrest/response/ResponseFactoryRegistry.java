@@ -40,7 +40,7 @@ public class ResponseFactoryRegistry {
                 return response;
             }
         }
-        throw new RuntimeException("no ResponseFactory found for value: " + value);
+        throw new NoResponseFactoryException(value);
     }
 
 }
