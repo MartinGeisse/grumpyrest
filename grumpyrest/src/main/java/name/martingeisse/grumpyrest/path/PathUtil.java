@@ -6,8 +6,6 @@
  */
 package name.martingeisse.grumpyrest.path;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -18,7 +16,7 @@ public final class PathUtil {
     private PathUtil() {
     }
 
-    public static String[] splitIntoSegments(String pathText) {
+    public static String trimSlashes(String pathText) {
         Objects.requireNonNull(pathText);
         while (pathText.startsWith("/")) {
             pathText = pathText.substring(1);
@@ -26,7 +24,11 @@ public final class PathUtil {
         while (pathText.endsWith("/")) {
             pathText = pathText.substring(0, pathText.length() - 1);
         }
-        return slashPattern.split(pathText);
+        return pathText;
+    }
+
+    public static String[] splitIntoSegments(String pathText) {
+        return slashPattern.split(trimSlashes(Objects.requireNonNull(pathText)));
     }
 
 }

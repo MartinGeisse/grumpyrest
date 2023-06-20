@@ -20,6 +20,7 @@ import name.martingeisse.grumpyrest.response.FinishRequestException;
 import name.martingeisse.grumpyrest.response.Response;
 import name.martingeisse.grumpyrest.response.ResponseTransmitter;
 import name.martingeisse.grumpyrest.response.standard.StandardErrorResponse;
+import name.martingeisse.grumpyrest.servlet.RequestPathSourcingStrategy;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,12 +46,17 @@ public final class RequestCycle {
     private final Request highlevelRequest;
     private final ResponseTransmitter responseTransmitter;
 
-    public RequestCycle(RestApi api, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+    public RequestCycle(
+            RestApi api,
+            HttpServletRequest servletRequest,
+            HttpServletResponse servletResponse,
+            RequestPathSourcingStrategy requestPathSourcingStrategy
+    ) {
         this.api = api;
         this.servletRequest = servletRequest;
         this.servletResponse = servletResponse;
 
-        String pathText = servletRequest.getServletPath();
+        String pathText = requestPathSourcingStrategy.getPath(servletRequest);
         if (pathText == null) {
             this.pathSegments = List.of();
         } else {
@@ -67,10 +73,6 @@ public final class RequestCycle {
 
     public HttpServletRequest getServletRequest() {
         return servletRequest;
-    }
-
-    public HttpServletResponse getServletResponse() {
-        return servletResponse;
     }
 
     public List<String> getPathSegments() {

@@ -8,6 +8,7 @@ package name.martingeisse.grumpyrest_demo;
 
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalField;
 import name.martingeisse.grumpyrest.RestApi;
+import name.martingeisse.grumpyrest.servlet.RequestPathSourcingStrategy;
 import name.martingeisse.grumpyrest.servlet.RestServlet;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
@@ -37,7 +38,7 @@ public class GreetingMain {
     public static class MyServlet extends RestServlet {
 
         public MyServlet() {
-            super(buildApi());
+            super(buildApi(), RequestPathSourcingStrategy.STARTING_WITH_CONTEXT_PATH);
         }
 
         record MakeGreetingRequest(String name, OptionalField<String> addendum) {}

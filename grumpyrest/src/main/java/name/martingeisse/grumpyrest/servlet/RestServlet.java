@@ -15,29 +15,31 @@ import name.martingeisse.grumpyrest.RestApi;
 public class RestServlet extends HttpServlet {
 
     private final RestApi api;
+    private final RequestPathSourcingStrategy requestPathSourcingStrategy;
 
-    public RestServlet(RestApi api) {
+    public RestServlet(RestApi api, RequestPathSourcingStrategy requestPathSourcingStrategy) {
         this.api = api;
+        this.requestPathSourcingStrategy = requestPathSourcingStrategy;
     }
 
     @Override
     protected void doGet(HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
-        api.handle(new RequestCycle(api, servletRequest, servletResponse));
+        api.handle(new RequestCycle(api, servletRequest, servletResponse, requestPathSourcingStrategy));
     }
 
     @Override
     protected void doPut(HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
-        api.handle(new RequestCycle(api, servletRequest, servletResponse));
+        api.handle(new RequestCycle(api, servletRequest, servletResponse, requestPathSourcingStrategy));
     }
 
     @Override
     protected void doPost(HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
-        api.handle(new RequestCycle(api, servletRequest, servletResponse));
+        api.handle(new RequestCycle(api, servletRequest, servletResponse, requestPathSourcingStrategy));
     }
 
     @Override
     protected void doDelete(HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
-        api.handle(new RequestCycle(api, servletRequest, servletResponse));
+        api.handle(new RequestCycle(api, servletRequest, servletResponse, requestPathSourcingStrategy));
     }
 
 }

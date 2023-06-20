@@ -6,6 +6,7 @@
  */
 package name.martingeisse.grumpyrest_demo;
 
+import name.martingeisse.grumpyrest.servlet.RequestPathSourcingStrategy;
 import name.martingeisse.grumpyrest.servlet.RestServlet;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
@@ -35,7 +36,7 @@ public class Main {
     public static class MyServlet extends RestServlet {
 
         public MyServlet() {
-            super(new ShopSystem().buildApi());
+            super(new ShopSystem().buildApi(), RequestPathSourcingStrategy.STARTING_WITH_CONTEXT_PATH);
         }
 
     }

@@ -145,10 +145,10 @@ public final class RestApi {
             // something else requested a Writer even though everything here uses an OutputStream), so at least
             // defend against that.
             try {
-                var servletResponse = requestCycle.getServletResponse();
-                servletResponse.setStatus(500);
-                servletResponse.setContentType("application/text");
-                servletResponse.getOutputStream().write("internal server error\n".getBytes(StandardCharsets.UTF_8));
+                var responseTransmitter = requestCycle.getResponseTransmitter();
+                responseTransmitter.setStatus(500);
+                responseTransmitter.setContentType("application/text");
+                responseTransmitter.getOutputStream().write("internal server error\n".getBytes(StandardCharsets.UTF_8));
             } catch (Exception e2) {
                 // ignore
             }
