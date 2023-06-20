@@ -1,5 +1,5 @@
 
-# WIP 69d866c9018f516fd93e4fb414ae37500e0e2e09
+# Version 0.2
 
 * Split into sub-packages: grumpyjson, grumpyrest, grumptyrest-demo.
 * Removed unnecessary dependencies; now uses JDK immutable collections such as List.copyOf() instead of Guava.
