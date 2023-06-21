@@ -8,20 +8,30 @@ streams, and minimizes the use of reflection. Instead,
 
 This is how building an API with grumpyrest looks like:
 
+```
+public class GreetingMain {
+
     record MakeGreetingRequest(String name, OptionalField<String> addendum) {}
     record MakeGreetingResponse(String greeting) {}
-    
-    ...
-    
-    RestApi api = new RestApi();
-    api.addRoute("/make-greeting", requestCycle -> {
-        MakeGreetingRequest request = requestCycle.parseBody(MakeGreetingRequest.class);
-        if (request.addendum.isPresent()) {
-            return new MakeGreetingResponse("Hello, " + request.name + "! " + request.addendum.getValue());
-        } else {
-            return new MakeGreetingResponse("Hello, " + request.name + "!");
-        }
-    });
+
+    public static void main(String[] args) throws Exception {
+        RestApi api = new RestApi();
+        api.addRoute(HttpMethod.GET, "/", request -> "Hello World!");
+        api.addRoute(HttpMethod.POST, "/", request -> {
+            MakeGreetingRequest requestBody = request.parseBody(MakeGreetingRequest.class);
+            if (requestBody.addendum.isPresent()) {
+                return new MakeGreetingResponse("Hello, " + requestBody.name + "! " + requestBody.addendum.getValue());
+            } else {
+                return new MakeGreetingResponse("Hello, " + requestBody.name + "!");
+            }
+        });
+
+        GrumpyrestJettyLauncher launcher = new GrumpyrestJettyLauncher();
+        launcher.launch(api);
+    }
+
+}
+```
 
 Request 1: `{"name": "Joe"}`
 

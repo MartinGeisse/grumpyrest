@@ -32,7 +32,40 @@ You can then refer to it like this:
     implementation 'name.martingeisse:grumpyrest:0.3'
     ```
 
-## Web Server
+## Using the pre-built Jetty Launcher
+
+The `name.martingeisse:grumpyrest-jetty-launcher` package contains a helper class to get an API server up and running
+with minimal code. This package gets build and locally published together with the main grumpyrest package when using
+the above commands. It can be used like this:
+
+```
+public class GreetingMain {
+
+    record MakeGreetingRequest(String name, OptionalField<String> addendum) {}
+    record MakeGreetingResponse(String greeting) {}
+
+    public static void main(String[] args) throws Exception {
+        RestApi api = new RestApi();
+        api.addRoute(HttpMethod.GET, "/", request -> "Hello World!");
+        api.addRoute(HttpMethod.POST, "/", request -> {
+            MakeGreetingRequest requestBody = request.parseBody(MakeGreetingRequest.class);
+            if (requestBody.addendum.isPresent()) {
+                return new MakeGreetingResponse("Hello, " + requestBody.name + "! " + requestBody.addendum.getValue());
+            } else {
+                return new MakeGreetingResponse("Hello, " + requestBody.name + "!");
+            }
+        });
+
+        GrumpyrestJettyLauncher launcher = new GrumpyrestJettyLauncher();
+        launcher.launch(api);
+    }
+
+}
+```
+
+This will launch an embedded Jetty at port 8080 and server the API just defined.
+
+## Using a Servlet Container
 
 grumpyrest does not include a web server, but instead ships as a servlet that can be installed into any web server that
 acts as a servlet container, such as Jetty or Tomcat. For example, here is a "just make it work" dependency list for
