@@ -6,9 +6,12 @@
  */
 package name.martingeisse.grumpyjson;
 
+import com.google.gson.JsonElement;
+import name.martingeisse.grumpyjson.builtin.ListAdapter;
 import name.martingeisse.grumpyjson.builtin.helper_types.NullableFieldAdapter;
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalFieldAdapter;
 
+import java.lang.reflect.Type;
 import java.util.Objects;
 
 /**
@@ -22,8 +25,8 @@ public class JsonValidationException extends Exception {
      * Creates an exception for a single error message without a field path. This constructor is typically used in
      * {@link JsonTypeAdapter#fromJson(JsonElement, Type)} for a JSON primitive, such as a parser for a custom date
      * format that has encountered a string which does not match the expected pattern.
-     *
-     * @see FieldErrorNode#create(String)
+     * 
+     * @see FieldErrorNode#create(String) 
      *
      * @param message the error message
      */
@@ -43,7 +46,7 @@ public class JsonValidationException extends Exception {
      *
      * @param cause the internal exception
      */
-    public JsonValidationException(Throwable cause) {
+    public JsonValidationException(Exception cause) {
         this(FieldErrorNode.create(cause));
     }
 

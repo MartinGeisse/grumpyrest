@@ -54,11 +54,11 @@ public abstract class FieldErrorNode {
     /**
      * Creates a node for a single error message without a field path.
      *
-     * @param cause an exception that caused the error
+     * @param exception an exception that caused the error
      * @return the newly created node
      */
-    public static FieldErrorNode create(Throwable cause) {
-        return create("an exception occurred: " + cause);
+    public static FieldErrorNode create(Exception exception) {
+        return new InternalException(exception);
     }
 
     /**
@@ -142,6 +142,38 @@ public abstract class FieldErrorNode {
         @Override
         protected void flatten(List<FlattenedError> errors, List<String> segments) {
             errors.add(new FlattenedError(message, segments));
+        }
+
+    }
+
+    /**
+     * A leaf node with an internal exception. The exception message and details will be hidden from the client, so
+     * we don't leak any internal information, but we want to make it available internally for debugging. The client
+     * will see the field path and a generic error message and so might be able to guess what the problem is.
+     * <p>
+     * This node type only handles {@link Exception}, not {@link Throwable} in general. The latter will not be caught
+     * at all since they usually indicate much more fundamental problems.
+     */
+    public static final class InternalException extends FieldErrorNode {
+
+        private final Exception exception;
+
+        private InternalException(Exception exception) {
+            this.exception = exception;
+        }
+
+        /**
+         * Getter for the exception.
+         *
+         * @return the exception, without any field information.
+         */
+        public Exception getException() {
+            return exception;
+        }
+
+        @Override
+        protected void flatten(List<FlattenedError> errors, List<String> segments) {
+            errors.add(new FlattenedError(ExceptionMessages.INTERNAL_ERROR, segments));
         }
 
     }

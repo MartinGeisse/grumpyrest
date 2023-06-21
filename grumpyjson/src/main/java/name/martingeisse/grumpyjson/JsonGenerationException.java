@@ -6,9 +6,11 @@
  */
 package name.martingeisse.grumpyjson;
 
+import name.martingeisse.grumpyjson.builtin.ListAdapter;
 import name.martingeisse.grumpyjson.builtin.helper_types.NullableFieldAdapter;
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalFieldAdapter;
 
+import java.lang.reflect.Type;
 import java.util.Objects;
 
 /**
@@ -50,7 +52,7 @@ public class JsonGenerationException extends RuntimeException {
      *
      * @param cause the internal exception
      */
-    public JsonGenerationException(Throwable cause) {
+    public JsonGenerationException(Exception cause) {
         this(FieldErrorNode.create(cause));
     }
 

@@ -16,6 +16,11 @@ public class ExceptionMessages {
     }
 
     /**
+     * Generic error message for internal errors that we don't want to expose any details about.
+     */
+    public static final String INTERNAL_ERROR = "internal error";
+
+    /**
      * Error message for an unexpected property in a JSON object.
      */
     public static final String UNEXPECTED_PROPERTY = "unexpected property";
