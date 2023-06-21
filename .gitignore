@@ -2,4 +2,5 @@
 /.gradle
 /grumpyjson/build
 /grumpyrest/build
+/grumpyrest-jetty-launcher/build
 /grumpyrest-demo/build

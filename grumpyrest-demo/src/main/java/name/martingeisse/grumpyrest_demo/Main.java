@@ -6,39 +6,15 @@
  */
 package name.martingeisse.grumpyrest_demo;
 
-import name.martingeisse.grumpyrest.servlet.RequestPathSourcingStrategy;
-import name.martingeisse.grumpyrest.servlet.RestServlet;
-import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.server.handler.DefaultHandler;
-import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.servlet.ServletContextHandler;
+import name.martingeisse.grumpyrest.RestApi;
+import name.martingeisse.grumpyrest_jetty_launcher.GrumpyrestJettyLauncher;
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        Server server = new Server();
-
-        @SuppressWarnings("resource") ServerConnector connector = new ServerConnector(server);
-        connector.setPort(8080);
-        server.setConnectors(new Connector[]{connector});
-
-        ServletContextHandler context = new ServletContextHandler();
-        context.setContextPath("/");
-        context.addServlet(MyServlet.class, "/");
-
-        server.setHandler(new HandlerList(context, new DefaultHandler()));
-        server.start();
-        server.join();
-    }
-
-    public static class MyServlet extends RestServlet {
-
-        public MyServlet() {
-            super(new ShopSystem().buildApi(), RequestPathSourcingStrategy.STARTING_WITH_CONTEXT_PATH);
-        }
-
+        RestApi api = new ShopSystem().buildApi();
+        GrumpyrestJettyLauncher launcher = new GrumpyrestJettyLauncher();
+        launcher.launch(api);
     }
 
 }
