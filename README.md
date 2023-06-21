@@ -33,7 +33,7 @@ Response 2: `{"greeting": "Hello, Joe! Nice to meet you."}`
 
 # Using grumpyrest
 
-See [[Quick Start|./doc/howto/quick-start.md]] to get an example project up and running quickly. Also, the
+See [Quick Start](./doc/howto/quick-start.md) to get an example project up and running quickly. Also, the
 grumpyrest-demo subproject shows how to use it.
 
 It is not on Maven Central yet, unfortunately, so I cannot just give the Maven coordinates here. See the quick
