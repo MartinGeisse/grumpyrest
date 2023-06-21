@@ -1,7 +1,8 @@
 cd ..
 cd grumpyrest-wiki
-cp ../grumpyrest/README.md Home.md
 rm -rf doc
+cp ../grumpyrest/README.md Home.md
 cp -R ../grumpyrest/doc .
 git add -A
-git status
+git commit -m sync
+git push
