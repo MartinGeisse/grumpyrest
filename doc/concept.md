@@ -1,3 +1,10 @@
+
+## Why?
+
+Because annotations make it hard to understand what is happening, and even harder if something is going wrong. They
+seem to improve readability and make the code clean and concise. But they actually silence errors, introduce subtle
+bugs, impede debugging, impede testing, impede understanding the code, impede static analysis ...
+
 ## Core Idea
 
 Particular differences with typical REST frameworks:
