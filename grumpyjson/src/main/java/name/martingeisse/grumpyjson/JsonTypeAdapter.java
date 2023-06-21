@@ -10,6 +10,7 @@ import com.google.gson.JsonElement;
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalField;
 
 import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Optional;
 
 /**

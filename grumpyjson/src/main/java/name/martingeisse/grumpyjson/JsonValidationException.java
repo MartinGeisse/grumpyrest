@@ -16,7 +16,7 @@ import java.util.Objects;
  */
 public class JsonValidationException extends Exception {
 
-    public final FieldErrorNode fieldErrorNode;
+    private final FieldErrorNode fieldErrorNode;
 
     /**
      * Creates an exception for a single error message without a field path. This constructor is typically used in
@@ -59,6 +59,15 @@ public class JsonValidationException extends Exception {
     public JsonValidationException(FieldErrorNode fieldErrorNode) {
         super("exception during JSON validation");
         this.fieldErrorNode = Objects.requireNonNull(fieldErrorNode, "fieldErrorNode");
+    }
+
+    /**
+     * Getter for the {@link FieldErrorNode} that holds the actual error(s)
+     *
+     * @return the field error node
+     */
+    public FieldErrorNode getFieldErrorNode() {
+        return fieldErrorNode;
     }
 
     @Override

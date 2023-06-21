@@ -9,7 +9,6 @@ package name.martingeisse.grumpyrest;
 import com.google.gson.reflect.TypeToken;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import name.martingeisse.grumpyjson.ExceptionMessages;
 import name.martingeisse.grumpyjson.JsonGenerationException;
 import name.martingeisse.grumpyjson.JsonValidationException;
 import name.martingeisse.grumpyrest.request.PathArgument;

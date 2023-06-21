@@ -55,7 +55,7 @@ public record StandardErrorResponse(int status, String message, List<Field> fiel
      */
     public static StandardErrorResponse requestBodyValidationFailed(JsonValidationException e) {
         List<Field> translatedErrors = new ArrayList<>();
-        for (FieldErrorNode.FlattenedError flattenedError : e.fieldErrorNode.flatten()) {
+        for (FieldErrorNode.FlattenedError flattenedError : e.getFieldErrorNode().flatten()) {
             translatedErrors.add(new Field(flattenedError.getPathAsString(), flattenedError.message()));
         }
         return new StandardErrorResponse(400, "invalid request body", translatedErrors);

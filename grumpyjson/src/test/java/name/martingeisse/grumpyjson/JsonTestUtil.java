@@ -200,14 +200,14 @@ public class JsonTestUtil {
             JsonGenerationException exception,
             FieldErrorNode.FlattenedError... expectedFlattenedErrors
     ) {
-        assertFieldErrors(exception.fieldErrorNode, expectedFlattenedErrors);
+        assertFieldErrors(exception.getFieldErrorNode(), expectedFlattenedErrors);
     }
 
     public static void assertFieldErrors(
             JsonValidationException exception,
             FieldErrorNode.FlattenedError... expectedFlattenedErrors
     ) {
-        assertFieldErrors(exception.fieldErrorNode, expectedFlattenedErrors);
+        assertFieldErrors(exception.getFieldErrorNode(), expectedFlattenedErrors);
     }
 
     public static void assertFieldErrors(

@@ -99,6 +99,12 @@ public abstract class FieldErrorNode {
         return List.copyOf(errors);
     }
 
+    /**
+     * NOT PUBLIC API
+     *
+     * @param errors ...
+     * @param segments ...
+     */
     protected abstract void flatten(List<FlattenedError> errors, List<String> segments);
 
     /**

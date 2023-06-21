@@ -41,7 +41,7 @@ public final class RecordAdapter<T> implements JsonTypeAdapter<T> {
     private final RecordInfo recordInfo;
     private final JsonRegistry registry;
 
-    public RecordAdapter(Class<T> clazz, JsonRegistry registry) {
+    RecordAdapter(Class<T> clazz, JsonRegistry registry) {
         Objects.requireNonNull(clazz, "clazz");
         Objects.requireNonNull(registry, "registry");
         this.recordInfo = new RecordInfo(clazz);
@@ -86,7 +86,7 @@ public final class RecordAdapter<T> implements JsonTypeAdapter<T> {
                         fieldValues[i] = adapter.fromJson(propertyJson, concreteFieldType);
                     }
                 } catch (JsonValidationException e) {
-                    errorNode = e.fieldErrorNode.in(name).and(errorNode);
+                    errorNode = e.getFieldErrorNode().in(name).and(errorNode);
                 } catch (Exception e) {
                     errorNode = FieldErrorNode.create(e).in(name).and(errorNode);
                 }
@@ -130,7 +130,7 @@ public final class RecordAdapter<T> implements JsonTypeAdapter<T> {
                 @SuppressWarnings("unchecked") Optional<JsonElement> optionalJson = adapter.toOptionalJson(value, concreteFieldType);
                 optionalJson.ifPresent(jsonElement -> jsonObject.add(name, jsonElement));
             } catch (JsonGenerationException e) {
-                errorNode = e.fieldErrorNode.in(name).and(errorNode);
+                errorNode = e.getFieldErrorNode().in(name).and(errorNode);
             } catch (Exception e) {
                 errorNode = FieldErrorNode.create(e).in(name).and(errorNode);
             }

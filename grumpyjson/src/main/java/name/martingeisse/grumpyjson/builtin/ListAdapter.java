@@ -46,7 +46,7 @@ public class ListAdapter implements JsonTypeAdapter<List<?>> {
                 try {
                     result.add(elementTypeAdapter.fromJson(array.get(i), elementType));
                 } catch (JsonValidationException e) {
-                    errorNode = e.fieldErrorNode.in(Integer.toString(i)).and(errorNode);
+                    errorNode = e.getFieldErrorNode().in(Integer.toString(i)).and(errorNode);
                 } catch (Exception e) {
                     errorNode = FieldErrorNode.create(e).in(Integer.toString(i)).and(errorNode);
                 }
@@ -70,7 +70,7 @@ public class ListAdapter implements JsonTypeAdapter<List<?>> {
                 //noinspection unchecked
                 result.add(elementTypeAdapter.toJson(value.get(i), elementType));
             } catch (JsonGenerationException e) {
-                errorNode = e.fieldErrorNode.in(Integer.toString(i)).and(errorNode);
+                errorNode = e.getFieldErrorNode().in(Integer.toString(i)).and(errorNode);
             } catch (Exception e) {
                 errorNode = FieldErrorNode.create(e).in(Integer.toString(i)).and(errorNode);
             }

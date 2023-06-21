@@ -13,13 +13,17 @@ import java.util.Objects;
 
 /**
  * This exception type gets thrown when the state of the objects being serialized is not possible to map to JSON.
- *
- * Such an error is always due to a bug (possible a bug in an earlier validation step), hence unexpected, so this
- * exception extends RuntimeException, not Exception.
+ * This can happen if an object is in an inconsistent state (which should have been prevented by the object's class),
+ * or it can happen if the object is in a consistent state that does not have an equivalent representation in JSON.
+ * <p>
+ * This exception therefore always indicates a bug. If the object's class allows its state to become inconsistent,
+ * then this should be prevented. On the other hand, if the object's state has no equivalent JSON representation,
+ * then the cause that wants to turn it into JSON anyway is faulty. Because it is a bug, and is therefore unexpected,
+ * this class extends {@link RuntimeException}, not {@link Exception}.
  */
 public class JsonGenerationException extends RuntimeException {
 
-    public final FieldErrorNode fieldErrorNode;
+    private final FieldErrorNode fieldErrorNode;
 
     /**
      * Creates an exception for a single error message without a field path. This constructor is typically used in
@@ -62,6 +66,15 @@ public class JsonGenerationException extends RuntimeException {
     public JsonGenerationException(FieldErrorNode fieldErrorNode) {
         super("exception during JSON generation");
         this.fieldErrorNode = Objects.requireNonNull(fieldErrorNode, "fieldErrorNode");
+    }
+
+    /**
+     * Getter for the {@link FieldErrorNode} that holds the actual error(s)
+     *
+     * @return the field error node
+     */
+    public FieldErrorNode getFieldErrorNode() {
+        return fieldErrorNode;
     }
 
     @Override
