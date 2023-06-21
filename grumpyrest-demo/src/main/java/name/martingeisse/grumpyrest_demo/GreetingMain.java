@@ -48,7 +48,7 @@ public class GreetingMain {
         private static RestApi buildApi() {
             RestApi api = new RestApi();
             api.addRoute(HttpMethod.GET, "/", request -> "Hello World!");
-            api.addRoute(HttpMethod.POST, "/make-greeting", request -> {
+            api.addRoute(HttpMethod.POST, "/", request -> {
                 MakeGreetingRequest requestBody = request.parseBody(MakeGreetingRequest.class);
                 if (requestBody.addendum.isPresent()) {
                     return new MakeGreetingResponse("Hello, " + requestBody.name + "! " + requestBody.addendum.getValue());

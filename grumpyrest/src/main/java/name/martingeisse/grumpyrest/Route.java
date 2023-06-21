@@ -34,6 +34,9 @@ public record Route(HttpMethod method, Path path, ComplexHandler handler) {
      * @return if matched, a request result that contains this route. Otherwise null.
      */
     public RouteMatchResult match(RequestCycle requestCycle) {
+        if (!method.matches(requestCycle.getServletRequest().getMethod())) {
+            return null;
+        }
         ParseFromStringService parseFromStringService = requestCycle.getApi().getFromStringParserRegistry();
         List<PathArgument> pathArguments = path.match(requestCycle.getPathSegments(), parseFromStringService);
         if (pathArguments == null) {
