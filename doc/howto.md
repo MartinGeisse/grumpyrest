@@ -1,6 +1,6 @@
 
 # How-To
 
-[Quick Start](./howto/quick-start.md)
+[Quick Start](howto-quick-start.md)
 
-[Path Parameters](./howto/path-parameters.md)
+[Path Parameters](howto-path-parameters.md)
