@@ -8,7 +8,7 @@ package name.martingeisse.grumpyrest.request;
 
 import com.google.gson.reflect.TypeToken;
 import name.martingeisse.grumpyrest.request.stringparser.FromStringParserException;
-import name.martingeisse.grumpyrest.request.stringparser.FromStringParserRegistry;
+import name.martingeisse.grumpyrest.request.stringparser.ParseFromStringService;
 
 import java.lang.reflect.Type;
 
@@ -21,12 +21,15 @@ public final class PathArgument {
 
     private final String name;
     private final String text;
-    private final FromStringParserRegistry fromStringParserRegistry;
+    private final ParseFromStringService parseFromStringService;
 
-    PathArgument(String name, String text, FromStringParserRegistry fromStringParserRegistry) {
+    /**
+     * NOT PUBLIC API
+     */
+    public PathArgument(String name, String text, ParseFromStringService parseFromStringService) {
         this.name = name;
         this.text = text;
-        this.fromStringParserRegistry = fromStringParserRegistry;
+        this.parseFromStringService = parseFromStringService;
     }
 
     /**
@@ -81,7 +84,7 @@ public final class PathArgument {
      * format according to the type to convert to
      */
     public Object getValue(Type type) throws FromStringParserException {
-        return fromStringParserRegistry.getParser(type).parseFromString(text, type);
+        return parseFromStringService.parseFromString(text, type);
     }
 
 }

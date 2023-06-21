@@ -7,6 +7,7 @@
 package name.martingeisse.grumpyrest;
 
 import name.martingeisse.grumpyjson.JsonEngine;
+import name.martingeisse.grumpyrest.request.HttpMethod;
 import name.martingeisse.grumpyrest.request.path.Path;
 import name.martingeisse.grumpyrest.request.querystring.QuerystringParserRegistry;
 import name.martingeisse.grumpyrest.response.NoResponseFactoryException;
@@ -51,24 +52,26 @@ public final class RestApi {
 
     }
 
+    // region configuration
+
     public void addRoute(Route route) {
         routes.add(route);
     }
 
-    public void addComplexRoute(Path path, ComplexHandler handler) {
-        addRoute(new Route(path, handler));
+    public void addComplexRoute(HttpMethod method, Path path, ComplexHandler handler) {
+        addRoute(new Route(method, path, handler));
     }
 
-    public void addComplexRoute(String path, ComplexHandler handler) {
-        addRoute(new Route(path, handler));
+    public void addComplexRoute(HttpMethod method, String path, ComplexHandler handler) {
+        addRoute(new Route(method, path, handler));
     }
 
-    public void addRoute(Path path, SimpleHandler handler) {
-        addRoute(new Route(path, handler));
+    public void addRoute(HttpMethod method, Path path, SimpleHandler handler) {
+        addRoute(new Route(method, path, handler));
     }
 
-    public void addRoute(String path, SimpleHandler handler) {
-        addRoute(new Route(path, handler));
+    public void addRoute(HttpMethod method, String path, SimpleHandler handler) {
+        addRoute(new Route(method, path, handler));
     }
 
     public List<Route> getRoutes() {
@@ -101,25 +104,48 @@ public final class RestApi {
         return jsonEngine;
     }
 
-    public Route match(RequestCycle requestCycle) {
+    // endregion
+
+    // region run-time
+
+    /**
+     * Matches the specified request cycle against all routes. This will not apply the match result to the request
+     * cycle, i.e. not bind path arguments.
+     * <p>
+     * If multiple routes match, then the one that was first added to this API will be returned.
+     *
+     * @param requestCycle the request cycle to match
+     * @return if a route matched, the match result for that route. Otherwise null.
+     */
+    public RouteMatchResult match(RequestCycle requestCycle) {
         for (Route route : routes) {
-            if (route.path().matchesSegments(requestCycle.getPathSegments())) {
-                return route;
+            RouteMatchResult result = route.match(requestCycle);
+            if (result != null) {
+                return result;
             }
         }
         return null;
     }
 
+    /**
+     * Handles a request cycle. This first matches the request cycle against all routes to find the route that will
+     * handle it, then apply information gathered from matching (i.e. the path arguments) to the request cycle. It
+     * will then  invoke the handler from the matched route to perform application logic and obtain a response value.
+     * This response value gets mapped to a response using an appropriate factory. Finally, the response will be
+     * transmitted to the client.
+     *
+     * @param requestCycle the request cycle to handle
+     */
     public void handle(RequestCycle requestCycle) {
         try {
 
             // run the handler
             Object responseValue;
             try {
-                Route route = match(requestCycle);
-                if (route != null) {
-                    requestCycle.setMatchedRoute(route);
-                    responseValue = route.handle(requestCycle);
+                RouteMatchResult matchResult = match(requestCycle);
+                if (matchResult != null) {
+                    requestCycle.applyRouteMatchResult(matchResult);
+                    responseValue = matchResult.route().invokeHandler(requestCycle);
                 } else {
                     responseValue = StandardErrorResponse.UNKNOWN_URL;
                 }
@@ -163,5 +189,7 @@ public final class RestApi {
             }
         }
     }
+
+    // endregion
 
 }

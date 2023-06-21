@@ -7,6 +7,7 @@
 package name.martingeisse.grumpyrest_demo;
 
 import name.martingeisse.grumpyjson.builtin.helper_types.NullableField;
+import name.martingeisse.grumpyrest.request.HttpMethod;
 import name.martingeisse.grumpyrest.request.Request;
 import name.martingeisse.grumpyrest.RestApi;
 import name.martingeisse.grumpyrest.response.FinishRequestException;
@@ -113,8 +114,8 @@ public final class ShopSystem {
     // ----------------------------------------------------------------------------------------------------------------
 
     private void addBrowsingRoutes(RestApi api) {
-        api.addRoute("/categories/:id", this::handleGetCategory);
-        api.addRoute("/products/:id", this::handleGetProduct);
+        api.addRoute(HttpMethod.GET, "/categories/:id", this::handleGetCategory);
+        api.addRoute(HttpMethod.GET, "/products/:id", this::handleGetProduct);
     }
 
     record CategoryResponse(
@@ -167,9 +168,9 @@ public final class ShopSystem {
     // ----------------------------------------------------------------------------------------------------------------
 
     private void addCartRoutes(RestApi api) {
-        api.addRoute("/cart/:userId", this::handleGetCart);
-        api.addRoute("/cart/:userId/add", this::handleAddToCart);
-        api.addRoute("/cart/:userId/clear", this::handleClearCart);
+        api.addRoute(HttpMethod.GET, "/cart/:userId", this::handleGetCart);
+        api.addRoute(HttpMethod.POST, "/cart/:userId/add", this::handleAddToCart);
+        api.addRoute(HttpMethod.POST, "/cart/:userId/clear", this::handleClearCart);
     }
 
     record GetCartResponse(List<GetCartResponseLineItem> lineItems) {}
@@ -217,8 +218,8 @@ public final class ShopSystem {
     // ----------------------------------------------------------------------------------------------------------------
 
     private void addOrderRoutes(RestApi api) {
-        api.addRoute("/orders/:userId", this::handleGetOrderHistory);
-        api.addRoute("/orders/:userId/place", this::handlePlaceOrder);
+        api.addRoute(HttpMethod.GET, "/orders/:userId", this::handleGetOrderHistory);
+        api.addRoute(HttpMethod.POST, "/orders/:userId/place", this::handlePlaceOrder);
     }
 
     record GetOrderHistoryResponse(List<GetOrderHistoryResponseOrder> orders) {}

@@ -24,7 +24,7 @@ public interface FromStringParser {
 
     /**
      * Parses value from an absent string. This can be used to return a default for optional parameters.
-     *
+     * <p>
      * The standard implementation of this method is that missing values are not tolerated, and throws an exception.
      */
     default Object parseFromAbsentString(Type type) throws FromStringParserException {

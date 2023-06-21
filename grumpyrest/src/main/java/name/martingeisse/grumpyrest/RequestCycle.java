@@ -14,9 +14,7 @@ import name.martingeisse.grumpyjson.JsonGenerationException;
 import name.martingeisse.grumpyjson.JsonValidationException;
 import name.martingeisse.grumpyrest.request.PathArgument;
 import name.martingeisse.grumpyrest.request.Request;
-import name.martingeisse.grumpyrest.request.path.PathSegment;
 import name.martingeisse.grumpyrest.request.path.PathUtil;
-import name.martingeisse.grumpyrest.request.path.VariablePathSegment;
 import name.martingeisse.grumpyrest.request.querystring.QuerystringParsingException;
 import name.martingeisse.grumpyrest.response.FinishRequestException;
 import name.martingeisse.grumpyrest.response.Response;
@@ -28,7 +26,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Hold the run-time state of processing a single request. Application code will normally not have to deal with a
@@ -42,8 +43,8 @@ public final class RequestCycle {
     private final HttpServletRequest servletRequest;
     private final HttpServletResponse servletResponse;
     private final List<String> pathSegments;
-    private Route matchedRoute;
-    private List<PathArgument> pathArguments;
+
+    private RouteMatchResult routeMatchResult;
 
     private final Request highlevelRequest;
     private final ResponseTransmitter responseTransmitter;
@@ -81,8 +82,19 @@ public final class RequestCycle {
         return pathSegments;
     }
 
+    private RouteMatchResult needRouteMatchResult() {
+        if (routeMatchResult == null) {
+            throw new IllegalStateException("no route matched yet");
+        }
+        return routeMatchResult;
+    }
+
     public Route getMatchedRoute() {
-        return matchedRoute;
+        return needRouteMatchResult().route();
+    }
+
+    public List<PathArgument> getPathArguments() {
+        return needRouteMatchResult().pathArguments();
     }
 
     public Request getHighlevelRequest() {
@@ -93,24 +105,9 @@ public final class RequestCycle {
         return responseTransmitter;
     }
 
-    void setMatchedRoute(Route matchedRoute) {
-        Objects.requireNonNull(matchedRoute, "matchedRoute");
-
-        List<PathSegment> matchedRouteSegments = matchedRoute.path().segments();
-        if (matchedRouteSegments.size() != pathSegments.size()) {
-            throw new IllegalArgumentException("matched route has different number of segments than the path of this request cycle");
-        }
-
-        List<PathArgument> newPathArguments = new ArrayList<>();
-        for (int i = 0; i < pathSegments.size(); i++) {
-            PathSegment routeSegment = matchedRouteSegments.get(i);
-            if (routeSegment instanceof VariablePathSegment variable) {
-                newPathArguments.add(new PathArgument(variable.getVariableName(), pathSegments.get(i), api.getFromStringParserRegistry()));
-            }
-        }
-
-        this.matchedRoute = matchedRoute;
-        this.pathArguments = List.copyOf(newPathArguments);
+    void applyRouteMatchResult(RouteMatchResult matchResult) {
+        Objects.requireNonNull(matchResult, "matchResult");
+        this.routeMatchResult = matchResult;
     }
 
     public <T> T parseBody(Class<T> clazz) {
@@ -149,12 +146,6 @@ public final class RequestCycle {
         }
     }
 
-    public List<PathArgument> getPathArguments() {
-        if (pathArguments == null) {
-            throw new IllegalStateException("no route matched yet");
-        }
-        return pathArguments;
-    }
 
     public <T> T parseQuerystring(Class<T> clazz) throws QuerystringParsingException {
         return clazz.cast(parseQuerystring((Type)clazz));
@@ -243,10 +234,7 @@ public final class RequestCycle {
     private class MyRequest implements Request {
 
         public List<PathArgument> getPathArguments() {
-            if (pathArguments == null) {
-                throw new IllegalStateException("no route matched yet");
-            }
-            return pathArguments;
+            return RequestCycle.this.getPathArguments();
         }
 
         public Object parseQuerystring(Type type) throws QuerystringParsingException {

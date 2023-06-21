@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class FromStringParserRegistry {
+public class FromStringParserRegistry implements ParseFromStringService {
 
     // This list is not thread-safe, but adding parsers after starting to serve requests would mess up things anyway.
     private final List<FromStringParser> parserList = new ArrayList<>();
@@ -76,5 +76,9 @@ public class FromStringParserRegistry {
         return parser;
     }
 
+    @Override
+    public Object parseFromString(String text, Type type) throws FromStringParserException {
+        return getParser(type).parseFromString(text, type);
+    }
 
 }

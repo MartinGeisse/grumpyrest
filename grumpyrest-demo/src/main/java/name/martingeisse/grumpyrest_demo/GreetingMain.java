@@ -8,6 +8,7 @@ package name.martingeisse.grumpyrest_demo;
 
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalField;
 import name.martingeisse.grumpyrest.RestApi;
+import name.martingeisse.grumpyrest.request.HttpMethod;
 import name.martingeisse.grumpyrest.servlet.RequestPathSourcingStrategy;
 import name.martingeisse.grumpyrest.servlet.RestServlet;
 import org.eclipse.jetty.server.Connector;
@@ -46,8 +47,8 @@ public class GreetingMain {
 
         private static RestApi buildApi() {
             RestApi api = new RestApi();
-            api.addRoute("/", request -> "Hello World!");
-            api.addRoute("/make-greeting", request -> {
+            api.addRoute(HttpMethod.GET, "/", request -> "Hello World!");
+            api.addRoute(HttpMethod.POST, "/make-greeting", request -> {
                 MakeGreetingRequest requestBody = request.parseBody(MakeGreetingRequest.class);
                 if (requestBody.addendum.isPresent()) {
                     return new MakeGreetingResponse("Hello, " + requestBody.name + "! " + requestBody.addendum.getValue());
