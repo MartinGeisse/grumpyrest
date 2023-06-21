@@ -269,6 +269,51 @@ public class JsonEngine {
         return "syntax error in JSON";
     }
 
+    /**
+     * Parses JSON from a {@link JsonElement}.
+     *
+     * @param source the source element
+     * @param clazz the target type to parse to
+     * @return the parsed value
+     * @param <T> the static target type
+     * @throws JsonValidationException if the JSON does not match the target type
+     */
+    public <T> T parse(JsonElement source, Class<T> clazz) throws JsonValidationException {
+        Objects.requireNonNull(source, "source");
+        Objects.requireNonNull(clazz, "clazz");
+        return clazz.cast(parse(source, (Type) clazz));
+    }
+
+    /**
+     * Parses JSON from a {@link JsonElement}.
+     *
+     * @param source the source element
+     * @param typeToken a type token for the target type to parse to
+     * @return the parsed value
+     * @param <T> the static target type
+     * @throws JsonValidationException if the JSON does not match the target type
+     */
+    public <T> T parse(JsonElement source, TypeToken<T> typeToken) throws JsonValidationException {
+        Objects.requireNonNull(source, "source");
+        Objects.requireNonNull(typeToken, "typeToken");
+        //noinspection unchecked
+        return (T)parse(source, typeToken.getType());
+    }
+
+    /**
+     * Parses JSON from a {@link JsonElement}.
+     *
+     * @param source the source element
+     * @param type the target type to parse to
+     * @return the parsed value
+     * @throws JsonValidationException if the JSON does not match the target type
+     */
+    public Object parse(JsonElement source, Type type) throws JsonValidationException {
+        Objects.requireNonNull(source, "source");
+        Objects.requireNonNull(type, "type");
+        return registry.getTypeAdapter(type).fromJson(source, type);
+    }
+
     // -----------------------------------------------------------------------
     // stringify / writeTo
     // -----------------------------------------------------------------------
@@ -408,6 +453,48 @@ public class JsonEngine {
         Objects.requireNonNull(destination, "destination");
         JsonTypeAdapter adapter = registry.getTypeAdapter(type);
         gson.toJson(adapter.toJson(value, type), destination);
+    }
+
+    /**
+     * Turns a value into a {@link JsonElement}.
+     *
+     * @param value the value to convert
+     * @return the JSON element
+     * @throws JsonGenerationException if the value is in an inconsistent state or a state that cannot be turned into JSON
+     */
+    public JsonElement toJsonElement(Object value) throws JsonGenerationException {
+        Objects.requireNonNull(value, "value");
+        return toJsonElement(value, value.getClass());
+    }
+
+    /**
+     * Turns a value into a {@link JsonElement}.
+     *
+     * @param value the value to convert
+     * @param typeToken a type token for the type to convert. This is useful if the value is an instance of a generic
+     *                  type and the static type arguments of that generic type are needed for conversion to JSON.
+     * @return the JSON element
+     * @throws JsonGenerationException if the value is in an inconsistent state or a state that cannot be turned into JSON
+     */
+    public JsonElement toJsonElement(Object value, TypeToken<?> typeToken) throws JsonGenerationException {
+        Objects.requireNonNull(value, "value");
+        Objects.requireNonNull(typeToken, "typeToken");
+        return toJsonElement(value, typeToken.getType());
+    }
+
+    /**
+     * Turns a value into a {@link JsonElement}.
+     *
+     * @param value the value to convert
+     * @param type the type to convert. This is useful if the value is an instance of a generic
+     *                  type and the static type arguments of that generic type are needed for conversion to JSON.
+     * @return the JSON element
+     * @throws JsonGenerationException if the value is in an inconsistent state or a state that cannot be turned into JSON
+     */
+    public JsonElement toJsonElement(Object value, Type type) throws JsonGenerationException {
+        Objects.requireNonNull(value, "value");
+        Objects.requireNonNull(type, "type");
+        return registry.getTypeAdapter(type).toJson(value, type);
     }
 
     // -----------------------------------------------------------------------
