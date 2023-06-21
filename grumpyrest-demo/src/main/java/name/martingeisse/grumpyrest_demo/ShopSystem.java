@@ -7,7 +7,7 @@
 package name.martingeisse.grumpyrest_demo;
 
 import name.martingeisse.grumpyjson.builtin.helper_types.NullableField;
-import name.martingeisse.grumpyrest.Request;
+import name.martingeisse.grumpyrest.request.Request;
 import name.martingeisse.grumpyrest.RestApi;
 import name.martingeisse.grumpyrest.response.FinishRequestException;
 import name.martingeisse.grumpyrest.response.standard.StandardErrorResponse;

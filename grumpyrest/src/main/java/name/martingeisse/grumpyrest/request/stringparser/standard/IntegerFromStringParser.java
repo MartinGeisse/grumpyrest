@@ -4,10 +4,10 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-package name.martingeisse.grumpyrest.stringparser.standard;
+package name.martingeisse.grumpyrest.request.stringparser.standard;
 
-import name.martingeisse.grumpyrest.stringparser.FromStringParser;
-import name.martingeisse.grumpyrest.stringparser.FromStringParserException;
+import name.martingeisse.grumpyrest.request.stringparser.FromStringParser;
+import name.martingeisse.grumpyrest.request.stringparser.FromStringParserException;
 
 import java.lang.reflect.Type;
 

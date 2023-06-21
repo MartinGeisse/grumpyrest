@@ -1,7 +1,7 @@
 package name.martingeisse.grumpyrest.servlet;
 
 import jakarta.servlet.http.HttpServletRequest;
-import name.martingeisse.grumpyrest.path.PathUtil;
+import name.martingeisse.grumpyrest.request.path.PathUtil;
 
 /**
  * This object defines how to obtain the request path from the servlet request. It is needed because different

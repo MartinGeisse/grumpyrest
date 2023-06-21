@@ -6,7 +6,7 @@
  */
 package name.martingeisse.grumpyrest;
 
-import name.martingeisse.grumpyrest.path.Path;
+import name.martingeisse.grumpyrest.request.path.Path;
 
 public record Route(Path path, ComplexHandler handler) {
 

@@ -7,6 +7,7 @@
 package name.martingeisse.grumpyrest;
 
 import name.martingeisse.grumpyjson.JsonRegistry;
+import name.martingeisse.grumpyrest.request.Request;
 import name.martingeisse.grumpyrest.response.FinishRequestException;
 import name.martingeisse.grumpyrest.response.Response;
 import name.martingeisse.grumpyrest.response.ResponseFactory;

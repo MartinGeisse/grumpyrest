@@ -7,8 +7,8 @@
 package name.martingeisse.grumpyrest;
 
 import name.martingeisse.grumpyjson.JsonEngine;
-import name.martingeisse.grumpyrest.path.Path;
-import name.martingeisse.grumpyrest.querystring.QuerystringParserRegistry;
+import name.martingeisse.grumpyrest.request.path.Path;
+import name.martingeisse.grumpyrest.request.querystring.QuerystringParserRegistry;
 import name.martingeisse.grumpyrest.response.NoResponseFactoryException;
 import name.martingeisse.grumpyrest.response.Response;
 import name.martingeisse.grumpyrest.response.ResponseFactory;
@@ -17,10 +17,10 @@ import name.martingeisse.grumpyrest.response.standard.IdentityResponseFactory;
 import name.martingeisse.grumpyrest.response.standard.JsonResponseFactory;
 import name.martingeisse.grumpyrest.response.standard.NullResponseFactory;
 import name.martingeisse.grumpyrest.response.standard.StandardErrorResponse;
-import name.martingeisse.grumpyrest.stringparser.FromStringParser;
-import name.martingeisse.grumpyrest.stringparser.FromStringParserRegistry;
-import name.martingeisse.grumpyrest.stringparser.standard.IntegerFromStringParser;
-import name.martingeisse.grumpyrest.stringparser.standard.StringFromStringParser;
+import name.martingeisse.grumpyrest.request.stringparser.FromStringParser;
+import name.martingeisse.grumpyrest.request.stringparser.FromStringParserRegistry;
+import name.martingeisse.grumpyrest.request.stringparser.standard.IntegerFromStringParser;
+import name.martingeisse.grumpyrest.request.stringparser.standard.StringFromStringParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

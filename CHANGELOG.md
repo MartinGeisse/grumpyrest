@@ -1,4 +1,9 @@
 
+# Version WIP
+
+* Moved all classes that are related to the request (as opposed to the whole API, the request cycle or the response)
+  into a single package.
+
 # Version 0.2
 
 * Split into sub-packages: grumpyjson, grumpyrest, grumptyrest-demo.

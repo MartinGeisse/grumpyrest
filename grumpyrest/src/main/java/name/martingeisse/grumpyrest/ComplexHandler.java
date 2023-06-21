@@ -6,6 +6,7 @@
  */
 package name.martingeisse.grumpyrest;
 
+import name.martingeisse.grumpyrest.request.Request;
 import name.martingeisse.grumpyrest.response.ResponseTransmitter;
 
 /**

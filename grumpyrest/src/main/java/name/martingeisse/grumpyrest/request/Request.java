@@ -1,7 +1,7 @@
-package name.martingeisse.grumpyrest;
+package name.martingeisse.grumpyrest.request;
 
 import com.google.gson.reflect.TypeToken;
-import name.martingeisse.grumpyrest.querystring.QuerystringParsingException;
+import name.martingeisse.grumpyrest.request.querystring.QuerystringParsingException;
 
 import java.lang.reflect.Type;
 import java.util.List;

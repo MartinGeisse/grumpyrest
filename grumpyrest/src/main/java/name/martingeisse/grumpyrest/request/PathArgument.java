@@ -4,11 +4,11 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-package name.martingeisse.grumpyrest;
+package name.martingeisse.grumpyrest.request;
 
 import com.google.gson.reflect.TypeToken;
-import name.martingeisse.grumpyrest.stringparser.FromStringParserException;
-import name.martingeisse.grumpyrest.stringparser.FromStringParserRegistry;
+import name.martingeisse.grumpyrest.request.stringparser.FromStringParserException;
+import name.martingeisse.grumpyrest.request.stringparser.FromStringParserRegistry;
 
 import java.lang.reflect.Type;
 
