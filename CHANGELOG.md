@@ -1,13 +1,13 @@
 
-# Version WIP (will be 0.3)
+# Version 0.3
 
 * Moved all classes that are related to the request (as opposed to the whole API, the request cycle or the response)
   into a single package.
-* added lots of Javadoc
+* added lots of documentation, including Javadoc
 * added methods to JsonEngine to convert from/to JsonElement
 * hide internal exceptions that occur in type adapters from the client
-
-* WIP: distinguish routes by HTTP method
+* multiple routes can now use the same path and be distinguished by HTTP method
+* added a helper package to launch a minimal Jetty with a REST API
 
 # Version 0.2
 
