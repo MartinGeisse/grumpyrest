@@ -6,8 +6,8 @@
  */
 package name.martingeisse.grumpyrest.request.querystring;
 
-import name.martingeisse.grumpyjson.ExceptionMessages;
 import name.martingeisse.grumpyjson.RecordInfo;
+import name.martingeisse.grumpyrest.ExceptionMessages;
 import name.martingeisse.grumpyrest.request.stringparser.FromStringParser;
 import name.martingeisse.grumpyrest.request.stringparser.FromStringParserException;
 import name.martingeisse.grumpyrest.request.stringparser.FromStringParserRegistry;

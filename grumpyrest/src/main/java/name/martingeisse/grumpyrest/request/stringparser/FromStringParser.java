@@ -6,7 +6,7 @@
  */
 package name.martingeisse.grumpyrest.request.stringparser;
 
-import name.martingeisse.grumpyjson.ExceptionMessages;
+import name.martingeisse.grumpyrest.ExceptionMessages;
 
 import java.lang.reflect.Type;
 
