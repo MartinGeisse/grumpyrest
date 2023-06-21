@@ -20,16 +20,16 @@ You can then refer to it like this:
     <dependency>
         <groupId>name.martingeisse</groupId>
         <artifactId>grumpyrest</artifactId>
-        <version>0.3</version>
+        <version>0.4</version>
     </dependency>
     ```
 * Gradle (long):
     ```
-    implementation group: 'name.martingeisse', name: 'grumpyrest', version: '0.3'
+    implementation group: 'name.martingeisse', name: 'grumpyrest', version: '0.4'
     ```
 * Gradle (short):
     ```
-    implementation 'name.martingeisse:grumpyrest:0.3'
+    implementation 'name.martingeisse:grumpyrest:0.4'
     ```
 
 ## Using the pre-built Jetty Launcher

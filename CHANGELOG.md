@@ -1,4 +1,8 @@
 
+# Version WIP (will be 0.4)
+
+...
+
 # Version 0.3
 
 * Moved all classes that are related to the request (as opposed to the whole API, the request cycle or the response)
