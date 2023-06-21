@@ -1,8 +1,13 @@
 
-# Version WIP
+# Version WIP (will be 0.3)
 
 * Moved all classes that are related to the request (as opposed to the whole API, the request cycle or the response)
   into a single package.
+* added lots of Javadoc
+* added methods to JsonEngine to convert from/to JsonElement
+* hide internal exceptions that occur in type adapters from the client
+
+* WIP: distinguish routes by HTTP method
 
 # Version 0.2
 
