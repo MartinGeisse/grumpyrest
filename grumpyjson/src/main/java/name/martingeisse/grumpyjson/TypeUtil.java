@@ -9,6 +9,9 @@ package name.martingeisse.grumpyjson;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+/**
+ * NOT PUBLIC API
+ */
 public class TypeUtil {
 
     /**
@@ -24,6 +27,11 @@ public class TypeUtil {
      * of the list.
      * <p>
      * Returns null if the type is not as expected.
+     *
+     * @param type the type to check
+     * @param expectedRawClass the expected raw class which the type must use
+     * @param expectedNumberOfTypeArguments the expected number of type arguments
+     * @return the type arguments, or null if the type is not as expected
      */
     public static Type[] isParameterizedType(Type type, Class<?> expectedRawClass, int expectedNumberOfTypeArguments) {
         if (type instanceof ParameterizedType p && p.getRawType().equals(expectedRawClass)) {
@@ -38,6 +46,10 @@ public class TypeUtil {
     /**
      * Like isParameterizedType(), but with expectedNumberOfTypeArguments=1 and returns the single type argument
      * directly, not as an array.
+     *
+     * @param type the type to check
+     * @param expectedRawClass the expected raw class which the type must use
+     * @return the type argument, or null if the type is not as expected
      */
     public static Type isSingleParameterizedType(Type type, Class<?> expectedRawClass) {
         Type[] result = isParameterizedType(type, expectedRawClass, 1);
@@ -47,6 +59,11 @@ public class TypeUtil {
     /**
      * Like isParameterizedType(), but will fail with a RuntimeException if the type is not as expected, indicating
      * an internal bug in the type adapter.
+     *
+     * @param type the type to check
+     * @param expectedRawClass the expected raw class which the type must use
+     * @param expectedNumberOfTypeArguments the expected number of type arguments
+     * @return the type arguments
      */
     public static Type[] expectParameterizedType(Type type, Class<?> expectedRawClass, int expectedNumberOfTypeArguments) {
         Type[] result = isParameterizedType(type, expectedRawClass, expectedNumberOfTypeArguments);
@@ -59,6 +76,10 @@ public class TypeUtil {
     /**
      * Like isSingleParameterizedType(), but will fail with a RuntimeException if the type is not as expected,
      * indicating an internal bug in the type adapter.
+     *
+     * @param type the type to check
+     * @param expectedRawClass the expected raw class which the type must use
+     * @return the type argument
      */
     public static Type expectSingleParameterizedType(Type type, Class<?> expectedRawClass) {
         Type result = isSingleParameterizedType(type, expectedRawClass);

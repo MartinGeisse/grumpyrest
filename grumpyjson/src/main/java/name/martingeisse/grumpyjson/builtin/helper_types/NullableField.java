@@ -17,6 +17,8 @@ import java.util.Objects;
  * <p>
  * A nullable field does not map to a null reference on the Java side, and using a null reference during JSON generation
  * throws an exception. Instead, a JSON null is mapped to and from a NullableField that {@link #isNull()}.
+ *
+ * @param <T> the type of the contained value
  */
 public final class NullableField<T> {
 
@@ -26,22 +28,52 @@ public final class NullableField<T> {
         this.value = value;
     }
 
+    /**
+     * Creates a new instance that is non-null, i.e. has a value.
+     *
+     * @param value the value (must not be null)
+     * @return the new instance
+     * @param <T> the static type of the value
+     */
     public static <T> NullableField<T> ofValue(T value) {
         return new NullableField<>(Objects.requireNonNull(value, "value"));
     }
 
+    /**
+     * Creates a new instance that is null.
+     *
+     * @return the new instance
+     * @param <T> the static type of the missing value
+     */
     public static <T> NullableField<T> ofNull() {
         return new NullableField<>(null);
     }
 
+    /**
+     * Creates a new instance that is non-null if the argument is non-null, and null if the argument is null.
+     *
+     * @param value the value or null
+     * @return the new instance
+     * @param <T> the static type of the value
+     */
     public static <T> NullableField<T> ofValueOrNull(T value) {
         return new NullableField<>(value);
     }
 
+    /**
+     * Getter method for the value in this instance. Returns null if this instance is null.
+     *
+     * @return the value or null
+     */
     public T getValueOrNull() {
         return value;
     }
 
+    /**
+     * Getter method for the value in this instance. Throws an {@link IllegalStateException} if null.
+     *
+     * @return the value
+     */
     public T getValue() {
         if (value == null) {
             throw new IllegalStateException("this NullableField is null");
@@ -49,10 +81,20 @@ public final class NullableField<T> {
         return value;
     }
 
+    /**
+     * Checks if this instance is non-null.
+     *
+     * @return true if this instance is non-null, false if null
+     */
     public boolean isNonNull() {
         return value != null;
     }
 
+    /**
+     * Checks if this instance is null.
+     *
+     * @return true if this instance is null, false if non-null
+     */
     public boolean isNull() {
         return value == null;
     }

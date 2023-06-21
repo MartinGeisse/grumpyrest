@@ -22,11 +22,28 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This class is the main entry point into the JSON conversion system.
+ * <p>
+ * This class should be used in two phases, configuration phase and runtime phase. Simply put, first call configuration
+ * methods only, then call runtime methods only. The behavior of this class is undefined if a configuration method
+ * gets called after a runtime method has been called (and this may be prevented in the future). The reason for this
+ * is that some supporting data gets generated lazily at runtime, and will be out-of-date (but not detected as
+ * out-of-date) if the configuration gets changed afterwards.
+ * <p>
+ * A new instance of this class has stanndard type adapters registered for convenience. More type adapters can be
+ * added using {@link #addTypeAdapter(JsonTypeAdapter)}. If the standard type adapters are not desired, you can call
+ * {@link #getRegistry()} and then {@link JsonRegistry#clearTypeAdapters()} to remove all currently registered type
+ * adapters.
+ */
 public class JsonEngine {
 
     private final Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
     private final JsonRegistry registry = new JsonRegistry();
 
+    /**
+     * Creates a new JSON engine with standard type adapters registered.
+     */
     public JsonEngine() {
 
         // Java types
@@ -45,20 +62,42 @@ public class JsonEngine {
 
     }
 
-    public <T> void addTypeAdapter(JsonTypeAdapter<T> adapter) {
+    /**
+     * Adds the specified type adapter.
+     *
+     * @param adapter the type adapter to add
+     */
+    public void addTypeAdapter(JsonTypeAdapter<?> adapter) {
         Objects.requireNonNull(adapter, "adapter");
         registry.addTypeAdapter(adapter);
     }
 
+    /**
+     * Getter method for the registry for type adapters.
+     *
+     * @return the registry
+     */
     public JsonRegistry getRegistry() {
         return registry;
     }
 
+    /**
+     * Checks whether the specified type is supported by this engine
+     *
+     * @param type the type to check
+     * @return true if supporte, false if not
+     */
     public boolean supportsType(Type type) {
         Objects.requireNonNull(type, "type");
         return registry.supportsType(type);
     }
 
+    /**
+     * Checks whether the specified type is supported by this engine
+     *
+     * @param typeToken a type token for the type to check
+     * @return true if supporte, false if not
+     */
     public boolean supportsType(TypeToken<?> typeToken) {
         Objects.requireNonNull(typeToken, "type");
         return registry.supportsType(typeToken.getType());
@@ -68,48 +107,121 @@ public class JsonEngine {
     // parse
     // -----------------------------------------------------------------------
 
+    /**
+     * Parses JSON from a {@link String}.
+     *
+     * @param source the source string
+     * @param clazz the target type to parse to
+     * @return the parsed value
+     * @param <T> the static target type
+     * @throws JsonValidationException if the JSON is malformed or does not match the target type
+     */
     public <T> T parse(String source, Class<T> clazz) throws JsonValidationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(clazz, "clazz");
         return parse(wrapSource(source), clazz);
     }
 
+    /**
+     * Parses JSON from a {@link String}.
+     *
+     * @param source the source string
+     * @param typeToken a type token for the target type to parse to
+     * @return the parsed value
+     * @param <T> the static target type
+     * @throws JsonValidationException if the JSON is malformed or does not match the target type
+     */
     public <T> T parse(String source, TypeToken<T> typeToken) throws JsonValidationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(typeToken, "typeToken");
         return parse(wrapSource(source), typeToken);
     }
 
+    /**
+     * Parses JSON from a {@link String}.
+     *
+     * @param source the source string
+     * @param type the target type to parse to
+     * @return the parsed value
+     * @throws JsonValidationException if the JSON is malformed or does not match the target type
+     */
     public Object parse(String source, Type type) throws JsonValidationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(type, "type");
         return parse(wrapSource(source), type);
     }
 
+    /**
+     * Parses JSON from an {@link InputStream}. As demanded by the MIME type application/json, the input must be
+     * UTF-8 encoded.
+     *
+     * @param source the source stream
+     * @param clazz the target type to parse to
+     * @return the parsed value
+     * @param <T> the static target type
+     * @throws JsonValidationException if the JSON is malformed or does not match the target type
+     */
     public <T> T parse(InputStream source, Class<T> clazz) throws JsonValidationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(clazz, "clazz");
         return parse(wrapSource(source), clazz);
     }
 
+    /**
+     * Parses JSON from an {@link InputStream}. As demanded by the MIME type application/json, the input must be
+     * UTF-8 encoded.
+     *
+     * @param source the source stream
+     * @param typeToken a type token for the target type to parse to
+     * @return the parsed value
+     * @param <T> the static target type
+     * @throws JsonValidationException if the JSON is malformed or does not match the target type
+     */
     public <T> T parse(InputStream source, TypeToken<T> typeToken) throws JsonValidationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(typeToken, "typeToken");
         return parse(wrapSource(source), typeToken);
     }
 
+    /**
+     * Parses JSON from an {@link InputStream}. As demanded by the MIME type application/json, the input must be
+     * UTF-8 encoded.
+     *
+     * @param source the source stream
+     * @param type the target type to parse to
+     * @return the parsed value
+     * @throws JsonValidationException if the JSON is malformed or does not match the target type
+     */
     public Object parse(InputStream source, Type type) throws JsonValidationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(type, "type");
         return parse(wrapSource(source), type);
     }
 
+    /**
+     * Parses JSON from an {@link Reader}.
+     *
+     * @param source the source reader
+     * @param clazz the target type to parse to
+     * @return the parsed value
+     * @param <T> the static target type
+     * @throws JsonValidationException if the JSON is malformed or does not match the target type
+     */
     public <T> T parse(Reader source, Class<T> clazz) throws JsonValidationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(clazz, "clazz");
         return clazz.cast(parse(source, (Type) clazz));
     }
 
+    /**
+     * Parses JSON from an {@link Reader}.
+     *
+     * @param source the source reader
+     * @param typeToken a type token for the target type to parse to
+     * @return the parsed value
+     * @param <T> the static target type
+     * @throws JsonValidationException if the JSON is malformed or does not match the target type
+     */
     public <T> T parse(Reader source, TypeToken<T> typeToken) throws JsonValidationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(typeToken, "typeToken");
@@ -117,6 +229,14 @@ public class JsonEngine {
         return (T)parse(source, typeToken.getType());
     }
 
+    /**
+     * Parses JSON from an {@link Reader}.
+     *
+     * @param source the source reader
+     * @param type the target type to parse to
+     * @return the parsed value
+     * @throws JsonValidationException if the JSON is malformed or does not match the target type
+     */
     public Object parse(Reader source, Type type) throws JsonValidationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(type, "type");
@@ -153,29 +273,72 @@ public class JsonEngine {
     // stringify / writeTo
     // -----------------------------------------------------------------------
 
+    /**
+     * Turns a value into a JSON string.
+     *
+     * @param value the value to convert
+     * @return the JSON string
+     * @throws JsonGenerationException if the value is in an inconsistent state or a state that cannot be turned into JSON
+     */
     public String stringify(Object value) throws JsonGenerationException {
         Objects.requireNonNull(value, "value");
         return stringDestination(writer -> writeTo(value, writer));
     }
 
+    /**
+     * Turns a value into a JSON string.
+     *
+     * @param value the value to convert
+     * @param typeToken a type token for type to convert. This is useful if the value is an instance of a generic
+     *                  type and the static type arguments of that generic type are needed for conversion to JSON.
+     * @return the JSON string
+     * @throws JsonGenerationException if the value is in an inconsistent state or a state that cannot be turned into JSON
+     */
     public String stringify(Object value, TypeToken<?> typeToken) throws JsonGenerationException {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(typeToken, "typeToken");
         return stringDestination(writer -> writeTo(value, typeToken, writer));
     }
 
+    /**
+     * Turns a value into a JSON string.
+     *
+     * @param value the value to convert
+     * @param type the type to convert. This is useful if the value is an instance of a generic
+     *                  type and the static type arguments of that generic type are needed for conversion to JSON.
+     * @return the JSON string
+     * @throws JsonGenerationException if the value is in an inconsistent state or a state that cannot be turned into JSON
+     */
     public String stringify(Object value, Type type) throws JsonGenerationException {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(type, "type");
         return stringDestination(writer -> writeTo(value, type, writer));
     }
 
+    /**
+     * Turns a value into JSON that is written to an output stream. As demanded by the MIME type application/json,
+     * the output will be UTF-8 encoded.
+     *
+     * @param value the value to convert
+     * @param destination the stream to write to
+     * @throws JsonGenerationException if the value is in an inconsistent state or a state that cannot be turned into JSON
+     */
     public void writeTo(Object value, OutputStream destination) throws JsonGenerationException {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(destination, "destination");
         wrapDestination(destination, writer -> writeTo(value, writer));
     }
 
+    /**
+     * Turns a value into JSON that is written to an output stream. As demanded by the MIME type application/json,
+     * the output will be UTF-8 encoded.
+     *
+     * @param value the value to convert
+     * @param typeToken a type token for the type to convert. This is useful if the value is an instance of a generic
+     *                  type and the static type arguments of that generic type are needed for conversion to JSON.
+     * @param destination the stream to write to
+     * @throws JsonGenerationException if the value is in an inconsistent state or a state that cannot be turned into JSON
+     */
     public void writeTo(Object value, TypeToken<?> typeToken, OutputStream destination) throws JsonGenerationException {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(typeToken, "typeToken");
@@ -183,6 +346,16 @@ public class JsonEngine {
         wrapDestination(destination, writer -> writeTo(value, typeToken, writer));
     }
 
+    /**
+     * Turns a value into JSON that is written to an output stream. As demanded by the MIME type application/json,
+     * the output will be UTF-8 encoded.
+     *
+     * @param value the value to convert
+     * @param type the type to convert. This is useful if the value is an instance of a generic
+     *                  type and the static type arguments of that generic type are needed for conversion to JSON.
+     * @param destination the stream to write to
+     * @throws JsonGenerationException if the value is in an inconsistent state or a state that cannot be turned into JSON
+     */
     public void writeTo(Object value, Type type, OutputStream destination) throws JsonGenerationException {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(type, "type");
@@ -190,12 +363,28 @@ public class JsonEngine {
         wrapDestination(destination, writer -> writeTo(value, type, writer));
     }
 
+    /**
+     * Turns a value into JSON that is written to a writer.
+     *
+     * @param value the value to convert
+     * @param destination the writer to write to
+     * @throws JsonGenerationException if the value is in an inconsistent state or a state that cannot be turned into JSON
+     */
     public void writeTo(Object value, Writer destination) throws JsonGenerationException {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(destination, "destination");
         writeTo(value, value.getClass(), destination);
     }
 
+    /**
+     * Turns a value into JSON that is written to a writer.
+     *
+     * @param value the value to convert
+     * @param typeToken a type token for the type to convert. This is useful if the value is an instance of a generic
+     *                  type and the static type arguments of that generic type are needed for conversion to JSON.
+     * @param destination the writer to write to
+     * @throws JsonGenerationException if the value is in an inconsistent state or a state that cannot be turned into JSON
+     */
     public void writeTo(Object value, TypeToken<?> typeToken, Writer destination) throws JsonGenerationException {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(typeToken, "typeToken");
@@ -203,6 +392,15 @@ public class JsonEngine {
         writeTo(value, typeToken.getType(), destination);
     }
 
+    /**
+     * Turns a value into JSON that is written to a writer.
+     *
+     * @param value the value to convert
+     * @param type the type to convert. This is useful if the value is an instance of a generic
+     *                  type and the static type arguments of that generic type are needed for conversion to JSON.
+     * @param destination the writer to write to
+     * @throws JsonGenerationException if the value is in an inconsistent state or a state that cannot be turned into JSON
+     */
     @SuppressWarnings({"rawtypes", "unchecked"})
     public void writeTo(Object value, Type type, Writer destination) throws JsonGenerationException {
         Objects.requireNonNull(value, "value");

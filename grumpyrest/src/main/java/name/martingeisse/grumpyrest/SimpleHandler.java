@@ -14,6 +14,11 @@ import name.martingeisse.grumpyrest.response.ResponseFactory;
 import name.martingeisse.grumpyrest.response.ResponseFactoryRegistry;
 import name.martingeisse.grumpyrest.response.ResponseValueWrapper;
 
+/**
+ * Implementing this handler interface should be preferred over {@link ComplexHandler} whenever it is sufficient.
+ * A simple handler will be passed only a {@link Request}, not the whole {@link RequestCycle}. This reduces coupling
+ * and makes it much easier to mock the argument in tests.
+ */
 public interface SimpleHandler {
 
     /**

@@ -14,12 +14,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * NOT PUBLIC API
+ */
 public final class RecordInfo {
 
     private final Class<?> recordClass;
     private final List<ComponentInfo> componentInfos;
     private final Constructor<?> constructor;
 
+    /**
+     * NOT PUBLIC API
+     */
     public RecordInfo(Class<?> recordClass) {
         Objects.requireNonNull(recordClass, "record");
         if (!recordClass.isRecord()) {
@@ -44,14 +50,30 @@ public final class RecordInfo {
         this.componentInfos = List.of(componentInfos);
     }
 
+    /**
+     * ...
+     *
+     * @return ...
+     */
     public Class<?> getRecordClass() {
         return recordClass;
     }
 
+    /**
+     * ...
+     *
+     * @return ...
+     */
     public List<ComponentInfo> getComponentInfos() {
         return componentInfos;
     }
 
+    /**
+     * ...
+     *
+     * @param arguments ...
+     * @return ...
+     */
     public Object invokeConstructor(Object[] arguments) {
         try {
             return constructor.newInstance(arguments);
@@ -60,27 +82,56 @@ public final class RecordInfo {
         }
     }
 
+    /**
+     * NOT PUBLIC API
+     */
     public class ComponentInfo {
 
         private final RecordComponent component;
 
+        /**
+         * ...
+         *
+         * @param component ...
+         */
         public ComponentInfo(RecordComponent component) {
             this.component = component;
             component.getAccessor().setAccessible(true);
         }
 
+        /**
+         * ...
+         *
+         * @return ...
+         */
         public String getName() {
             return component.getName();
         }
 
+        /**
+         * ...
+         *
+         * @return ...
+         */
         public Type getType() {
             return component.getGenericType();
         }
 
+        /**
+         * ...
+         *
+         * @return ...
+         */
         public Method getGetter() {
             return component.getAccessor();
         }
 
+        /**
+         * ...
+         *
+         * @param container ...
+         * @return ...
+         */
         public Object invokeGetter(Object container) {
             Method getter = getGetter();
             try {
@@ -90,6 +141,12 @@ public final class RecordInfo {
             }
         }
 
+        /**
+         * ...
+         *
+         * @param concreteRecordType ...
+         * @return ...
+         */
         public Type getConcreteType(Type concreteRecordType) {
             if (concreteRecordType instanceof Class<?>) {
                 return component.getGenericType();

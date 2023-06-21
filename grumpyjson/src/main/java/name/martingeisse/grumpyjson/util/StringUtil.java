@@ -8,11 +8,21 @@ package name.martingeisse.grumpyjson.util;
 
 import java.util.List;
 
+/**
+ * NOT PUBLIC API
+ */
 public class StringUtil {
 
     private StringUtil() {
     }
 
+    /**
+     * ...
+     *
+     * @param list ...
+     * @param separator ...
+     * @return ...
+     */
     public static String join(final List<?> list, String separator) {
         StringBuilder builder = new StringBuilder();
         for (Object element : list) {

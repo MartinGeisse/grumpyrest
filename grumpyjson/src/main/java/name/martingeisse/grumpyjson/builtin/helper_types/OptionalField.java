@@ -18,6 +18,8 @@ import java.util.Objects;
  * An optional field does not map to a null reference on the Java side, and using a null reference during JSON
  * generation throws an exception. Instead, a missing JSON property is mapped to and from an {@link OptionalField}
  * that {@link #isAbsent()}.
+ *
+ * @param <T> the type of the contained value
  */
 public final class OptionalField<T> {
 
@@ -27,22 +29,52 @@ public final class OptionalField<T> {
         this.value = value;
     }
 
+    /**
+     * Creates a new instance that is present, i.e. has a value.
+     *
+     * @param value the value (must not be null)
+     * @return the new instance
+     * @param <T> the static type of the value
+     */
     public static <T> OptionalField<T> ofValue(T value) {
         return new OptionalField<>(Objects.requireNonNull(value, "value"));
     }
 
+    /**
+     * Creates a new instance that is absent.
+     *
+     * @return the new instance
+     * @param <T> the static type of the missing value
+     */
     public static <T> OptionalField<T> ofNothing() {
         return new OptionalField<>(null);
     }
 
+    /**
+     * Creates a new instance that is present if the argument is non-null, and absent if the argument is null.
+     *
+     * @param value the value or null
+     * @return the new instance
+     * @param <T> the static type of the value
+     */
     public static <T> OptionalField<T> ofValueOrNullAsNothing(T value) {
         return new OptionalField<>(value);
     }
 
+    /**
+     * Getter method for the value in this instance. Returns null if this instance is absent.
+     *
+     * @return the value or null
+     */
     public T getValueOrNothingAsNull() {
         return value;
     }
 
+    /**
+     * Getter method for the value in this instance. Throws an {@link IllegalStateException} if absent.
+     *
+     * @return the value
+     */
     public T getValue() {
         if (value == null) {
             throw new IllegalStateException("this OptionalField is absent");
@@ -50,10 +82,20 @@ public final class OptionalField<T> {
         return value;
     }
 
+    /**
+     * Checks if this instance is present.
+     *
+     * @return true if this instance is present, false if absent
+     */
     public boolean isPresent() {
         return value != null;
     }
 
+    /**
+     * Checks if this instance is absent.
+     *
+     * @return true if this instance is absent, false if present
+     */
     public boolean isAbsent() {
         return value == null;
     }
