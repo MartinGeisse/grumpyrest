@@ -163,7 +163,8 @@ public final class RestApi {
                 if (rejectedResponseValue instanceof Throwable t) {
                     LOGGER.error("unexpected exception and no response factory registered for it", t);
                 } else {
-                    LOGGER.error("could not create HTTP response for response value", e);
+                    String hint = getHintForMissingResponseFactory(rejectedResponseValue);
+                    LOGGER.error(e.getMessage() + (hint == null ? "" : ". HINT: " + hint));
                 }
             } catch (Exception e) {
                 LOGGER.error("could not create HTTP response for response value", e);
@@ -188,6 +189,13 @@ public final class RestApi {
                 // ignore
             }
         }
+    }
+
+    private static String getHintForMissingResponseFactory(Object value) {
+        if (value instanceof List<?>) {
+            return "You returned a List object as the response value. A List must be wrapped in a TypeWrapper to indicate the element type.";
+        }
+        return null;
     }
 
     // endregion
