@@ -13,6 +13,7 @@ import name.martingeisse.grumpyjson.builtin.*;
 import name.martingeisse.grumpyjson.builtin.helper_types.FieldMustBeNullAdapter;
 import name.martingeisse.grumpyjson.builtin.helper_types.NullableFieldAdapter;
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalFieldAdapter;
+import name.martingeisse.grumpyjson.builtin.helper_types.TypeWrapperAdapter;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -59,6 +60,7 @@ public class JsonEngine {
         addTypeAdapter(new NullableFieldAdapter(registry));
         addTypeAdapter(new OptionalFieldAdapter(registry));
         addTypeAdapter(new JsonElementAdapter());
+        addTypeAdapter(new TypeWrapperAdapter(registry));
 
     }
 
