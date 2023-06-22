@@ -12,6 +12,7 @@ import name.martingeisse.grumpyjson.JsonRegistry;
 import name.martingeisse.grumpyjson.JsonTypeAdapter;
 import name.martingeisse.grumpyjson.JsonValidationException;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
@@ -33,7 +34,13 @@ public class TypeWrapperAdapter implements JsonTypeAdapter<TypeWrapper<?>> {
 
     @Override
     public boolean supportsType(Type type) {
-        return (type instanceof Class<?> c) && (TypeWrapper.class.isAssignableFrom(c));
+        if (type instanceof Class<?> c) {
+            return TypeWrapper.class.isAssignableFrom(c);
+        }
+        if (type instanceof ParameterizedType pt) {
+            return pt.getRawType() == TypeWrapper.class;
+        }
+        return false;
     }
 
     @Override
