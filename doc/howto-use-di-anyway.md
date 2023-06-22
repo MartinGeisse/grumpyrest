@@ -80,3 +80,75 @@ public class MyGuiceModule extends AbstractModule {
 ```
 
 And that's it! grumpyrest is now running in your Guice application.
+
+## Request-Scoped Handlers
+
+A typical pattern is to perform the request handling in short-lived, request-scoped objects. Such objects are newly
+created for each request, and discarded after the request has been finished. The advantage of this pattern is there
+is much less danger of accidentally leaking data from one request to another when a handler contains a bug. It also
+allows to store request-scoped data such as the authenticated user in those objects. Finally, frameworks will
+usually inject dependencies into the request-scoped objects too, and decide on a per-dependency basis which
+dependencies are global and should be shared, and which ones are request-scoped and have to be created for each
+request.
+
+If one tried to transfer this pattern to grumpyrest, one might want to have the `Handler` re-created for each request.
+This won't work, because the `Handler` is long-lived by design. But you wouldn't want to write boilerplate code into
+each handler that just creates a request-scoped "actual handler" and call it. Fortunately, you don't have to: This
+boilerplate code can again be generalized. Just as with launching the application, the details will depend on the DI
+framework. I'll explain it for Guice:
+
+The first step is to move the handler code to a proper class, in case it is currently in a lambda. This of course
+inflates the code a bit, but lambdas would be globally scoped. Also, a proper class can declare dependencies to be
+injected. This class should implement `SimpleHandler` (or `ComplexHandler` if needed), and should be marked as
+request-scoped so Guice creates a new instance per request:
+
+```
+@RequestScoped
+public class MyHandler implements SimpleHandler {
+    public Object handle(Request request) throws Exception {
+        // ...
+    }
+}
+```
+
+Such a handler could only be mounted in a `RestApi` if you went and created a global instance, which is exactly what
+you don't want to do. Instead, a wrapping handler is mounted that creates a new instance of the actual handler for
+each request. Since you don't want to have Guice inject `Provider`s for all your request classes, you'll have to
+have the `Injector` injected into the `RestApiProvider`:
+
+```
+@Singleton
+public class RestApiProvider implements Provider<RestApi> {
+
+    private final Injector injector;
+    
+    @Inject
+    public RestApiProvider(Injector injector) {
+        this.injector = injector;
+    }
+
+    // ...
+}
+```
+
+You can then define your handler-wrapping method:
+
+```
+private SimpleHandler wrap(Class<? extends SimpleHandler> wrappedClass) {
+    return request -> injector GET wrappedClass .handle(request);
+}
+```
+
+You can then mount your handler classes by wrapping them. Instead of writing
+
+```
+api.addRoute(HttpMethod.GET, "/", new MyRequestHandler());
+```
+
+you should now write:
+
+```
+api.addRoute(HttpMethod.GET, "/", wrap(MyRequestHandler.class));
+```
+
+Your handler is now request-scoped.
