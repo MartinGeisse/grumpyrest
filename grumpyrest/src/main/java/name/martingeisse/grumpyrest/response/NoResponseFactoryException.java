@@ -7,6 +7,9 @@ package name.martingeisse.grumpyrest.response;
  */
 public final class NoResponseFactoryException extends RuntimeException {
 
+    /**
+     * needs javadoc because this class is {@link java.io.Serializable}
+     */
     private final Object responseValue;
 
     /**

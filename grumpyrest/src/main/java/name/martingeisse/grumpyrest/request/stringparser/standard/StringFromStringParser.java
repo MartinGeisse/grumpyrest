@@ -15,6 +15,12 @@ import java.lang.reflect.Type;
  */
 public final class StringFromStringParser implements FromStringParser {
 
+    /**
+     * Constructor.
+     */
+    public StringFromStringParser() {
+    }
+
     @Override
     public boolean supportsType(Type type) {
         return type.equals(String.class);
