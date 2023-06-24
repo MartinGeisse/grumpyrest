@@ -10,6 +10,9 @@ import name.martingeisse.grumpyrest.request.stringparser.FromStringParser;
 
 import java.lang.reflect.Type;
 
+/**
+ * Returns the argument text as a {@link String} without any actual parsing.
+ */
 public final class StringFromStringParser implements FromStringParser {
 
     @Override

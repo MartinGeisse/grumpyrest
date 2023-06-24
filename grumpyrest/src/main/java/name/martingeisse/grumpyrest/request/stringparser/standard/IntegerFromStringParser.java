@@ -11,6 +11,9 @@ import name.martingeisse.grumpyrest.request.stringparser.FromStringParserExcepti
 
 import java.lang.reflect.Type;
 
+/**
+ * Parses integers from their usual decimal text representation.
+ */
 public final class IntegerFromStringParser implements FromStringParser {
 
     @Override
