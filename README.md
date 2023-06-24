@@ -51,6 +51,10 @@ start on how to use it anyway.
 
 # Further Reading
 
-The [howto file](https://github.com/MartinGeisse/grumpyrest/wiki/howto) explains common tasks.
+[howto](https://github.com/MartinGeisse/grumpyrest/wiki/howto) -- explains common tasks.
 
-Read the [concept file](https://github.com/MartinGeisse/grumpyrest/wiki/concept) to understand the idea behind grumpyrest.
+[javadoc](https://martingeisse.github.io/javadoc/grumpyrest)
+
+[concept file](https://github.com/MartinGeisse/grumpyrest/wiki/concept) -- understand the idea behind grumpyrest
+
+[roadmap](https://github.com/MartinGeisse/grumpyrest/wiki/roadmap)
