@@ -16,6 +16,9 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+/**
+ * This registry keeps the {@link JsonTypeAdapter}s used by a {@link JsonEngine}.
+ */
 public final class JsonRegistry {
 
     // This list is not thread-safe, but adding type adapters after starting to serve requests would mess up
@@ -108,6 +111,7 @@ public final class JsonRegistry {
      *
      * @param clazz the class to return an adapter for
      * @return the type adapter
+     * @param <T> the adapted type as a static type
      */
     public <T> JsonTypeAdapter<T> getTypeAdapter(Class<T> clazz) {
         //noinspection unchecked
@@ -120,6 +124,7 @@ public final class JsonRegistry {
      *
      * @param typeToken a type token for the type to return an adapter for
      * @return the type adapter
+     * @param <T> the adapted type as a static type
      */
     public <T> JsonTypeAdapter<T> getTypeAdapter(TypeToken<T> typeToken) {
         //noinspection unchecked

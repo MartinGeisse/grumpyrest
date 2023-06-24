@@ -269,6 +269,12 @@ public abstract class FieldErrorNode {
      */
     public record FlattenedError(String message, List<String> fieldPath) {
 
+        /**
+         * Constructor
+         *
+         * @param message the error message
+         * @param fieldPath the field names, from root to leaf
+         */
         public FlattenedError {
             fieldPath = List.copyOf(fieldPath);
         }

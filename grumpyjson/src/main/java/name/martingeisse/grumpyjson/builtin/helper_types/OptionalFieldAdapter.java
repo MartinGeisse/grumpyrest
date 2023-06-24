@@ -22,6 +22,11 @@ public class OptionalFieldAdapter implements JsonTypeAdapter<OptionalField<?>> {
 
     private final JsonRegistry registry;
 
+    /**
+     * Constructor.
+     *
+     * @param registry the JSON registry -- needed to fetch the adapter for the contained type at run-time
+     */
     public OptionalFieldAdapter(JsonRegistry registry) {
         this.registry = registry;
     }

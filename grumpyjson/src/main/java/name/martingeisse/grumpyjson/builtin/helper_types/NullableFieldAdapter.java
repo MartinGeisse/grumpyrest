@@ -22,6 +22,11 @@ public class NullableFieldAdapter implements JsonTypeAdapter<NullableField<?>> {
 
     private final JsonRegistry registry;
 
+    /**
+     * Constructor.
+     *
+     * @param registry the JSON registry -- needed to fetch the adapter for the contained type at run-time
+     */
     public NullableFieldAdapter(JsonRegistry registry) {
         this.registry = registry;
     }
