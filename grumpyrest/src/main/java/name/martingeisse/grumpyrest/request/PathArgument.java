@@ -25,6 +25,10 @@ public final class PathArgument {
 
     /**
      * NOT PUBLIC API
+     *
+     * @param name                   ...
+     * @param text                   ...
+     * @param parseFromStringService ...
      */
     public PathArgument(String name, String text, ParseFromStringService parseFromStringService) {
         this.name = name;
