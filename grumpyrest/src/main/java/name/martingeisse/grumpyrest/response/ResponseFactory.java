@@ -15,6 +15,11 @@ public interface ResponseFactory {
 
     /**
      * Returns null on failure, causing the next factory to be tried.
+     *
+     * @param requestCycle the request cycle to create a response for. This is passed in case the response factory
+     *                     wants to do special stuff like look into request properties.
+     * @param value        the response value to convert to a {@link Response}
+     * @return the response
      */
     Response createResponse(RequestCycle requestCycle, Object value);
 
