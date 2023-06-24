@@ -14,6 +14,7 @@ import name.martingeisse.grumpyrest.response.ResponseFactory;
  * Produces an empty 200 response when null is returned as a response value.
  */
 public class NullResponseFactory implements ResponseFactory {
+
     @Override
     public Response createResponse(RequestCycle requestCycle, Object value) {
         if (value == null) {
@@ -22,4 +23,5 @@ public class NullResponseFactory implements ResponseFactory {
             return null;
         }
     }
+
 }

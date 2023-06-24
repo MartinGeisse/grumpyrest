@@ -15,6 +15,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implements a standard JSON-based error response format, combined with a selectable HTTP status code.
+ * <p>
+ * The "message" field contains a string message, and the "fields" contains a list of field errors, each with a
+ * field path and message. This allows to send a response that mentions errors in multiple fields at the same time.
+ * If, for example, JSON validation fails for the request body, then the individual field errors can be mentioned
+ * to the client all at once.
+ *
+ * @param status  the HTTP status
+ * @param message the error message
+ * @param fields  the field errors
+ */
 public record StandardErrorResponse(int status, String message, List<Field> fields) implements Response {
 
     public StandardErrorResponse {
@@ -63,10 +75,23 @@ public record StandardErrorResponse(int status, String message, List<Field> fiel
 
     // ----------------------------------------------------------------------------------------------------------------
 
+    /**
+     * Constructor without field errors.
+     *
+     * @param status  the HTTP status code
+     * @param message the error message
+     */
     public StandardErrorResponse(int status, String message) {
         this(status, message, List.of());
     }
 
+    /**
+     * Constructor with a single field error.
+     *
+     * @param status  the HTTP status code
+     * @param message the error message
+     * @param field the field error
+     */
     public StandardErrorResponse(int status, String message, Field field) {
         this(status, message, List.of(field));
     }
@@ -78,8 +103,16 @@ public record StandardErrorResponse(int status, String message, List<Field> fiel
         responseTransmitter.writeJson(new Body(message, fields));
     }
 
+    /**
+     * Represents an error for a single field.
+     *
+     * @param path    the field path
+     * @param message the error message
+     */
     public record Field(String path, String message) {}
-    public record Body(String message, List<Field> fields) {
+
+    // helper type so the HTTP status code won't be included in the response body
+    record Body(String message, List<Field> fields) {
         public Body {
             fields = List.copyOf(fields);
         }
