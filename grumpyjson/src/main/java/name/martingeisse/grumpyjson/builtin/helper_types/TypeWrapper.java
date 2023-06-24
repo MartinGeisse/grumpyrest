@@ -9,6 +9,8 @@ package name.martingeisse.grumpyjson.builtin.helper_types;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+// no javadoc because this may disappear in a future version, if we go the route to only use the run-time class during
+// serialization.
 public abstract class TypeWrapper<T> {
 
     private final T value;
