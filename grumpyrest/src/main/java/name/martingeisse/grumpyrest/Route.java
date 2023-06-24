@@ -32,7 +32,7 @@ import java.util.List;
  *     {@link SimpleHandler} if possible, and {@link ComplexHandler} if necessary, because it reduces coupling and
  *     simplifies testing and mocking. Refer to these interfaces for details</li>
  * </ul>
- * </p>
+ * <p>
  * The canonical constructor takes a {@link ComplexHandler} because this is the more general case.
  *
  * @param method the HTTP method to match
