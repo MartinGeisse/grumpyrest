@@ -10,11 +10,11 @@ import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Objects;
 
-public final class QuerystringParserProxy implements QuerystringParser {
+final class QuerystringParserProxy implements QuerystringParser {
 
     private QuerystringParser target;
 
-    public void setTarget(QuerystringParser target) {
+    void setTarget(QuerystringParser target) {
         this.target = Objects.requireNonNull(target);
     }
 
