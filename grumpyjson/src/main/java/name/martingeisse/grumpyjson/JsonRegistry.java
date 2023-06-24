@@ -84,7 +84,8 @@ public final class JsonRegistry {
 
     /**
      * Checks whether a type is supported by this registry through auto-generation, that is, without ever registering
-     * an explicit adapter for that type. If this method returns <tt>true</tt> for a type, so does <tt>supportsType</tt>.
+     * an explicit adapter for that type. If this method returns <code>true</code> for a type, so does
+     * <code>supportsType</code>.
      *
      * @param type the type to check
      * @return true if supported through auto-generation, false if not supported or only supported through an
