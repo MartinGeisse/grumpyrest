@@ -15,6 +15,12 @@ import name.martingeisse.grumpyrest.response.ResponseFactory;
  */
 public class NullResponseFactory implements ResponseFactory {
 
+    /**
+     * Constructor.
+     */
+    public NullResponseFactory() {
+    }
+
     @Override
     public Response createResponse(RequestCycle requestCycle, Object value) {
         if (value == null) {

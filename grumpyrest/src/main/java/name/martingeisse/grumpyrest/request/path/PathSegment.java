@@ -12,6 +12,12 @@ package name.martingeisse.grumpyrest.request.path;
 public abstract class PathSegment {
 
     /**
+     * Constructor.
+     */
+    protected PathSegment() {
+    }
+
+    /**
      * Parses an instance from a single segment of a string-based path specification. The segment is turned
      * into a path parameter ({@link VariablePathSegment}) if the segment specification starts with a <code>:</code>
      * character.
