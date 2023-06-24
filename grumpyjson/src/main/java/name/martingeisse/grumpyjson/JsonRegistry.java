@@ -46,7 +46,7 @@ public final class JsonRegistry {
     }
 
     /**
-     * Adds a type adapter to this registry, to be used when parsing and generating code with the {@link JsonEngine}
+     * Adds a type adapter to this registry, to be used when parsing and generating JSON with the {@link JsonEngine}
      * that uses this registry.
      *
      * @param adapter the adapter to add
@@ -134,7 +134,9 @@ public final class JsonRegistry {
 
     /**
      * Returns a type adapter for the specified type, auto-generating it if necessary and possible. This method will
-     * throw an exception if no adapter for that type was registered and no adapter can be auto-generated.
+     * throw an exception if no adapter for that type was registered and no adapter can be auto-generated. If multiple
+     * type adapters have been registered that can handle the specified type, the one registered earlier will take
+     * precedence.
      *
      * @param type the type to return an adapter for
      * @return the type adapter

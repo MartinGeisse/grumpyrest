@@ -115,7 +115,8 @@ public final class QuerystringParserRegistry {
 
     /**
      * Returns a parser for the specified type. This method throws an exception if no parser has been added for that
-     * type and auto-generation is not supported for it.
+     * type and auto-generation is not supported for it. If multiple parsers have been registered that can handle the
+     * specified type, the one registered earlier will take precedence.
      *
      * @param type the type to return a parser for
      * @return the parser
