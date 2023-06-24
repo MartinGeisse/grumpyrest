@@ -18,11 +18,21 @@ public class QuerystringParsingException extends Exception {
 
     private final Map<String, String> fieldErrors;
 
+    /**
+     * Creates an instance from a set of field errors, represented as a field-name-to-error map.
+     *
+     * @param fieldErrors the field errors
+     */
     public QuerystringParsingException(Map<String, String> fieldErrors) {
         super("exception during querystring parsing");
         this.fieldErrors = Map.copyOf(fieldErrors);
     }
 
+    /**
+     * Getter for the field errors
+     *
+     * @return the field errors
+     */
     public final Map<String, String> getFieldErrors() {
         return fieldErrors;
     }

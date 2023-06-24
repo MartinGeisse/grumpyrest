@@ -17,14 +17,14 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 /**
- * Auto-generated record parsers.
+ * This class implements an auto-generated record parser.
  */
 public final class QuerystringToRecordParser implements QuerystringParser {
 
     private final RecordInfo recordInfo;
     private final FromStringParserRegistry fromStringParserRegistry;
 
-    public QuerystringToRecordParser(Class<?> rawRecordClass, FromStringParserRegistry fromStringParserRegistry) {
+    QuerystringToRecordParser(Class<?> rawRecordClass, FromStringParserRegistry fromStringParserRegistry) {
         Objects.requireNonNull(rawRecordClass, "rawRecordClass");
         Objects.requireNonNull(fromStringParserRegistry, "fromStringParserRegistry");
         this.recordInfo = new RecordInfo(rawRecordClass);
