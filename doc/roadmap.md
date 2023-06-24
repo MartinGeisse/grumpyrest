@@ -19,6 +19,7 @@
 * Possibly: Request filters / interceptors. May instead result in documentation on how to achieve this with the current code.
 * Maps / objects with arbitrary keys
 * objects that allow arbitrary extra keys
+* HTTP headers (request and response)
 
 ## Future
 

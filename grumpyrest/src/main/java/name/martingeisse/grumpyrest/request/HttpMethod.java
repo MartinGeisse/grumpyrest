@@ -7,9 +7,25 @@ import java.util.Objects;
  * listed here since the routes don't deal with it directly.
  */
 public enum HttpMethod {
+
+    /**
+     * HTTP GET method
+     */
     GET,
+
+    /**
+     * HTTP PUT method
+     */
     PUT,
+
+    /**
+     * HTTP POST method
+     */
     POST,
+
+    /**
+     * HTTP DELETE method
+     */
     DELETE;
 
     /**
