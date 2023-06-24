@@ -13,14 +13,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * A path -- actually a path <i>pattern</i> -- that determines whether the actual path provided by a request matches
+ * a route. An instance of this class may define path parameters using {@link VariablePathSegment}.
+ *
+ * It is currently not possible to create an instance that allows an incoming request path to have extra segments.
+ *
+ * @param segments the segments of this path. These segments of the actual path from a request are lined up one-by-one
+ *                 with these segments and matched using {@link PathSegment#matches(String)}.
+ */
 public record Path(List<PathSegment> segments) {
 
+    /**
+     * Compact constructor.
+     *
+     * @param segments the segments of this path. These segments of the actual path from a request are lined up one-by-one
+     *                 with these segments and matched using {@link PathSegment#matches(String)}.
+     */
     public Path {
         segments = List.copyOf(segments);
     }
 
-    // TODO allow match extra incoming segments
-
+    /**
+     * Creates an instance from a string-based specification, using <code>:name</code> for path parameters.
+     *
+     * @param pathSpec the path specification
+     * @return the instance
+     */
     public static Path parse(String pathSpec) {
         Objects.requireNonNull(pathSpec);
         String[] segmentSpecs = PathUtil.splitIntoSegments(pathSpec);

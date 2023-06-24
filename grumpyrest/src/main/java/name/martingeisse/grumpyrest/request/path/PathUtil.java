@@ -9,6 +9,9 @@ package name.martingeisse.grumpyrest.request.path;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+/**
+ * NOT PUBLIC API
+ */
 public final class PathUtil {
 
     private static final Pattern slashPattern = Pattern.compile("/");
@@ -16,6 +19,12 @@ public final class PathUtil {
     private PathUtil() {
     }
 
+    /**
+     * NOT PUBLIC API
+     *
+     * @param pathText ...
+     * @return ...
+     */
     public static String trimSlashes(String pathText) {
         Objects.requireNonNull(pathText);
         while (pathText.startsWith("/")) {
@@ -27,6 +36,12 @@ public final class PathUtil {
         return pathText;
     }
 
+    /**
+     * NOT PUBLIC API
+     *
+     * @param pathText ...
+     * @return ...
+     */
     public static String[] splitIntoSegments(String pathText) {
         return slashPattern.split(trimSlashes(Objects.requireNonNull(pathText)));
     }
