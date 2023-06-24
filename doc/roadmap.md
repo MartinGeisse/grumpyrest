@@ -3,9 +3,7 @@
 
 ## Version 0.5
 
-* More documentation
-  * especially JSON-related topics
-  * also: provide tutorials, howtos, tech reference (javadoc), explanation (architecture and concept)
+* More javadoc
 * further reduce external dependencies
 
 ## Version 0.6
@@ -27,3 +25,4 @@
 specify path/querystring parameter defaults by the caller, not the parser
 * check if this is even necessary. Querystring parsing can use OptionalField and path parameters can't be optional
   because then the route would not match
+* provide a tutorial (I'll delay this until the API has stabilized)
