@@ -6,8 +6,17 @@
  */
 package name.martingeisse.grumpyrest.request.stringparser;
 
+/**
+ * This exception gets thrown by a {@link FromStringParser} if the string to parse does not conform to the parser's
+ * expectation.
+ */
 public class FromStringParserException extends Exception {
 
+    /**
+     * Constructor
+     *
+     * @param message the exception message
+     */
     public FromStringParserException(String message) {
         super(message);
     }
