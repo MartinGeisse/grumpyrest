@@ -496,7 +496,9 @@ public class JsonEngine {
     public JsonElement toJsonElement(Object value, Type type) throws JsonGenerationException {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(type, "type");
-        return registry.getTypeAdapter(type).toJson(value, type);
+        @SuppressWarnings("rawtypes") JsonTypeAdapter adapter = registry.getTypeAdapter(type);
+        //noinspection unchecked
+        return adapter.toJson(value, type);
     }
 
     // -----------------------------------------------------------------------

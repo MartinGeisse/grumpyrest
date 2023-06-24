@@ -50,7 +50,9 @@ public class TypeWrapperAdapter implements JsonTypeAdapter<TypeWrapper<?>> {
 
     @Override
     public JsonElement toJson(TypeWrapper<?> value, Type _ignored) throws JsonGenerationException {
-        return registry.getTypeAdapter(value.getType()).toJson(value.getValue(), value.getType());
+        @SuppressWarnings("rawtypes") JsonTypeAdapter adapter = registry.getTypeAdapter(value.getType());
+        //noinspection unchecked
+        return adapter.toJson(value.getValue(), value.getType());
     }
 
 }

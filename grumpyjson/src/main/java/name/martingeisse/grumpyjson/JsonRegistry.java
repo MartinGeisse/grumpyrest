@@ -6,6 +6,8 @@
  */
 package name.martingeisse.grumpyjson;
 
+import com.google.gson.reflect.TypeToken;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -97,6 +99,30 @@ public final class JsonRegistry {
         } else {
             return false;
         }
+    }
+
+    /**
+     * This is a convenience wrapper for {@link #getTypeAdapter(Type)} in case the type is a raw class object. It
+     * returns the adapter as a typed adapter.
+     *
+     * @param clazz the class to return an adapter for
+     * @return the type adapter
+     */
+    public <T> JsonTypeAdapter<T> getTypeAdapter(Class<T> clazz) {
+        //noinspection unchecked
+        return (JsonTypeAdapter<T>)getTypeAdapter((Type)clazz);
+    }
+
+    /**
+     * This is a convenience wrapper for {@link #getTypeAdapter(Type)} in case the type is a not raw class object but
+     * can be specified statically using a type token. It returns the adapter as a typed adapter.
+     *
+     * @param typeToken a type token for the type to return an adapter for
+     * @return the type adapter
+     */
+    public <T> JsonTypeAdapter<T> getTypeAdapter(TypeToken<T> typeToken) {
+        //noinspection unchecked
+        return (JsonTypeAdapter<T>)getTypeAdapter(typeToken.getType());
     }
 
     /**
