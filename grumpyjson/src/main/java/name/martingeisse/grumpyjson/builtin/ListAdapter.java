@@ -24,6 +24,11 @@ public class ListAdapter implements JsonTypeAdapter<List<?>> {
 
     private final JsonRegistry registry;
 
+    /**
+     * Constructor.
+     *
+     * @param registry the JSON registry -- needed to fetch the adapter for the element type at run-time
+     */
     public ListAdapter(JsonRegistry registry) {
         this.registry = registry;
     }

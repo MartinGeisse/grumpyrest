@@ -25,6 +25,13 @@ import java.util.Objects;
  */
 public class IntegerAdapter implements JsonTypeAdapter<Integer> {
 
+    /**
+     * Constructor
+     */
+    public IntegerAdapter() {
+        // needed to silence Javadoc error because the implicit constructor doesn't have a doc comment
+    }
+
     @Override
     public boolean supportsType(Type type) {
         Objects.requireNonNull(type, "type");

@@ -21,6 +21,13 @@ import java.util.Objects;
  */
 public final class JsonElementAdapter implements JsonTypeAdapter<JsonElement> {
 
+    /**
+     * Constructor
+     */
+    public JsonElementAdapter() {
+        // needed to silence Javadoc error because the implicit constructor doesn't have a doc comment
+    }
+
     @Override
     public boolean supportsType(Type type) {
         Objects.requireNonNull(type, "type");

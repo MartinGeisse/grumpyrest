@@ -21,15 +21,32 @@ public final class JsonRegistry {
     private final List<JsonTypeAdapter<?>> adapterList = new ArrayList<>();
     private final ConcurrentMap<Type, JsonTypeAdapter<?>> adapterMap = new ConcurrentHashMap<>();
 
+    /**
+     * Constructor
+     */
+    public JsonRegistry() {
+        // needed to silence Javadoc error because the implicit constructor doesn't have a doc comment
+    }
+
     // ----------------------------------------------------------------------------------------------------------------
     // configuration-time methods
     // ----------------------------------------------------------------------------------------------------------------
 
+    /**
+     * Removes all type adapters from this registry. This is useful because the registry that is used by a newly
+     * created {@link JsonEngine} contains default adapters, and the code using it might not want to use them.
+     */
     public void clearTypeAdapters() {
         adapterList.clear();
     }
 
-    public <T> void addTypeAdapter(JsonTypeAdapter<T> adapter) {
+    /**
+     * Adds a type adapter to this registry, to be used when parsing and generating code with the {@link JsonEngine}
+     * that uses this registry.
+     *
+     * @param adapter the adapter to add
+     */
+    public void addTypeAdapter(JsonTypeAdapter<?> adapter) {
         adapterList.add(Objects.requireNonNull(adapter, "adapter"));
     }
 
@@ -37,6 +54,16 @@ public final class JsonRegistry {
     // run-time methods
     // ----------------------------------------------------------------------------------------------------------------
 
+    /**
+     * Checks whether the specified type is supported by any adapter in this registry.
+     * <p>
+     * Note that there are some reasons why an adapter may claim to support a type, but fail at run-time when it
+     * actually encounters that type. Such a type will still be "supported" by that adapter from the point-of-view of
+     * the registry. Refer to the documentation of the individual type adapters for details.
+     *
+     * @param type the type to check
+     * @return true if supported, false if not
+     */
     public boolean supportsType(Type type) {
         Objects.requireNonNull(type, "type");
         if (supportsAdapterAutoGeneration(type)) {
@@ -53,6 +80,14 @@ public final class JsonRegistry {
         return false;
     }
 
+    /**
+     * Checks whether a type is supported by this registry through auto-generation, that is, without ever registering
+     * an explicit adapter for that type. If this method returns <tt>true</tt> for a type, so does <tt>supportsType</tt>.
+     *
+     * @param type the type to check
+     * @return true if supported through auto-generation, false if not supported or only supported through an
+     * explicitly added type adapter
+     */
     public boolean supportsAdapterAutoGeneration(Type type) {
         Objects.requireNonNull(type, "type");
         if (type instanceof Class<?> c) {
@@ -64,7 +99,14 @@ public final class JsonRegistry {
         }
     }
 
-    public <T> JsonTypeAdapter<T> getTypeAdapter(Type type) {
+    /**
+     * Returns a type adapter for the specified type, auto-generating it if necessary and possible. This method will
+     * throw an exception if no adapter for that type was registered and no adapter can be auto-generated.
+     *
+     * @param type the type to return an adapter for
+     * @return the type adapter
+     */
+    public JsonTypeAdapter<?> getTypeAdapter(Type type) {
         Objects.requireNonNull(type, "type");
 
         // computeIfAbsent() cannot be used, if it behaves as it should, because recursively adding recognized types
@@ -90,7 +132,7 @@ public final class JsonRegistry {
             // Next, install a proxy, so that recursive types don't crash the registry. Note that we don't put the
             // adapter/proxy into the adapterList because we already put it into the adapterMap, and it cannot handle
             // any types other than the exact type it gets generated for.
-            var proxy = new AdapterProxy<T>();
+            var proxy = new AdapterProxy<>();
             adapterMap.put(type, proxy);
 
             // finally, create the actual adapter and set it as the proxy's target
@@ -103,7 +145,7 @@ public final class JsonRegistry {
             }
 
             //noinspection unchecked
-            proxy.setTarget((JsonTypeAdapter<T>)adapter);
+            proxy.setTarget((JsonTypeAdapter<Object>) adapter);
 
         }
 
@@ -112,8 +154,7 @@ public final class JsonRegistry {
             throw new RuntimeException("no JSON type adapter found and can only auto-generate them for record types, found type: " + type);
         }
 
-        //noinspection unchecked
-        return (JsonTypeAdapter<T>)adapter;
+        return adapter;
     }
 
 }

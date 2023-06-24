@@ -26,6 +26,13 @@ import java.util.Objects;
  */
 public class StringAdapter implements JsonTypeAdapter<String> {
 
+    /**
+     * Constructor
+     */
+    public StringAdapter() {
+        // needed to silence Javadoc error because the implicit constructor doesn't have a doc comment
+    }
+
     @Override
     public boolean supportsType(Type type) {
         Objects.requireNonNull(type, "type");

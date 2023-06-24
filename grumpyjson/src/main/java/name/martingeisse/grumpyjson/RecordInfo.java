@@ -25,6 +25,8 @@ public final class RecordInfo {
 
     /**
      * NOT PUBLIC API
+     *
+     * @param recordClass ...
      */
     public RecordInfo(Class<?> recordClass) {
         Objects.requireNonNull(recordClass, "record");

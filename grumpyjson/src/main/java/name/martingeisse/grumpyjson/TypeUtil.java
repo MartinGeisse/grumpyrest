@@ -14,6 +14,9 @@ import java.lang.reflect.Type;
  */
 public class TypeUtil {
 
+    private TypeUtil() {
+    }
+
     /**
      * A common thing to check in type adapters is whether a requested type is a parameterized type with a specific
      * raw type and a specific number of type parameters, but without further restricting the type arguments used

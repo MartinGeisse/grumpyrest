@@ -24,6 +24,13 @@ import java.util.Objects;
  */
 public class FieldMustBeNullAdapter implements JsonTypeAdapter<FieldMustBeNull> {
 
+    /**
+     * Constructor
+     */
+    public FieldMustBeNullAdapter() {
+        // needed to silence Javadoc error because the implicit constructor doesn't have a doc comment
+    }
+
     @Override
     public boolean supportsType(Type type) {
         return type.equals(FieldMustBeNull.class);
