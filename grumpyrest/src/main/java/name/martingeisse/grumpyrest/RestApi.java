@@ -6,7 +6,6 @@
  */
 package name.martingeisse.grumpyrest;
 
-import com.google.gson.JsonElement;
 import name.martingeisse.grumpyjson.JsonEngine;
 import name.martingeisse.grumpyjson.JsonRegistry;
 import name.martingeisse.grumpyjson.JsonTypeAdapter;
@@ -14,21 +13,15 @@ import name.martingeisse.grumpyrest.request.HttpMethod;
 import name.martingeisse.grumpyrest.request.path.Path;
 import name.martingeisse.grumpyrest.request.querystring.QuerystringParser;
 import name.martingeisse.grumpyrest.request.querystring.QuerystringParserRegistry;
-import name.martingeisse.grumpyrest.response.FinishRequestException;
-import name.martingeisse.grumpyrest.response.NoResponseFactoryException;
-import name.martingeisse.grumpyrest.response.Response;
-import name.martingeisse.grumpyrest.response.ResponseFactory;
-import name.martingeisse.grumpyrest.response.ResponseFactoryRegistry;
-import name.martingeisse.grumpyrest.response.ResponseValueWrapper;
-import name.martingeisse.grumpyrest.response.standard.IdentityResponseFactory;
-import name.martingeisse.grumpyrest.response.standard.JsonResponseFactory;
-import name.martingeisse.grumpyrest.response.standard.NullResponseFactory;
-import name.martingeisse.grumpyrest.response.standard.StandardErrorResponse;
 import name.martingeisse.grumpyrest.request.stringparser.FromStringParser;
 import name.martingeisse.grumpyrest.request.stringparser.FromStringParserRegistry;
 import name.martingeisse.grumpyrest.request.stringparser.standard.IntegerFromStringParser;
 import name.martingeisse.grumpyrest.request.stringparser.standard.StringFromStringParser;
-import name.martingeisse.grumpyrest.response.standard.StatusOnlyResponse;
+import name.martingeisse.grumpyrest.response.*;
+import name.martingeisse.grumpyrest.response.standard.IdentityResponseFactory;
+import name.martingeisse.grumpyrest.response.standard.JsonResponseFactory;
+import name.martingeisse.grumpyrest.response.standard.NullResponseFactory;
+import name.martingeisse.grumpyrest.response.standard.StandardErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -162,40 +155,9 @@ public final class RestApi {
      * <p>
      * Note that support for new JSON-able types should not be implemented as a response factory, but by
      * registering a {@link JsonTypeAdapter} with the {@link JsonRegistry} returned by {@link #getJsonEngine()} /
-     * {@link JsonEngine#getRegistry()}.
-     * <p>
-     * Since most responses are expected to be JSON-based, custom response factories are rare. If you think you need
-     * one, consider these alternatives:
-     * <ul>
-     *     <li>A custom {@link JsonTypeAdapter}, as mentioned above, to achieve a custom response format</li>
-     *     <li>A {@link StandardErrorResponse} to send error responses in standard JSON format</li>
-     *     <li>Building and returning a {@link JsonElement} (in case your response format does not have to
-     *       be abstracted and re-usable</li>
-     *     <li>Throwing a {@link FinishRequestException} as a means of control flow, to stop handling the requests and
-     *       to return any of the above to the framework immediately</li>
-     *     <li>A {@link StatusOnlyResponse} for custom HTTP-level errors</li>
-     *     <li>Returning a {@link Response} directly (in case you need a custom response, but it does not have to be
-     *       abstracted and re-usable).</li>
-     * </ul>
-     * One example where none of these is sufficient and you'll want a custom response factory is when you want to
-     * define a custom RedirectException that sens a 302 redirect to the client. Reasons you need a custom response
-     * factory in this case are:
-     * <ul>
-     *     <li>The problem is not JSON-related, so neither a {@link JsonTypeAdapter} nor {@link JsonElement} will help</li>
-     *     <li>The {@link StandardErrorResponse} format is not related to the HTTP status nor the Location header,
-     *       and if the redirect works, the response body should be irrelevant to the client</li>
-     *     <li>The {@link FinishRequestException} actually helps with the control flow, but not with generating the
-     *       response. You might want to derive RedirectException from {@link FinishRequestException}, or use a
-     *       Redirection response wrapped by a {@link FinishRequestException} instead (more work for the caller,
-     *       though), or have the RedirectException implement {@link ResponseValueWrapper} to kind-of make it its
-     *       own response factory. But let's say, you don't want that for some reason.</li>
-     *     <li>A {@link StatusOnlyResponse} only sets the status code. It won't add a Location header.</li>
-     *     <li>A {@link Response} puts the burden of generating a correct 302 redirect on the caller.</li>
-     * </ul>
-     * In this case, you'll want to make RedirectResponse as abstract and as convenient for the caller as possible.
-     * For example, you might define it in such a way that the caller does not have to specify the full URL to redirect
-     * to, but only higher-level information from which the URL is derived. A custom {@link ResponseFactory} is then
-     * a good way to generate a {@link Response} for that exception.
+     * {@link JsonEngine#getRegistry()}. A custom response factory, OTOH, would be appropriate to send a JSON response
+     * (using the {@link JsonEngine} implicitly by calling one of the {@link ResponseTransmitter#writeJson} methods)
+     * together with a custom HTTP status code or custom HTTP headers.
      *
      * @param responseFactory the response factory to register
      */
