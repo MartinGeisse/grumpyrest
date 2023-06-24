@@ -48,11 +48,19 @@ public final class RequestCycle {
     private final Request highlevelRequest;
     private final ResponseTransmitter responseTransmitter;
 
+    /**
+     * NOT PUBLIC API
+     *
+     * @param api                         ...
+     * @param servletRequest              ...
+     * @param servletResponse             ...
+     * @param requestPathSourcingStrategy ...
+     */
     public RequestCycle(
-            RestApi api,
-            HttpServletRequest servletRequest,
-            HttpServletResponse servletResponse,
-            RequestPathSourcingStrategy requestPathSourcingStrategy
+        RestApi api,
+        HttpServletRequest servletRequest,
+        HttpServletResponse servletResponse,
+        RequestPathSourcingStrategy requestPathSourcingStrategy
     ) {
         this.api = api;
         this.servletRequest = servletRequest;
@@ -69,14 +77,29 @@ public final class RequestCycle {
         this.responseTransmitter = new MyResponseTransmitter();
     }
 
+    /**
+     * Getter method for the {@link RestApi} that handles the request
+     *
+     * @return the REST API implementation
+     */
     public RestApi getApi() {
         return api;
     }
 
+    /**
+     * Getter method for the underlying servlet request
+     *
+     * @return the servlet request
+     */
     public HttpServletRequest getServletRequest() {
         return servletRequest;
     }
 
+    /**
+     * Getter method for the requested path, split into segments at slashes
+     *
+     * @return the path segments
+     */
     public List<String> getPathSegments() {
         return pathSegments;
     }
@@ -88,18 +111,49 @@ public final class RequestCycle {
         return routeMatchResult;
     }
 
+    /**
+     * Getter method for the route that matched this request. This method must not be called before route matching
+     * is completed, otherwise it throws an exception.
+     *
+     * @return the route
+     */
     public Route getMatchedRoute() {
         return needRouteMatchResult().route();
     }
 
+    /**
+     * Getter method for the path arguments that are bound to variables in the path of the matched route.
+     * This method must not be called before route matching is completed, otherwise it throws an exception.
+     * <p>
+     * The returned list contains elements only for variables in the route's path, not for fixed path segments.
+     *
+     * @return the path arguments
+     */
     public List<PathArgument> getPathArguments() {
         return needRouteMatchResult().pathArguments();
     }
 
+    /**
+     * The high-level {@link Request} object that makes all relevant properties of the HTTP request available. This is
+     * the object that gets passed to a {@link SimpleHandler} as the only parameter.
+     *
+     * @return the request
+     */
     public Request getHighlevelRequest() {
         return highlevelRequest;
     }
 
+    /**
+     * Returns an object that is used by {@link Response} implementations to transmit the response to the client. It is
+     * an abstraction of the {@link HttpServletResponse} and contains methods to send headers as well as the response
+     * body.
+     * <p>
+     * The returned object is called a response <i>transmitter</i>, even though it abstracts the servlet
+     * <i>response</i>, because the latter suffers from bad naming: That object isn't really the response itself as
+     * much as a mechanism to send a response to the client.
+     *
+     * @return the response transmitter
+     */
     public ResponseTransmitter getResponseTransmitter() {
         return responseTransmitter;
     }
@@ -107,88 +161,6 @@ public final class RequestCycle {
     void applyRouteMatchResult(RouteMatchResult matchResult) {
         Objects.requireNonNull(matchResult, "matchResult");
         this.routeMatchResult = matchResult;
-    }
-
-    public <T> T parseBody(Class<T> clazz) {
-        try {
-            return api.getJsonEngine().parse(prepareParse(), clazz);
-        } catch (JsonValidationException e) {
-            throw new FinishRequestException(StandardErrorResponse.requestBodyValidationFailed(e));
-        }
-    }
-
-    public <T> T parseBody(TypeToken<T> typeToken) {
-        try {
-            return api.getJsonEngine().parse(prepareParse(), typeToken);
-        } catch (JsonValidationException e) {
-            throw new FinishRequestException(StandardErrorResponse.requestBodyValidationFailed(e));
-        }
-    }
-
-    public Object parseBody(Type type) {
-        try {
-            return api.getJsonEngine().parse(prepareParse(), type);
-        } catch (JsonValidationException e) {
-            throw new FinishRequestException(StandardErrorResponse.requestBodyValidationFailed(e));
-        }
-    }
-
-    private InputStream prepareParse() {
-        String contentType = servletRequest.getContentType();
-        if (contentType == null || !contentType.equals("application/json")) {
-            throw new FinishRequestException(StandardErrorResponse.JSON_EXPECTED);
-        }
-        try {
-            return servletRequest.getInputStream();
-        } catch (IOException e) {
-            throw new FinishRequestException(StandardErrorResponse.IO_ERROR);
-        }
-    }
-
-
-    public <T> T parseQuerystring(Class<T> clazz) throws QuerystringParsingException {
-        return clazz.cast(parseQuerystring((Type)clazz));
-    }
-
-    public <T> T parseQuerystring(TypeToken<T> typeToken) throws QuerystringParsingException {
-        //noinspection unchecked
-        return (T)parseQuerystring(typeToken.getType());
-    }
-
-    public Object parseQuerystring(Type type) throws QuerystringParsingException {
-        Map<String, String[]> querystringMulti = servletRequest.getParameterMap();
-        Map<String, String> querystringSingle = new HashMap<>();
-        Map<String, String> errorMap = new HashMap<>();
-        for (Map.Entry<String, String[]> entry : querystringMulti.entrySet()) {
-            String[] values = entry.getValue();
-            for (String value : values) {
-                if (querystringSingle.put(entry.getKey(), value) != null) {
-                    errorMap.put(entry.getKey(), ExceptionMessages.DUPLICATE_PARAMETER);
-                }
-            }
-        }
-        Object result = null;
-        QuerystringParsingException originalException = null;
-        try {
-            result = api.getQuerystringParserRegistry().getParser(type).parse(querystringSingle, type);
-            if (result == null) {
-                throw new QuerystringParsingException(Map.of("(root)", "querystring parser returned null"));
-            }
-        } catch (QuerystringParsingException e) {
-            originalException = e;
-            // duplicate-parameter errors take precedence here
-            for (Map.Entry<String, String> entry : e.getFieldErrors().entrySet()) {
-                errorMap.putIfAbsent(entry.getKey(), entry.getValue());
-            }
-        }
-        if (!errorMap.isEmpty()) {
-            throw new QuerystringParsingException(Map.copyOf(errorMap));
-        }
-        if (result == null) {
-            // this can only happen if the originalException did not contain any errors
-            throw originalException;
-        }
-        return result;
     }
 
     private final class MyResponseTransmitter implements ResponseTransmitter {
@@ -230,7 +202,7 @@ public final class RequestCycle {
 
     }
 
-    private class MyRequest implements Request {
+    private final class MyRequest implements Request {
 
         public List<PathArgument> getPathArguments() {
             return RequestCycle.this.getPathArguments();
@@ -310,12 +282,12 @@ public final class RequestCycle {
 
 
         public <T> T parseQuerystring(Class<T> clazz) throws QuerystringParsingException {
-            return clazz.cast(parseQuerystring((Type)clazz));
+            return clazz.cast(parseQuerystring((Type) clazz));
         }
 
         public <T> T parseQuerystring(TypeToken<T> typeToken) throws QuerystringParsingException {
             //noinspection unchecked
-            return (T)parseQuerystring(typeToken.getType());
+            return (T) parseQuerystring(typeToken.getType());
         }
 
     }
