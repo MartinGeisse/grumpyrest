@@ -10,6 +10,11 @@ public final class StatusOnlyResponse implements Response {
 
     private final int status;
 
+    /**
+     * Constructor.
+     *
+     * @param status the HTTP status code
+     */
     public StatusOnlyResponse(int status) {
         this.status = status;
     }

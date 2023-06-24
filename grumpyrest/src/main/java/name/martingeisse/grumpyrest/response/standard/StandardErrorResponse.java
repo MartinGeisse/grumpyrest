@@ -29,6 +29,13 @@ import java.util.List;
  */
 public record StandardErrorResponse(int status, String message, List<Field> fields) implements Response {
 
+    /**
+     * Compact constructor.
+     *
+     * @param status  the HTTP status
+     * @param message the error message
+     * @param fields  the field errors
+     */
     public StandardErrorResponse {
         fields = List.copyOf(fields);
     }
@@ -64,6 +71,9 @@ public record StandardErrorResponse(int status, String message, List<Field> fiel
     /**
      * This is an error response for failed request body validation. The error lists the fields that failed
      * validation and their error messages.
+     *
+     * @param e the exceptionfrom the failed validation
+     * @return the instance of this class
      */
     public static StandardErrorResponse requestBodyValidationFailed(JsonValidationException e) {
         List<Field> translatedErrors = new ArrayList<>();

@@ -21,11 +21,20 @@ public interface QuerystringParser {
 
     /**
      * Checks if this adapter supports the specified type.
+     *
+     * @param type the type to check
+     * @return true if supported, false if not
      */
     boolean supportsType(Type type);
 
     /**
      * Converts the querystring to an application object.
+     *
+     * @param querystring the querystring to convert, pre-parsed into key/value pairs by the servlet container
+     * @param type the type to parse as
+     * @return the parsed object
+     * @throws QuerystringParsingException on parsing errors, such as wrongly formatted fields, unknown fields,
+     * missing fields or duplicate fields
      */
     Object parse(Map<String, String> querystring, Type type) throws QuerystringParsingException;
 
