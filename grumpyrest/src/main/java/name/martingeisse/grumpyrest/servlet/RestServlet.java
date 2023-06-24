@@ -12,11 +12,20 @@ import jakarta.servlet.http.HttpServletResponse;
 import name.martingeisse.grumpyrest.RequestCycle;
 import name.martingeisse.grumpyrest.RestApi;
 
+/**
+ * Java servlet that serves a REST API defined by a {@link RestApi} object.
+ */
 public class RestServlet extends HttpServlet {
 
     private final RestApi api;
     private final RequestPathSourcingStrategy requestPathSourcingStrategy;
 
+    /**
+     * Constructor.
+     *
+     * @param api                         the API definition
+     * @param requestPathSourcingStrategy how to determine the request path from the servlet request object
+     */
     public RestServlet(RestApi api, RequestPathSourcingStrategy requestPathSourcingStrategy) {
         this.api = api;
         this.requestPathSourcingStrategy = requestPathSourcingStrategy;

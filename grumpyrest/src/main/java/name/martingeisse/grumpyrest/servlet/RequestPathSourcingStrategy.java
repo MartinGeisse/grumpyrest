@@ -12,18 +12,29 @@ import name.martingeisse.grumpyrest.request.path.PathUtil;
  */
 public enum RequestPathSourcingStrategy {
 
+    /**
+     * The request path is built by concatenating the context path, servlet path and path info.
+     */
     STARTING_WITH_CONTEXT_PATH {
         @Override
         public String getPath(HttpServletRequest request) {
             return handleResult(mergeParts(mergeParts(getContextPath(request), getServletPath(request)), getPathInfo(request)));
         }
     },
+
+    /**
+     * The request path is built by concatenating the servlet path and path info.
+     */
     STARTING_WITH_SERVLET_PATH {
         @Override
         public String getPath(HttpServletRequest request) {
             return handleResult(mergeParts(getServletPath(request), getPathInfo(request)));
         }
     },
+
+    /**
+     * The request path only consists of the path info.
+     */
     PATH_INFO_ONLY {
         @Override
         public String getPath(HttpServletRequest request) {
@@ -31,6 +42,12 @@ public enum RequestPathSourcingStrategy {
         }
     };
 
+    /**
+     * Determines the request path from a servlet request object.
+     *
+     * @param request the servlet request object
+     * @return the path
+     */
     public abstract String getPath(HttpServletRequest request);
 
     private static String getContextPath(HttpServletRequest request) {
