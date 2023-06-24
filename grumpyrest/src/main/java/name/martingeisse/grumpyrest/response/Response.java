@@ -39,6 +39,9 @@ public interface Response {
      * {@link RequestCycle} to transmit itself, e.g. access request parameters on-the-fly, then these things have to be
      * passed to the implementation by another mechanism. This interface tries to keep the dependency between the two
      * minimal.
+     *
+     * @param responseTransmitter the response transmitter that is used to actually send data to the client
+     * @throws IOException on I/O errors
      */
     void transmit(ResponseTransmitter responseTransmitter) throws IOException;
 

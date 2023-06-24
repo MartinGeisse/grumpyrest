@@ -16,6 +16,12 @@ import java.lang.reflect.Type;
  */
 public final class IntegerFromStringParser implements FromStringParser {
 
+    /**
+     * Constructor.
+     */
+    public IntegerFromStringParser() {
+    }
+
     @Override
     public boolean supportsType(Type type) {
         return type.equals(Integer.TYPE) || type.equals(Integer.class);

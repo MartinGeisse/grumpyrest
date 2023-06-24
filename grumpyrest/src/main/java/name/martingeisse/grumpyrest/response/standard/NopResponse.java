@@ -15,7 +15,16 @@ import name.martingeisse.grumpyrest.response.Response;
  */
 public class NopResponse implements Response {
 
+    /**
+     * A shared instance of this class that can be used to reduce memory usage.
+     */
     public static final NopResponse INSTANCE = new NopResponse();
+
+    /**
+     * Constructor.
+     */
+    public NopResponse() {
+    }
 
     @Override
     public void transmit(ResponseTransmitter responseTransmitter) {
