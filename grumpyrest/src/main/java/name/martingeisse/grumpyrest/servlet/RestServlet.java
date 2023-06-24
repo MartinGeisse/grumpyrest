@@ -17,7 +17,14 @@ import name.martingeisse.grumpyrest.RestApi;
  */
 public class RestServlet extends HttpServlet {
 
+    /**
+     * needs javadoc because this class is {@link java.io.Serializable}
+     */
     private final RestApi api;
+
+    /**
+     * needs javadoc because this class is {@link java.io.Serializable}
+     */
     private final RequestPathSourcingStrategy requestPathSourcingStrategy;
 
     /**
