@@ -19,6 +19,8 @@
   * TypeAdapterProvider: Interface to use in other type adapters so they don't have to depend on the whole registry
     * with the above split, there would actually be a SerializerProvider and a DeserializerProvider
 * Possibly: Request filters / interceptors. May instead result in documentation on how to achieve this with the current code.
+* Maps / objects with arbitrary keys
+* objects that allow arbitrary extra keys
 
 ## Future
 

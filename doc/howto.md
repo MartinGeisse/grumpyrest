@@ -7,4 +7,6 @@
 
 [Querystring Parameters](howto-querystring-parameters)
 
+[Request Body](howto-request-body)
+
 [Using Dependency Injection Anyway](howto-use-di-anyway)
