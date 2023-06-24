@@ -19,6 +19,9 @@ import java.util.Objects;
  */
 public class JsonValidationException extends Exception {
 
+    /**
+     * needs javadoc because this class is {@link java.io.Serializable}
+     */
     private final FieldErrorNode fieldErrorNode;
 
     /**

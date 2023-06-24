@@ -25,6 +25,9 @@ import java.util.Objects;
  */
 public class JsonGenerationException extends RuntimeException {
 
+    /**
+     * needs javadoc because this class is {@link java.io.Serializable}
+     */
     private final FieldErrorNode fieldErrorNode;
 
     /**
