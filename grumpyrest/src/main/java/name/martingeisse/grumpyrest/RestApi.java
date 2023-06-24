@@ -164,7 +164,11 @@ public final class RestApi {
                     LOGGER.error("unexpected exception and no response factory registered for it", t);
                 } else {
                     String hint = getHintForMissingResponseFactory(rejectedResponseValue);
-                    LOGGER.error(e.getMessage() + (hint == null ? "" : ". HINT: " + hint));
+                    if (hint == null) {
+                        LOGGER.error(e.getMessage());
+                    } else {
+                        LOGGER.error(hint + " original error: " + e.getMessage());
+                    }
                 }
             } catch (Exception e) {
                 LOGGER.error("could not create HTTP response for response value", e);
