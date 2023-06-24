@@ -23,6 +23,9 @@ package name.martingeisse.grumpyrest.response;
  */
 public class FinishRequestException extends RuntimeException implements ResponseValueWrapper {
 
+    /**
+     * needs javadoc because this class is {@link java.io.Serializable}
+     */
     private final Object responseValue;
 
     /**

@@ -16,6 +16,9 @@ import java.util.Map;
  */
 public class QuerystringParsingException extends Exception {
 
+    /**
+     * needs javadoc because this class is {@link java.io.Serializable}
+     */
     private final Map<String, String> fieldErrors;
 
     /**
