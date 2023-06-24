@@ -25,6 +25,13 @@ public class FromStringParserRegistry implements ParseFromStringService {
     private final List<FromStringParser> parserList = new ArrayList<>();
     private final ConcurrentMap<Type, FromStringParser> parserMap = new ConcurrentHashMap<>();
 
+    /**
+     * Constructor. This constructor does not add any standard parsers, but the {@link RestApi} calling this
+     * constructor does.
+     */
+    public FromStringParserRegistry() {
+    }
+
     // ----------------------------------------------------------------------------------------------------------------
     // configuration-time methods
     // ----------------------------------------------------------------------------------------------------------------

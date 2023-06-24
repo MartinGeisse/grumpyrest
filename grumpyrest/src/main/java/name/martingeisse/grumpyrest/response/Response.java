@@ -6,10 +6,30 @@
  */
 package name.martingeisse.grumpyrest.response;
 
+import jakarta.servlet.http.HttpServletResponse;
+import name.martingeisse.grumpyjson.JsonRegistry;
+import name.martingeisse.grumpyjson.JsonTypeAdapter;
 import name.martingeisse.grumpyrest.RequestCycle;
 
 import java.io.IOException;
 
+/**
+ * An object that knows how to express itself via HTTP to the client. In other words, this interface is implemented
+ * by objects that can transmit themselves to the client using a {@link ResponseTransmitter}.
+ * <p>
+ * Most application-level objects do not implement this interface because they are defined on a higher level than
+ * HTTP. These objects do not even know how to express themselves as JSON, but they <i>do</i> have a
+ * {@link JsonTypeAdapter} registered in the {@link JsonRegistry}, so at least that can be used to generate JSON.
+ * However, this is not by itself sufficient to express via HTTP.
+ * <p>
+ * Instead, on a lower level, a {@link ResponseFactory} is selected that further converts the JSON to a
+ * {@link Response}. Likewise, other values such as uncaught exceptions are also converted to a {@link Response},
+ * either by an appropriate factory or by the framework itself. The result is that no matter what happens, in the
+ * end an instance of this interface is the result, and that instance is asked to transmit itself to the client.
+ * <p>
+ * The response transmitter used here is simply an abstraction of the {@link HttpServletResponse} that we use to
+ * decouple our code from unnecessary parts of the servlet spec.
+ */
 public interface Response {
 
     /**

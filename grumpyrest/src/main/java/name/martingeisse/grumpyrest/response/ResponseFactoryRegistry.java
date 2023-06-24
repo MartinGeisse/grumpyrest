@@ -7,6 +7,7 @@
 package name.martingeisse.grumpyrest.response;
 
 import name.martingeisse.grumpyrest.RequestCycle;
+import name.martingeisse.grumpyrest.RestApi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,17 +20,38 @@ public class ResponseFactoryRegistry {
 
     private final List<ResponseFactory> factories = new ArrayList<>();
 
+    /**
+     * Constructor. This constructor does not add any factories, but the {@link RestApi} calling this constructor does.
+     */
     public ResponseFactoryRegistry() {
     }
 
+    /**
+     * Removes all response factories from this registry. This is useful because the registry that is used by a newly
+     * created {@link RestApi} contains default response factories, and the code using it might not want to use them.
+     */
     public void clear() {
         factories.clear();
     }
 
+    /**
+     * Adds a response factory to this registry, to be used when converting a response value to a {@link Response}.
+     *
+     * @param factory the response factory to add
+     */
     public void add(ResponseFactory factory) {
         factories.add(factory);
     }
 
+    /**
+     * Converts a response value to a {@link Response} using an appropriate response factory from this registry.
+     * If multiple response factories support conversion of that value, then the one added earlier takes precedence.
+     *
+     * @param requestCycle the request cycle to create a response for. This is passed in case the response factory
+     *                     wants to do special stuff like look into request properties.
+     * @param value        the response value to convert to a {@link Response}
+     * @return the response
+     */
     public Response createResponse(RequestCycle requestCycle, Object value) {
         while (value instanceof ResponseValueWrapper wrapper) {
             value = wrapper.getWrappedResponseValue();

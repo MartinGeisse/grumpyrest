@@ -8,6 +8,9 @@ package name.martingeisse.grumpyrest.response;
 
 import name.martingeisse.grumpyrest.RequestCycle;
 
+/**
+ * This factory knows how to turn specific kinds of response values into {@link Response} objects.
+ */
 public interface ResponseFactory {
 
     /**
