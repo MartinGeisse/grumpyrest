@@ -15,6 +15,12 @@ import name.martingeisse.grumpyrest.response.ResponseFactory;
  */
 public final class IdentityResponseFactory implements ResponseFactory {
 
+    /**
+     * Constructor.
+     */
+    public IdentityResponseFactory() {
+    }
+
     @Override
     public Response createResponse(RequestCycle requestCycle, Object value) {
         return (value instanceof Response response) ? response : null;

@@ -12,6 +12,14 @@ package name.martingeisse.grumpyrest.response;
  */
 public interface ResponseValueWrapper {
 
+    /**
+     * Getter method for the response value wrapped by this wrapper.
+     * <p>
+     * If the wrapped value is itself an instance of this interface, then the implementation does not have to unwrap
+     * that wrapper too -- the caller of this method is expected to unwrap as often as possible.
+     *
+     * @return the wrapped response value
+     */
     Object getWrappedResponseValue();
 
 }
