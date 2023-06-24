@@ -12,6 +12,7 @@ import name.martingeisse.grumpyjson.JsonRegistry;
 import name.martingeisse.grumpyjson.JsonTypeAdapter;
 import name.martingeisse.grumpyrest.request.HttpMethod;
 import name.martingeisse.grumpyrest.request.path.Path;
+import name.martingeisse.grumpyrest.request.querystring.QuerystringParser;
 import name.martingeisse.grumpyrest.request.querystring.QuerystringParserRegistry;
 import name.martingeisse.grumpyrest.response.FinishRequestException;
 import name.martingeisse.grumpyrest.response.NoResponseFactoryException;
@@ -32,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -212,20 +214,67 @@ public final class RestApi {
         return responseFactoryRegistry;
     }
 
+    /**
+     * Adds a from-string parser to support new types of path parameters and querystring parameters. This is needed,
+     * for example, to support a custom date format in the path or querystring. Note that you might need to call
+     * {@link #getFromStringParserRegistry()} to remove standard parsers if you want that custom format to be mapped
+     * to one of the built-in types such as {@link LocalDate}.
+     * <p>
+     * Each from-string parser will only see a single path argument or a single querystring argument. If you have to
+     * support whole-path logic, you will have to do so in the handler. If you have to support a whole-querystring
+     * parser that uses a different format than key/value pairs separated by &amp; and = characters, see
+     * {@link #getQuerystringParserRegistry()}.
+     *
+     * @param parser the parser to add
+     */
     public void addFromStringParser(FromStringParser parser) {
         fromStringParserRegistry.addParser(parser);
     }
 
+    /**
+     * Getter method for the registry for from-string parsers. See {@link #addFromStringParser(FromStringParser)} for
+     * some information on when such a parser helps. Getting the registry itself is necessary when you want to
+     * remove the default parsers after construction.
+     *
+     * @return the from-string parser registry
+     */
     public FromStringParserRegistry getFromStringParserRegistry() {
         return fromStringParserRegistry;
     }
 
-    // note: no addQuerystringParser() so people don't think they have to do that routinely to add new QS field types --
-    // that is only needed to add new whole-QS parsers.
+    /**
+     * Getter method for the registry for whole-querystring parsers. <b>Dealing with this registry is rarely needed
+     * because it relates to how the whole querystring gets parsed, not how individual fields are parsed!</b> If you
+     * want to support custom types for querystring parameters, see {@link #addFromStringParser(FromStringParser)}
+     * (and possibly {@link #getFromStringParserRegistry()}) instead.
+     * <p>
+     * The registry returned here is relevant for redefining how the whole querystring is interpreted as individual
+     * fields. You will have to deal with it in the following cases:
+     * <ul>
+     *     <li>If the querystring uses a custom format instead of the standard key/value list using &amp; and
+     *       = characters (Note: I just realized this isn't possible right now because that format is imposed
+     *       by the servlet API. Fortunately, we don't need it yet. If we do, it's time to change the
+     *       {@link QuerystringParser} interface)</li>
+     *     <li>If the type to parse the whole querystring as cannot use an auto-generated record parser, for example
+     *       because it cannot be a Java record for some reason</li>
+     * </ul>
+     * There is no "addQuerystringParser()" method just so nobody is confused and thinks that you need to use it to
+     * support custom field types.
+     *
+     * @return the whole querystring parser registry
+     */
     public QuerystringParserRegistry getQuerystringParserRegistry() {
         return querystringParserRegistry;
     }
 
+    /**
+     * Getter method for the {@link JsonEngine}. This method is needed to add custom types for request/response bodies
+     * using custom {@link JsonTypeAdapter}s.
+     * <p>
+     * (We might consider adding convenience methods to add type adapters here in RestApi)
+     *
+     * @return the JSON registries
+     */
     public JsonEngine getJsonEngine() {
         return jsonEngine;
     }

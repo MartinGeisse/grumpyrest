@@ -25,7 +25,7 @@ public interface QuerystringParser {
     boolean supportsType(Type type);
 
     /**
-     * Converts a value from JSON.
+     * Converts the querystring to an application object.
      */
     Object parse(Map<String, String> querystring, Type type) throws QuerystringParsingException;
 
