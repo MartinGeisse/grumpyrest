@@ -20,3 +20,5 @@ ser and deser to avoid scanning all record types twice. This looks nice and clea
 --> try the meta-adapter in a feature branch. The MA keeps an internal sub-registry for all records and builds
   record-specific adapters on demand. This allows to make the record-adapter-on-demand independent of whether it is
   called from a ser or deser process. All auto-generation disappears from the JsonRegistry.
+- bigger downside: The application cannot register a type adapter for a record type to override the default behavior
+    anymore. THIS IS PROBABLY A SHOW STOPPER. Better try the ugly solution first.
