@@ -1,4 +1,6 @@
 
+# Version WIP (will be 0.5)
+
 # Version 0.4
 
 * added TypeWrapper to serialize top-level lists (but the next version will probably solve this differently)
