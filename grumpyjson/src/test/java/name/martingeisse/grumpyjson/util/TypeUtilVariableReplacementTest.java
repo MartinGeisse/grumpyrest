@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-package name.martingeisse.grumpyjson;
+package name.martingeisse.grumpyjson.util;
 
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.reflect.TypeUtils;
@@ -15,13 +15,9 @@ import java.lang.reflect.TypeVariable;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.commons.lang3.reflect.TypeUtils.unrollVariables;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**
- * Ensures that Apache commons' unrollVariables() as what I think it is.
- */
-public class UnrollVariablesAssumptionsTest {
+public class TypeUtilVariableReplacementTest {
 
     private record MyRecord<A>(A a) {}
     private static final TypeVariable<?> typeVariableA;
@@ -36,18 +32,18 @@ public class UnrollVariablesAssumptionsTest {
     @Test
     public void test() {
 
-        assertEquals(String.class, unrollVariables(Map.of(), String.class));
+        assertEquals(String.class, TypeUtil.replaceTypeVariables(String.class, Map.of()));
 
         {
             TypeToken<List<String>> token = new TypeToken<>() {};
             Type type = token.getType();
-            assertEquals(type, unrollVariables(Map.of(), type));
+            assertEquals(type, TypeUtil.replaceTypeVariables(type, Map.of()));
         }
 
         {
             Type unboundListType = TypeUtils.parameterize(List.class, typeVariableA); // List<A>
             Type StringListType = TypeUtils.parameterize(List.class, String.class); // List<String>
-            assertEquals(StringListType, unrollVariables(Map.of(typeVariableA, String.class), unboundListType));
+            assertEquals(StringListType, TypeUtil.replaceTypeVariables(unboundListType, Map.of("A", String.class)));
         }
 
     }

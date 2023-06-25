@@ -6,7 +6,7 @@
  */
 package name.martingeisse.grumpyjson;
 
-import org.apache.commons.lang3.reflect.TypeUtils;
+import name.martingeisse.grumpyjson.util.TypeUtil;
 
 import java.lang.reflect.*;
 import java.util.HashMap;
@@ -158,11 +158,11 @@ public final class RecordInfo {
                 if (recordTypeParameters.length != recordTypeArguments.length) {
                     throw new RuntimeException("type parameter/argument length mismatch for record " + recordClass);
                 }
-                Map<TypeVariable<?>, Type> typeArgumentMap = new HashMap<>();
+                Map<String, Type> typeArguments = new HashMap<>();
                 for (int i = 0; i < recordTypeParameters.length; i++) {
-                    typeArgumentMap.put(recordTypeParameters[i], recordTypeArguments[i]);
+                    typeArguments.put(recordTypeParameters[i].getName(), recordTypeArguments[i]);
                 }
-                return TypeUtils.unrollVariables(typeArgumentMap, component.getGenericType());
+                return TypeUtil.replaceTypeVariables(component.getGenericType(), typeArguments);
             } else {
                 throw new RuntimeException("cannot find concrete component type for record type " + concreteRecordType);
             }

@@ -8,6 +8,7 @@ package name.martingeisse.grumpyjson.builtin.helper_types;
 
 import com.google.gson.JsonElement;
 import name.martingeisse.grumpyjson.*;
+import name.martingeisse.grumpyjson.util.TypeUtil;
 
 import java.lang.reflect.Type;
 import java.util.Optional;
