@@ -7,7 +7,6 @@
 package name.martingeisse.grumpyjson.util;
 
 import com.google.gson.reflect.TypeToken;
-import org.apache.commons.lang3.reflect.TypeUtils;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Type;
@@ -41,8 +40,8 @@ public class TypeUtilVariableReplacementTest {
         }
 
         {
-            Type unboundListType = TypeUtils.parameterize(List.class, typeVariableA); // List<A>
-            Type StringListType = TypeUtils.parameterize(List.class, String.class); // List<String>
+            Type unboundListType = new ParameterizedTypeImpl(null, List.class, typeVariableA);
+            Type StringListType = new ParameterizedTypeImpl(null, List.class, String.class);
             assertEquals(StringListType, TypeUtil.replaceTypeVariables(unboundListType, Map.of("A", String.class)));
         }
 

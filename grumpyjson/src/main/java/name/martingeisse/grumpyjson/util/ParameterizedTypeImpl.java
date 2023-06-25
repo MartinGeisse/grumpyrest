@@ -21,7 +21,7 @@ import java.util.Objects;
 public record ParameterizedTypeImpl(
     Type owner,
     Type raw,
-    Type[] arguments
+    Type... arguments
 ) implements ParameterizedType {
 
     /**
