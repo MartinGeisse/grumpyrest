@@ -1,0 +1,11 @@
+
+split interfaces
+only split implementations if behavior is different (boolean: no, list: maybe)
+    need separate supportsType for ser/de: supportsTypeForSerialization, supportsTypeForDeserialization,
+    otherwise adapters like List MUST always be split
+record adapter should not be split -> too complex, no gain
+    records can be genreic too, like lists, so this means we need the above split for supports* anyway
+    therefore, shared engine and registry
+        if there is a special need to use distinct registries for ser/de, just use two of them. Who cares that
+        they have methods that won't be used in that case.
+
