@@ -1,7 +1,9 @@
 
-# Version WIP (will be 0.4)
+# Version 0.4
 
-...
+* added TypeWrapper to serialize top-level lists (but the next version will probably solve this differently)
+* removed Apache Commons dependency
+* even more documentation and Javadoc
 
 # Version 0.3
 
