@@ -8,4 +8,15 @@ record adapter should not be split -> too complex, no gain
     therefore, shared engine and registry
         if there is a special need to use distinct registries for ser/de, just use two of them. Who cares that
         they have methods that won't be used in that case.
-
+record adapter would have to be added as relevant for both its type(s) -- but only deser -- and the raw class -- but
+only ser -- but all this at a time where only one of them (ser or deser) is requested. This is ugly but doable.
+Alternatively, move all the auto-generation into a meta-adapter for all records. This would have to be re-used for
+ser and deser to avoid scanning all record types twice. This looks nice and clean but I'm not yet sure if it's
+"too clever". Maybe just try.
+- Downside: harder to optimize, especially via code generation. Because you always have to refer to the meta-adapter,
+  never to the individual one. But this can be solved, e.g. add a method to the adapter that produces an optimized
+  version of itself for a specific type, and this would resolve the individual record adapter from the meta-adapter.
+  Even if this is not done, the overhead is only a hash map lookup.
+--> try the meta-adapter in a feature branch. The MA keeps an internal sub-registry for all records and builds
+  record-specific adapters on demand. This allows to make the record-adapter-on-demand independent of whether it is
+  called from a ser or deser process. All auto-generation disappears from the JsonRegistry.
