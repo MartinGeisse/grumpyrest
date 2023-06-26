@@ -22,50 +22,32 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Base class for a registry which acts somewhat like a {@link Map}, but with the following differences:
  * <ul>
- *     <li>Each object to register ("value" in Map terminology) knows the keys it supports, i.e. the keys that can be
- *     used to obtain that object from the registry. Objects can be added without specifying a key, and an object
- *     added this way will be available using any of the keys it supports.</li>
- *     <li>Depending on the subclass, the registry may support auto-generation of an object for a key for which no
- *     object was registered manually.</li>
- *     <li>The only allowed ways to manipulate the registry are adding objects manually, auto-generation, and clearing
- *     the registry. In particular, removing individual objects is not supported.</li>
- *     <li>The only possible way to query the registry is to ask whether a key is supported, and to get the registered
- *     object for a key. In particular, iteration is not supported.</li>
- *     <li>The registry operated in two phases, configuration phase and run-time phase. In the configuration phase, only
+ *     <li>Each registrable ("value" in Map terminology) knows the keys it supports, i.e. the keys that can be
+ *     used to obtain that registrable from the registry. Regitrables can be added without specifying a key, and a
+ *     registrable will be available using any of the keys it supports.</li>
+ *     <li>Depending on the subclass, the registry may support auto-generation of a registrable for a key for which no
+ *     registrable was registered manually.</li>
+ *     <li>The only allowed ways to manipulate the registry are adding registrables manually, auto-generation, and
+ *     clearing the registry. In particular, removing individual registrables is not supported.</li>
+ *     <li>The only possible way to query the registry is to ask whether a key is supported, and to get the registrable
+ *     for a key. In particular, iteration is not supported.</li>
+ *     <li>The registry operates in two phases, configuration phase and run-time phase. In the configuration phase, only
  *     registering objects and clearing the registry are allowed. Querying the registry is not allowed. In the
  *     run-time phase, only querying is allowed, no manipulation. The transition from configuration phase to
  *     run-time phase is called "sealing" the registry. The separation into two phases allows internal optimization.
  *     </li>
+ *     <li>Registrables have an {@link Registrable#initialize(Registry)} method that will be called to resolve
+ *     dependencies on other registrables.</li>
  * </ul>
- * <p>
- * Note for subclasses: Auto-generation might be invoked multiple times in parallel for the same key from different
- * threads. One of the generated objects will end up in the registry, but another one may be returned and used
- * temporarily by the other thread.
  *
  * @param <K> the key type
- * @param <V> the type of registered object
+ * @param <V> the type of registrable stored in this registry
  */
-public abstract class RegistryBase<K, V extends RegistryBase.Value<K>> {
+public abstract class Registry<K, V extends Registrable<K, V>> {
 
-    private final List<V> manuallyAddedObjects = new ArrayList<>();
-    private final AtomicBoolean sealed = new AtomicBoolean(false);
+    private final List<V> manuallyAddedRegistrables = new ArrayList<>();
+    private final AtomicBoolean sealedFlag = new AtomicBoolean(false);
     private final ConcurrentMap<K, V> map = new ConcurrentHashMap<>();
-
-    /**
-     * A value that can be stored in a {@link RegistryBase} with key type K.
-     *
-     * @param <K> the key type
-     */
-    public interface Value<K> {
-
-        /**
-         * Checks whether this object supports the specified key,
-         *
-         * @param key the key to check
-         * @return true if this object supports the key, false if not
-         */
-        boolean supports(K key);
-    }
 
     // ----------------------------------------------------------------------------------------------------------------
     // configuration-time methods
@@ -75,30 +57,42 @@ public abstract class RegistryBase<K, V extends RegistryBase.Value<K>> {
      * Throws an {@link IllegalStateException} if this registry has been sealed already.
      */
     protected final void ensureConfigurationPhase() {
-        if (sealed.get()) {
+        if (sealedFlag.get()) {
             throw new IllegalStateException("this registry has been sealed already");
         }
     }
 
     /**
      * Removes all registered objects from this registry. This is useful because the registries used by grumpyjson
-     * contain default objects, and the code using it might not want to use them.
+     * contain default registrables, and the code using it might not want to use them.
      */
     public final void clear() {
         ensureConfigurationPhase();
-        manuallyAddedObjects.clear();
+        manuallyAddedRegistrables.clear();
     }
 
     /**
-     * Registers an object with this registry.
+     * Registers a registrable with this registry.
      *
-     * @param object the object to add
+     * @param registrable the registrable to add
      */
-    public final void register(V object) {
-        Objects.requireNonNull(object, "object");
+    public final void register(V registrable) {
+        Objects.requireNonNull(registrable, "registrable");
         ensureConfigurationPhase();
-        manuallyAddedObjects.add(object);
+        manuallyAddedRegistrables.add(registrable);
     }
+
+    /**
+     * Seals this registry, moving from the configuration phase to the run-time phase.
+     */
+    public final void seal() {
+        ensureConfigurationPhase();
+        sealedFlag.set(true);
+        for (V registrable : manuallyAddedRegistrables) {
+            registrable.initialize(this);
+        }
+    }
+
 
     // ----------------------------------------------------------------------------------------------------------------
     // run-time methods
@@ -108,18 +102,18 @@ public abstract class RegistryBase<K, V extends RegistryBase.Value<K>> {
      * Throws an {@link IllegalStateException} if this registry has not yet been sealed.
      */
     protected final void ensureRunTimePhase() {
-        if (!sealed.get()) {
+        if (!sealedFlag.get()) {
             throw new IllegalStateException("this registry has not yet been sealed");
         }
     }
 
     /**
-     * Checks whether the specified key is supported by any object that is registered with this registry or can be
+     * Checks whether the specified key is supported by any registrable that is registered with this registry or can be
      * auto-generated on the fly.
      * <p>
      * Note that there are some reasons why a registered object may claim to support a key, but fail at run-time when it
-     * actually encounters that key. Such a key will still be "supported" by that object from the point-of-view of
-     * the registry. Refer to the documentation of the individual registered objects for details.
+     * actually encounters that key. Such a key will still be "supported" by that registrable from the point-of-view of
+     * the registry. Refer to the documentation of the individual registrables for details.
      *
      * @param key the key to check
      * @return true if supported, false if not
@@ -133,8 +127,8 @@ public abstract class RegistryBase<K, V extends RegistryBase.Value<K>> {
         if (map.containsKey(key)) {
             return true;
         }
-        for (var object : manuallyAddedObjects) {
-            if (object.supports(key)) {
+        for (var registrable : manuallyAddedRegistrables) {
+            if (registrable.supports(key)) {
                 return true;
             }
         }
@@ -143,10 +137,10 @@ public abstract class RegistryBase<K, V extends RegistryBase.Value<K>> {
 
     /**
      * Checks whether a key is supported by this registry through auto-generation, that is, without ever registering
-     * an explicit object for that key. If this method returns <code>true</code> for a key, so does
-     * <code>supports</code>. Note that this method even returns true for a key for which an object could be
-     * auto-generated in theory, but an object has already been added manually, so the auto-generation never actually
-     * occurs.
+     * an explicit registrable for that key. If this method returns <code>true</code> for a key, so does
+     * <code>supports</code>. Note that this method even returns true for a key for which a registrable could be
+     * auto-generated in theory, but a registrable has already been added manually, so the auto-generation never
+     * actually occurs.
      *
      * @param key the key to check
      * @return true if supported through auto-generation, false if not supported or only supported through an
@@ -169,11 +163,11 @@ public abstract class RegistryBase<K, V extends RegistryBase.Value<K>> {
 
     /**
      * Returns a registered object for the specified key, auto-generating it if necessary and possible. This method will
-     * throw an exception if no object was registered manually that supports the key and no object can be
-     * auto-generated. If multiple objects have been registered that can handle the specified key, the one registered
-     * earlier will take precedence.
+     * throw an exception if no registrable was registered manually that supports the key and no registrable can be
+     * auto-generated. If multiple registrables have been registered that can handle the specified key, the one
+     * registered earlier will take precedence.
      *
-     * @param key the key to return an object for
+     * @param key the key to return a registrable for
      * @return the registered object, possibly auto-generated
      */
     public final V get(K key) {
@@ -182,23 +176,23 @@ public abstract class RegistryBase<K, V extends RegistryBase.Value<K>> {
 
         // computeIfAbsent() cannot be used, if it behaves as it should, because recursively adding recognized keys
         // would cause a ConcurrentModificationException. Note that thread safety is not a concern here because,
-        // while two threads might *both* decide to create a missing object, we just end up with either one of them
+        // while two threads might *both* decide to create a missing registrable, we just end up with either one of them
         // and they should be equivalent.
-        V object = map.get(key);
+        V registrable = map.get(key);
 
         // check if one of the registered adapters supports this type
-        if (object == null) {
-            for (V objectFromList : manuallyAddedObjects) {
-                if (objectFromList.supports(key)) {
-                    object = objectFromList;
-                    map.put(key, object);
+        if (registrable == null) {
+            for (V registrableFromList : manuallyAddedRegistrables) {
+                if (registrableFromList.supports(key)) {
+                    registrable = registrableFromList;
+                    map.put(key, registrable);
                     break;
                 }
             }
         }
 
         // check if we can auto-generate an adapter
-        if (object == null && supportsAutoGeneration(key)) {
+        if (registrable == null && supportsAutoGeneration(key)) {
 
             // Next, install a proxy, so that recursive types don't crash the registry. Note that we don't put the
             // adapter/proxy into the adapterList because we already put it into the adapterMap, and it cannot handle
@@ -208,24 +202,48 @@ public abstract class RegistryBase<K, V extends RegistryBase.Value<K>> {
 
             // finally, create the actual adapter and set it as the proxy's target
             if (type instanceof Class<?> clazz) {
-                object = new RecordAdapter<>(clazz, this);
+                registrable = new RecordAdapter<>(clazz, this);
             } else if (type instanceof ParameterizedType parameterizedType) {
-                object = new RecordAdapter<>((Class<?>)parameterizedType.getRawType(), this);
+                registrable = new RecordAdapter<>((Class<?>)parameterizedType.getRawType(), this);
             } else {
                 throw new RuntimeException("internal error: erroneously selected a record adapter for type " + type);
             }
 
             //noinspection unchecked
-            proxy.setTarget((JsonTypeAdapter<Object>) object);
+            proxy.setTarget((JsonTypeAdapter<Object>) registrable);
 
         }
 
         // if this failed, then we don't have an appropriate adapter
-        if (object == null) {
+        if (registrable == null) {
             throw new RuntimeException("no JSON type adapter found and can only auto-generate them for record types, found type: " + type);
         }
 
-        return object;
+        return registrable;
     }
+
+    /**
+     * Auto-generates a registrable in a subclass-specific way. This method does not have to check the key for null.
+     * <p>
+     * This method should not itself refer to the registry, to avoid infinite recursion. If the registrable has a
+     * dependency on other registrables, it should resolve those dependencies in its
+     * {@link Registrable#initialize(Registry)} method. That method should not be called by the auto-generation.
+     * Instead, it will be called by the registry after auto-generation is complete and <i>after</i> adding the
+     * new
+     * <p>
+     * It is possible that this method gets called multiple times in parallel for the same key by different threads.
+     * The registry will eventually contain one of them, and that one will be used in future calls. However, the other
+     * one(s) might be returned to other threads in the meantime and be used.
+     * <p>
+     *
+     *
+     * </p>
+     * Subclass-specific implementation for {@link #supportsAutoGeneration(Object)}. This method does not have to
+     * check the key for null, nor whether this registry is in the configuration phase.
+     *
+     * @param key the key (never null)
+     * @return the auto-generated registrable
+     */
+    protected abstract V performAutoGenerationInternal(K key);
 
 }
