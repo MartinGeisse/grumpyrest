@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -36,8 +37,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *     run-time phase, only querying is allowed, no manipulation. The transition from configuration phase to
  *     run-time phase is called "sealing" the registry. The separation into two phases allows internal optimization.
  *     </li>
- *     <li>Registrables have an {@link Registrable#initialize(Registry)} method that will be called to resolve
- *     dependencies on other registrables.</li>
+ *     <li>Registrables have an {@link Registrable#initialize(Registrable.InitializationContext)} method that will be
+ *     called to resolve dependencies on other registrables.</li>
  * </ul>
  *
  * @param <K> the key type
@@ -45,9 +46,35 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public abstract class Registry<K, V extends Registrable<K, V>> {
 
+    private static class Entry<V> {
+
+        AtomicBoolean initializationStarted = new AtomicBoolean(false);
+        CountDownLatch initializationFinished = new CountDownLatch(1);
+        V registrable;
+
+        Entry(V registrable) {
+            this.registrable = registrable;
+        }
+
+        void initialize() throws InterruptedException {
+            if (!initializationStarted.getAndSet(true)) {
+                // TODO call registrable.initialize here
+                // TODO should the registrable have to provide supports(key) while being initialized?
+                // auto-generation could do a sanity check: call supports(theKeyItWasCreatedFor) and expect true,
+                // and do this before calling initialize(). Do I expect any case in which initialize() changes the
+                // supported keys? I think not!
+                initializationFinished.countDown();
+            } else {
+                initializationFinished.await();
+            }
+        }
+
+    }
+
     private final List<V> manuallyAddedRegistrables = new ArrayList<>();
     private final AtomicBoolean sealedFlag = new AtomicBoolean(false);
-    private final ConcurrentMap<K, V> map = new ConcurrentHashMap<>();
+    private final ConcurrentMap<K, V> knownMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<K, V> initializedMap = new ConcurrentHashMap<>();
 
     // ----------------------------------------------------------------------------------------------------------------
     // configuration-time methods
@@ -105,6 +132,11 @@ public abstract class Registry<K, V extends Registrable<K, V>> {
         if (!sealedFlag.get()) {
             throw new IllegalStateException("this registry has not yet been sealed");
         }
+    }
+
+    // initializes
+    private void initialize(V registrable) {
+
     }
 
     /**

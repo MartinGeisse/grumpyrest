@@ -25,9 +25,27 @@ public interface Registrable<K, V extends Registrable<K, V>> {
      * This method must not rely on other registrables being initialized because there is no defined order of
      * initialization.
      *
-     * @param registry the registry that contains this registrable. This registry can be used to obtain dependency
-     *                 registrables. As noted above, such registrables may or may not have been initialized already.
+     * @param context a limited view of the registry that contains this registrable. The context can be used to obtain
+     *                dependency registrables. As noted above, such registrables may or may not have been initialized
+     *                already.
      */
-    default void initialize(Registry<K, V> registry) {}
+    default void initialize(InitializationContext<K, V> context) {}
+
+    /**
+     * This interface gives limited registry access to a registrable while it is being initialized.
+     */
+    interface InitializationContext<K, V extends Registrable<K, V>> {
+
+        /**
+         * Resolves a dependency to another registrable. This method is similar to {@link Registry#get(Object)}, but
+         * the returned registrable is not guaranteed to be initialized itself. This allows the registry to initialize
+         * a set of registrables with cyclic dependencies.
+         *
+         * @param key the key of the dependency
+         * @return the dependency registrable, possibly uninitialized
+         */
+        V resolveDependency(K key);
+
+    }
 
 }
