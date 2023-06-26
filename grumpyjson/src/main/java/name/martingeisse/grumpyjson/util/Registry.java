@@ -71,6 +71,12 @@ public abstract class Registry<K, V extends Registrable<K, V>> {
 
     }
 
+    PROBLEM: How to auto-generate a registrable that can be used for *other* keys (e.g. RecordAdapter for Foo<String>
+    can be used for raw Foo.class too) but avoid generating it twice if both are requested in parallel. The easiest
+        thing would actually be to allow duplicate generation. We can even guarantee that only one of them will be used,
+    except that the other must still provide supports(key) -- that is the only method that must always work.
+
+
     private final List<V> manuallyAddedRegistrables = new ArrayList<>();
     private final AtomicBoolean sealedFlag = new AtomicBoolean(false);
     private final ConcurrentMap<K, V> knownMap = new ConcurrentHashMap<>();

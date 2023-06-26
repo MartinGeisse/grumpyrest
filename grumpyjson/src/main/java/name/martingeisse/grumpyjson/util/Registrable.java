@@ -9,7 +9,11 @@ package name.martingeisse.grumpyjson.util;
 public interface Registrable<K, V extends Registrable<K, V>> {
 
     /**
-     * Checks whether this object supports the specified key,
+     * Checks whether this object supports the specified key.
+     * <p>
+     * This method must always return the same result for the same key. It must work even when this registrable has not
+     * yet been initialized, as well as when called while it is being initialized. This increases parallelism because
+     * callers looking for a different key do not have to wait for initialization of this registrable.
      *
      * @param key the key to check
      * @return true if this object supports the key, false if not
