@@ -69,6 +69,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
     - this is actually a good solution and exactly matches the problem: I only need record adapters generated, and I
     can synchronize the factory internally.
     - the current solution is even worse. It just creates the record adapter once per type argument.
+
+
+    JUST use abstract methods to abstract from auto-generation for now. No interface. This can easily be added later
+    if users want to provide their own factories. The main synchronization problem can be solved around abstract
+    methods just as well.
+
  */
 public abstract class Registry<K, V extends Registrable<K, V>> {
 
