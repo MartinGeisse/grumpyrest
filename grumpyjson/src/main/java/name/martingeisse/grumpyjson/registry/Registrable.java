@@ -1,4 +1,4 @@
-package name.martingeisse.grumpyjson.util;
+package name.martingeisse.grumpyjson.registry;
 
 /**
  * A value that can be stored in a {@link Registry} with key type K.

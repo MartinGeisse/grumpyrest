@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-package name.martingeisse.grumpyjson.util;
+package name.martingeisse.grumpyjson.registry;
 
 import name.martingeisse.grumpyjson.AdapterProxy;
 import name.martingeisse.grumpyjson.JsonTypeAdapter;
@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -75,40 +74,29 @@ import java.util.concurrent.atomic.AtomicBoolean;
     if users want to provide their own factories. The main synchronization problem can be solved around abstract
     methods just as well.
 
+    The knownMap and initializedMap may contain null values for keys that are not supported by any added or
+    auto-generatable registrable. This optimizes and simplifies the negative case.
+
+
+Do we need initialization at all? The mechanism is nice and I should keep it in git if needed some day, but right now,
+it isn't used at all. Rather, the registrables keep a reference to the registry to ask for other registrables at
+*run-time*, and they expect those dependencies to be ready to use ("initialized"). I could just give them a reference
+to the registry (possibly abstracted) to obtain fully ready registrables, and use the sealed flag to prevent mis-use.
+
+But how do I give them that reference? initialization. Or demand that it gets passed in the constructor.
+-> misuse in the constructor is not a real concern. Either it's configuration phase, or it immediately causes
+infinite recursion (fails fast), or it works. Initialization might be desired later to reduce coupling, but for now
+passing the registry in the constructor is sufficient. But keep it in git.
+
  */
 public abstract class Registry<K, V extends Registrable<K, V>> {
 
-    private static class Entry<V> {
-
-        AtomicBoolean initializationStarted = new AtomicBoolean(false);
-        CountDownLatch initializationFinished = new CountDownLatch(1);
-        V registrable;
-
-        Entry(V registrable) {
-            this.registrable = registrable;
-        }
-
-        void initialize() throws InterruptedException {
-            if (!initializationStarted.getAndSet(true)) {
-                // TODO call registrable.initialize here
-                // TODO should the registrable have to provide supports(key) while being initialized?
-                // auto-generation could do a sanity check: call supports(theKeyItWasCreatedFor) and expect true,
-                // and do this before calling initialize(). Do I expect any case in which initialize() changes the
-                // supported keys? I think not!
-                initializationFinished.countDown();
-            } else {
-                initializationFinished.await();
-            }
-        }
-
-    }
-
-
-
     private final List<V> manuallyAddedRegistrables = new ArrayList<>();
     private final AtomicBoolean sealedFlag = new AtomicBoolean(false);
-    private final ConcurrentMap<K, V> knownMap = new ConcurrentHashMap<>();
+    private final List<RegistrableWrapper<K, V>> wrappedManuallyAddedRegistrables = new ArrayList<>();
+    private final ConcurrentMap<K, RegistrableWrapper<K, V>> knownMap = new ConcurrentHashMap<>();
     private final ConcurrentMap<K, V> initializedMap = new ConcurrentHashMap<>();
+    private final Registrable.InitializationContext<K, V> initializationContext = (K key) -> knownmap;
 
     // ----------------------------------------------------------------------------------------------------------------
     // configuration-time methods
@@ -150,7 +138,7 @@ public abstract class Registry<K, V extends Registrable<K, V>> {
         ensureConfigurationPhase();
         sealedFlag.set(true);
         for (V registrable : manuallyAddedRegistrables) {
-            registrable.initialize(this);
+            wrappedManuallyAddedRegistrables.add(new RegistrableWrapper<>(null, registrable));
         }
     }
 
@@ -168,11 +156,6 @@ public abstract class Registry<K, V extends Registrable<K, V>> {
         }
     }
 
-    // initializes
-    private void initialize(V registrable) {
-
-    }
-
     /**
      * Checks whether the specified key is supported by any registrable that is registered with this registry or can be
      * auto-generated on the fly.
@@ -187,45 +170,8 @@ public abstract class Registry<K, V extends Registrable<K, V>> {
     public final boolean supports(K key) {
         Objects.requireNonNull(key, "key");
         ensureRunTimePhase();
-        if (supportsAutoGeneration(key)) {
-            return true;
-        }
-        if (map.containsKey(key)) {
-            return true;
-        }
-        for (var registrable : manuallyAddedRegistrables) {
-            if (registrable.supports(key)) {
-                return true;
-            }
-        }
-        return false;
+        return getOrNull(key) != null;
     }
-
-    /**
-     * Checks whether a key is supported by this registry through auto-generation, that is, without ever registering
-     * an explicit registrable for that key. If this method returns <code>true</code> for a key, so does
-     * <code>supports</code>. Note that this method even returns true for a key for which a registrable could be
-     * auto-generated in theory, but a registrable has already been added manually, so the auto-generation never
-     * actually occurs.
-     *
-     * @param key the key to check
-     * @return true if supported through auto-generation, false if not supported or only supported through an
-     * explicitly registered object
-     */
-    public final boolean supportsAutoGeneration(K key) {
-        Objects.requireNonNull(key, "key");
-        ensureRunTimePhase();
-        return supportsAutoGenerationInternal(key);
-    }
-
-    /**
-     * Subclass-specific implementation for {@link #supportsAutoGeneration(Object)}. This method does not have to
-     * check the key for null, nor whether this registry is in the configuration phase.
-     *
-     * @param key the key (never null)
-     * @return true if and only if auto-generation for the specified key is supported
-     */
-    protected abstract boolean supportsAutoGenerationInternal(K key);
 
     /**
      * Returns a registered object for the specified key, auto-generating it if necessary and possible. This method will
@@ -237,6 +183,14 @@ public abstract class Registry<K, V extends Registrable<K, V>> {
      * @return the registered object, possibly auto-generated
      */
     public final V get(K key) {
+        V result = getOrNull(key);
+        if (result == null) {
+            throw new RuntimeException(getErrorMessageForUnknownKey(key));
+        }
+        return result;
+    }
+
+    private V getOrNull(K key) {
         Objects.requireNonNull(key, "key");
         ensureRunTimePhase();
 
@@ -281,35 +235,36 @@ public abstract class Registry<K, V extends Registrable<K, V>> {
         }
 
         // if this failed, then we don't have an appropriate adapter
-        if (registrable == null) {
-            throw new RuntimeException("no JSON type adapter found and can only auto-generate them for record types, found type: " + type);
-        }
-
         return registrable;
     }
 
     /**
-     * Auto-generates a registrable in a subclass-specific way. This method does not have to check the key for null.
+     * Auto-generates a registrable in a subclass-specific way. This method does not have to check the key for null,
+     * nor whether this registry is in the configuration phase.
      * <p>
      * This method should not itself refer to the registry, to avoid infinite recursion. If the registrable has a
      * dependency on other registrables, it should resolve those dependencies in its
-     * {@link Registrable#initialize(Registry)} method. That method should not be called by the auto-generation.
-     * Instead, it will be called by the registry after auto-generation is complete and <i>after</i> adding the
-     * new
+     * {@link Registrable#initialize(Registrable.InitializationContext)} method. That method should not be called by
+     * the auto-generation. Instead, it will be called by the registry after auto-generation is complete and
+     * <i>after</i> making it available as a dependency for other registrables.
      * <p>
-     * It is possible that this method gets called multiple times in parallel for the same key by different threads.
-     * The registry will eventually contain one of them, and that one will be used in future calls. However, the other
-     * one(s) might be returned to other threads in the meantime and be used.
-     * <p>
-     *
-     *
-     * </p>
-     * Subclass-specific implementation for {@link #supportsAutoGeneration(Object)}. This method does not have to
-     * check the key for null, nor whether this registry is in the configuration phase.
+     * The returned registrable will only be used for the specified key, not for other keys that it might support as
+     * well. To re-use a single auto-generated registrable that supports multiple keys for all the keys it supports,
+     * the auto-generation itself must return the same registrable for all those keys.
      *
      * @param key the key (never null)
-     * @return the auto-generated registrable
+     * @return the auto-generated registrable, or null if auto-generation is not supported for that key
      */
-    protected abstract V performAutoGenerationInternal(K key);
+    protected abstract V generateRegistrable(K key);
+
+    /**
+     * Produces an error message that gets used in an exception for an unknown key. The error message is one of the
+     * most frequent points of contact between the registry and application code, so it should be as developer-friendly
+     * as possible.
+     *
+     * @param key the unknown key
+     * @return the error message
+     */
+    protected abstract String getErrorMessageForUnknownKey(K key);
 
 }
