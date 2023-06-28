@@ -1,12 +1,7 @@
 
 # Roadmap
 
-## Version 0.5
-
-* More javadoc
-* further reduce external dependencies
-
-## Version 0.6
+## Version 0.5 or 0.6
 
 * serialize raw lists. this will probably trigger a huge redesign WRT type adapters: 
   * split type adapters in serializers and deserializers
@@ -19,11 +14,7 @@
 * Possibly: Request filters / interceptors. May instead result in documentation on how to achieve this with the current code.
 * Maps / objects with arbitrary keys
 * objects that allow arbitrary extra keys
-* HTTP headers (request and response)
 
 ## Future
 
-specify path/querystring parameter defaults by the caller, not the parser
-* check if this is even necessary. Querystring parsing can use OptionalField and path parameters can't be optional
-  because then the route would not match
 * provide a tutorial (I'll delay this until the API has stabilized)
