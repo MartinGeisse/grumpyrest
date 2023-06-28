@@ -204,6 +204,11 @@ public final class RequestCycle {
 
     private final class MyRequest implements Request {
 
+        @Override
+        public String getHeader(String name) {
+            return servletRequest.getHeader(name);
+        }
+
         public List<PathArgument> getPathArguments() {
             return RequestCycle.this.getPathArguments();
         }
