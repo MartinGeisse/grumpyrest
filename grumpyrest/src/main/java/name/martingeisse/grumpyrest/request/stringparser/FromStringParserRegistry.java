@@ -89,7 +89,7 @@ public class FromStringParserRegistry implements ParseFromStringService {
      * @param type the type to return an adapter for
      * @return the type adapter
      */
-    public FromStringParser getParser(Type type) {
+    public FromStringParser getParser(Type type) throws FromStringParserException {
         Objects.requireNonNull(type, "type");
 
         // computeIfAbsent() cannot be used, if it behaves as it should, because recursively adding recognized types
@@ -111,7 +111,7 @@ public class FromStringParserRegistry implements ParseFromStringService {
 
         // if this failed, then we don't have an appropriate parser
         if (parser == null) {
-            throw new RuntimeException("no from-string parser found for type: " + type);
+            throw new FromStringParserException("no from-string parser found for type: " + type);
         }
 
         return parser;
