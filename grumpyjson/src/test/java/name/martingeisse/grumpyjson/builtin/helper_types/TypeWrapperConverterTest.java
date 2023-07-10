@@ -10,8 +10,8 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.reflect.TypeToken;
 import name.martingeisse.grumpyjson.JsonRegistry;
 import name.martingeisse.grumpyjson.JsonTestUtil;
-import name.martingeisse.grumpyjson.builtin.IntegerAdapter;
-import name.martingeisse.grumpyjson.builtin.ListAdapter;
+import name.martingeisse.grumpyjson.builtin.IntegerConverter;
+import name.martingeisse.grumpyjson.builtin.ListConverter;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Type;
@@ -20,15 +20,15 @@ import java.util.List;
 import static name.martingeisse.grumpyjson.JsonTestUtil.createRegistry;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TypeWrapperAdapterTest {
+public class TypeWrapperConverterTest {
 
     private static final Type INTEGER_TYPE_WRAPPER_TYPE = new TypeToken<TypeWrapper<Integer>>() {}.getType();
 
-    private final JsonRegistry registry = createRegistry(new IntegerAdapter());
+    private final JsonRegistry registry = createRegistry(new IntegerConverter());
     {
-        registry.addTypeAdapter(new ListAdapter(registry));
+        registry.addTypeAdapter(new ListConverter(registry));
     }
-    private final TypeWrapperAdapter adapter = new TypeWrapperAdapter(registry);
+    private final TypeWrapperConverter adapter = new TypeWrapperConverter(registry);
 
     @Test
     public void testSupportsType() {

@@ -172,9 +172,9 @@ public final class JsonRegistry {
 
             // finally, create the actual adapter and set it as the proxy's target
             if (type instanceof Class<?> clazz) {
-                adapter = new RecordAdapter<>(clazz, this);
+                adapter = new RecordConverter<>(clazz, this);
             } else if (type instanceof ParameterizedType parameterizedType) {
-                adapter = new RecordAdapter<>((Class<?>)parameterizedType.getRawType(), this);
+                adapter = new RecordConverter<>((Class<?>)parameterizedType.getRawType(), this);
             } else {
                 throw new RuntimeException("internal error: erroneously selected a record adapter for type " + type);
             }

@@ -12,9 +12,9 @@ import org.junit.jupiter.api.Test;
 
 import static name.martingeisse.grumpyjson.JsonTestUtil.*;
 
-public class BooleanAdapterTest {
+public class BooleanConverterTest {
 
-    private final BooleanAdapter adapter = new BooleanAdapter();
+    private final BooleanConverter adapter = new BooleanConverter();
 
     @Test
     public void testValidationHappyCase() throws Exception {

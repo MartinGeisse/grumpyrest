@@ -36,12 +36,12 @@ import java.util.*;
  *
  * @param <T> the record type
  */
-public final class RecordAdapter<T> implements JsonTypeAdapter<T> {
+public final class RecordConverter<T> implements JsonTypeAdapter<T> {
 
     private final RecordInfo recordInfo;
     private final JsonRegistry registry;
 
-    RecordAdapter(Class<T> clazz, JsonRegistry registry) {
+    RecordConverter(Class<T> clazz, JsonRegistry registry) {
         Objects.requireNonNull(clazz, "clazz");
         Objects.requireNonNull(registry, "registry");
         this.recordInfo = new RecordInfo(clazz);

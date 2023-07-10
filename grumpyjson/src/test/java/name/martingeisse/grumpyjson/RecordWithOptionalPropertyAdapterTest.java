@@ -7,10 +7,10 @@
 package name.martingeisse.grumpyjson;
 
 import com.google.gson.JsonObject;
-import name.martingeisse.grumpyjson.builtin.IntegerAdapter;
-import name.martingeisse.grumpyjson.builtin.StringAdapter;
+import name.martingeisse.grumpyjson.builtin.IntegerConverter;
+import name.martingeisse.grumpyjson.builtin.StringConverter;
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalField;
-import name.martingeisse.grumpyjson.builtin.helper_types.OptionalFieldAdapter;
+import name.martingeisse.grumpyjson.builtin.helper_types.OptionalFieldConverter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -20,9 +20,9 @@ public class RecordWithOptionalPropertyAdapterTest {
 
     private record Record(OptionalField<Integer> myInt) {}
 
-    private final JsonRegistry registry = createRegistry(new IntegerAdapter(), new StringAdapter());
+    private final JsonRegistry registry = createRegistry(new IntegerConverter(), new StringConverter());
     {
-        registry.addTypeAdapter(new OptionalFieldAdapter(registry));
+        registry.addTypeAdapter(new OptionalFieldConverter(registry));
     }
     private final JsonTypeAdapter<Record> adapter = registry.getTypeAdapter(Record.class);
 

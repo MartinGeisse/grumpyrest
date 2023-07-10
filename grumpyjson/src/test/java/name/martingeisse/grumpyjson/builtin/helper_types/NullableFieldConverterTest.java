@@ -11,8 +11,8 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
 import name.martingeisse.grumpyjson.JsonRegistry;
 import name.martingeisse.grumpyjson.JsonValidationException;
-import name.martingeisse.grumpyjson.builtin.IntegerAdapter;
-import name.martingeisse.grumpyjson.builtin.StringAdapter;
+import name.martingeisse.grumpyjson.builtin.IntegerConverter;
+import name.martingeisse.grumpyjson.builtin.StringConverter;
 import org.junit.jupiter.api.Test;
 
 import java.io.OutputStream;
@@ -22,13 +22,13 @@ import java.util.Optional;
 import static name.martingeisse.grumpyjson.JsonTestUtil.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class NullableFieldAdapterTest {
+public class NullableFieldConverterTest {
 
     private static final Type NULLABLE_INTEGER_TYPE = new TypeToken<NullableField<Integer>>() {}.getType();
     private static final Type NULLABLE_STRING_TYPE = new TypeToken<NullableField<String>>() {}.getType();
 
-    private final JsonRegistry registry = createRegistry(new IntegerAdapter(), new StringAdapter());
-    private final NullableFieldAdapter adapter = new NullableFieldAdapter(registry);
+    private final JsonRegistry registry = createRegistry(new IntegerConverter(), new StringConverter());
+    private final NullableFieldConverter adapter = new NullableFieldConverter(registry);
 
     @Test
     public void testValidationHappyCase() throws Exception {

@@ -7,19 +7,19 @@
 package name.martingeisse.grumpyjson.builtin.helper_types;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import name.martingeisse.grumpyjson.*;
 import name.martingeisse.grumpyjson.util.TypeUtil;
 
 import java.lang.reflect.Type;
+import java.util.Optional;
 
 /**
- * The {@link JsonTypeAdapter} for {@link NullableField}.
+ * The {@link JsonTypeAdapter} for {@link OptionalField}.
  * <p>
  * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistry#clearTypeAdapters()}.
  */
-public class NullableFieldAdapter implements JsonTypeAdapter<NullableField<?>> {
+public class OptionalFieldConverter implements JsonTypeAdapter<OptionalField<?>> {
 
     private final JsonRegistry registry;
 
@@ -28,24 +28,21 @@ public class NullableFieldAdapter implements JsonTypeAdapter<NullableField<?>> {
      *
      * @param registry the JSON registry -- needed to fetch the adapter for the contained type at run-time
      */
-    public NullableFieldAdapter(JsonRegistry registry) {
+    public OptionalFieldConverter(JsonRegistry registry) {
         this.registry = registry;
     }
 
     @Override
     public boolean supportsType(Type type) {
-        return TypeUtil.isSingleParameterizedType(type, NullableField.class) != null;
+        return TypeUtil.isSingleParameterizedType(type, OptionalField.class) != null;
     }
 
     @Override
-    public NullableField<?> fromJson(JsonElement json, Type type) throws JsonValidationException {
-        Type innerType = TypeUtil.expectSingleParameterizedType(type, NullableField.class);
-        if (json.isJsonNull()) {
-            return NullableField.ofNull();
-        }
+    public OptionalField<?> fromJson(JsonElement json, Type type) throws JsonValidationException {
+        Type innerType = getInner(type);
         JsonTypeAdapter<?> innerAdapter = registry.getTypeAdapter(innerType);
         try {
-            return NullableField.ofValue(innerAdapter.fromJson(json, innerType));
+            return OptionalField.ofValue(innerAdapter.fromJson(json, innerType));
         } catch (JsonValidationException e) {
             throw e;
         } catch (Exception e) {
@@ -54,20 +51,36 @@ public class NullableFieldAdapter implements JsonTypeAdapter<NullableField<?>> {
     }
 
     @Override
-    public JsonElement toJson(NullableField<?> value, Type type) throws JsonGenerationException {
-        Type innerType = TypeUtil.expectSingleParameterizedType(type, NullableField.class);
-        if (value.isNull()) {
-            return JsonNull.INSTANCE;
+    public OptionalField<?> fromAbsentJson(Type type) {
+        getInner(type);
+        return OptionalField.ofNothing();
+    }
+
+    @Override
+    public JsonElement toJson(OptionalField<?> value, Type type) throws JsonGenerationException {
+        throw new JsonGenerationException("found OptionalField in a non-vanishable context");
+    }
+
+    @Override
+    public Optional<JsonElement> toOptionalJson(OptionalField<?> value, Type type) throws JsonGenerationException {
+        Type innerType = getInner(type);
+        if (value.isAbsent()) {
+            return Optional.empty();
         }
         @SuppressWarnings("rawtypes") JsonTypeAdapter innerAdapter = registry.getTypeAdapter(innerType);
         try {
             //noinspection unchecked
-            return innerAdapter.toJson(value.getValueOrNull(), innerType);
+            return Optional.of(innerAdapter.toJson(value.getValueOrNothingAsNull(), innerType));
         } catch (JsonGenerationException e) {
             throw e;
         } catch (Exception e) {
             throw new JsonGenerationException(e);
         }
+
+    }
+
+    private Type getInner(Type outer) {
+        return TypeUtil.expectSingleParameterizedType(outer, OptionalField.class);
     }
 
 }

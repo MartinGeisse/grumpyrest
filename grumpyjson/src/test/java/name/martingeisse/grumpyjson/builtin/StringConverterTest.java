@@ -12,9 +12,9 @@ import org.junit.jupiter.api.Test;
 
 import static name.martingeisse.grumpyjson.JsonTestUtil.*;
 
-public class StringAdapterTest {
+public class StringConverterTest {
 
-    private final StringAdapter adapter = new StringAdapter();
+    private final StringConverter adapter = new StringConverter();
 
     @Test
     public void testValidationHappyCase() throws Exception {

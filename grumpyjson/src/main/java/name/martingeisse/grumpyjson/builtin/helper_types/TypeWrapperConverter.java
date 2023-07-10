@@ -24,11 +24,11 @@ import java.lang.reflect.Type;
  * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistry#clearTypeAdapters()}.
  */
-public class TypeWrapperAdapter implements JsonTypeAdapter<TypeWrapper<?>> {
+public class TypeWrapperConverter implements JsonTypeAdapter<TypeWrapper<?>> {
 
     private final JsonRegistry registry;
 
-    public TypeWrapperAdapter(JsonRegistry registry) {
+    public TypeWrapperConverter(JsonRegistry registry) {
         this.registry = registry;
     }
 

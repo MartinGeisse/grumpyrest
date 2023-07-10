@@ -16,44 +16,53 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 
 /**
- * A {@link JsonTypeAdapter} for the primitive type boolean and its boxed type, {@link Boolean}.
+ * A {@link JsonTypeAdapter} for the primitive type int and its boxed type, {@link Integer}.
  * <p>
- * This maps to and from JSON boolean values.
+ * This maps to and from integral JSON numbers in the 32-bit signed integer range.
  * <p>
  * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistry#clearTypeAdapters()}.
  */
-public class BooleanAdapter implements JsonTypeAdapter<Boolean> {
+public class IntegerConverter implements JsonTypeAdapter<Integer> {
 
     /**
      * Constructor
      */
-    public BooleanAdapter() {
+    public IntegerConverter() {
         // needed to silence Javadoc error because the implicit constructor doesn't have a doc comment
     }
 
     @Override
     public boolean supportsType(Type type) {
         Objects.requireNonNull(type, "type");
-        return type.equals(Boolean.TYPE) || type.equals(Boolean.class);
+        return type.equals(Integer.TYPE) || type.equals(Integer.class);
     }
 
     @Override
-    public Boolean fromJson(JsonElement json, Type type) throws JsonValidationException {
+    public Integer fromJson(JsonElement json, Type type) throws JsonValidationException {
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
 
         if (json instanceof JsonPrimitive primitive) {
-            if (primitive.isBoolean()) {
-                return primitive.getAsBoolean();
+            if (primitive.isNumber()) {
+                long longValue = primitive.getAsLong();
+                // test for float
+                if (primitive.equals(new JsonPrimitive(longValue))) {
+                    // test for too-large-for-int
+                    int intValue = (int)longValue;
+                    if (longValue != (long)intValue) {
+                        throw new JsonValidationException("value out of bounds: " + longValue);
+                    }
+                    return intValue;
+                }
             }
         }
 
-        throw new JsonValidationException("expected boolean, found: " + json);
+        throw new JsonValidationException("expected integer, found: " + json);
     }
 
     @Override
-    public JsonElement toJson(Boolean value, Type type) {
+    public JsonElement toJson(Integer value, Type type) {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(type, "type");
         return new JsonPrimitive(value);

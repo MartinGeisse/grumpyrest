@@ -9,8 +9,8 @@ package name.martingeisse.grumpyjson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import name.martingeisse.grumpyjson.builtin.ListAdapter;
-import name.martingeisse.grumpyjson.builtin.StringAdapter;
+import name.martingeisse.grumpyjson.builtin.ListConverter;
+import name.martingeisse.grumpyjson.builtin.StringConverter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -26,15 +26,15 @@ import static name.martingeisse.grumpyjson.JsonTestUtil.*;
  * - type-taking record-typed fields: A field whose type is a generic record and which passes a type variable
  *   for the record's type parameter
  */
-public class TypePassingRecordAdapterTest {
+public class TypePassingRecordConverterTest {
 
     private record Inner<T>(T best, List<T> others) {}
     private record Middle<T>(Inner<T> inner) {}
     private record Outer(Middle<String> middle) {}
 
-    private final JsonRegistry registry = createRegistry(new StringAdapter());
+    private final JsonRegistry registry = createRegistry(new StringConverter());
     {
-        registry.addTypeAdapter(new ListAdapter(registry));
+        registry.addTypeAdapter(new ListConverter(registry));
     }
     private final JsonTypeAdapter<Outer> outerAdapter = registry.getTypeAdapter(Outer.class);
 

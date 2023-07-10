@@ -12,8 +12,8 @@ import com.google.gson.reflect.TypeToken;
 import name.martingeisse.grumpyjson.JsonGenerationException;
 import name.martingeisse.grumpyjson.JsonRegistry;
 import name.martingeisse.grumpyjson.JsonValidationException;
-import name.martingeisse.grumpyjson.builtin.IntegerAdapter;
-import name.martingeisse.grumpyjson.builtin.StringAdapter;
+import name.martingeisse.grumpyjson.builtin.IntegerConverter;
+import name.martingeisse.grumpyjson.builtin.StringConverter;
 import org.junit.jupiter.api.Test;
 
 import java.io.OutputStream;
@@ -23,13 +23,13 @@ import java.util.Optional;
 import static name.martingeisse.grumpyjson.JsonTestUtil.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class OptionalFieldAdapterTest {
+public class OptionalFieldConverterTest {
 
     private static final Type OPTIONAL_INTEGER_TYPE = new TypeToken<OptionalField<Integer>>() {}.getType();
     private static final Type OPTIONAL_STRING_TYPE = new TypeToken<OptionalField<String>>() {}.getType();
 
-    private final JsonRegistry registry = createRegistry(new IntegerAdapter(), new StringAdapter());
-    private final OptionalFieldAdapter adapter = new OptionalFieldAdapter(registry);
+    private final JsonRegistry registry = createRegistry(new IntegerConverter(), new StringConverter());
+    private final OptionalFieldConverter adapter = new OptionalFieldConverter(registry);
 
     @Test
     public void testValidationHappyCase() throws Exception {

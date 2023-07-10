@@ -12,9 +12,9 @@ import org.junit.jupiter.api.Test;
 
 import static name.martingeisse.grumpyjson.JsonTestUtil.*;
 
-public class FieldMustBeNullAdapterTest {
+public class FieldMustBeNullConverterTest {
 
-    private final FieldMustBeNullAdapter adapter = new FieldMustBeNullAdapter();
+    private final FieldMustBeNullConverter adapter = new FieldMustBeNullConverter();
 
     @Test
     public void testValidationHappyCase() throws Exception {

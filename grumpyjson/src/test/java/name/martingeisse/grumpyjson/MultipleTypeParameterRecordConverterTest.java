@@ -8,8 +8,8 @@ package name.martingeisse.grumpyjson;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import name.martingeisse.grumpyjson.builtin.IntegerAdapter;
-import name.martingeisse.grumpyjson.builtin.StringAdapter;
+import name.martingeisse.grumpyjson.builtin.IntegerConverter;
+import name.martingeisse.grumpyjson.builtin.StringConverter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -19,13 +19,13 @@ import static name.martingeisse.grumpyjson.JsonTestUtil.createRegistry;
 /**
  * This test ensures that handling multiple type parameters works. We also swap their order.
  */
-public class MultipleTypeParameterRecordAdapterTest {
+public class MultipleTypeParameterRecordConverterTest {
 
     private record Inner<A, B>(A a, B b) {}
     private record Middle<P, Q>(Inner<Q, P> inner) {}
     private record Outer(Middle<Integer, String> middle) {}
 
-    private final JsonRegistry registry = createRegistry(new IntegerAdapter(), new StringAdapter());
+    private final JsonRegistry registry = createRegistry(new IntegerConverter(), new StringConverter());
     private final JsonTypeAdapter<Outer> outerAdapter = registry.getTypeAdapter(Outer.class);
 
     @Test

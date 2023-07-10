@@ -16,53 +16,43 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 
 /**
- * A {@link JsonTypeAdapter} for the primitive type int and its boxed type, {@link Integer}.
+ * A {@link JsonTypeAdapter} for type {@link String}.
  * <p>
- * This maps to and from integral JSON numbers in the 32-bit signed integer range.
+ * This maps to and from JSON strings. No other mapping exists; in particular, JSON numbers are not converted to
+ * strings by this adapter.
  * <p>
  * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistry#clearTypeAdapters()}.
  */
-public class IntegerAdapter implements JsonTypeAdapter<Integer> {
+public class StringConverter implements JsonTypeAdapter<String> {
 
     /**
      * Constructor
      */
-    public IntegerAdapter() {
+    public StringConverter() {
         // needed to silence Javadoc error because the implicit constructor doesn't have a doc comment
     }
 
     @Override
     public boolean supportsType(Type type) {
         Objects.requireNonNull(type, "type");
-        return type.equals(Integer.TYPE) || type.equals(Integer.class);
+        return type.equals(String.class);
     }
 
     @Override
-    public Integer fromJson(JsonElement json, Type type) throws JsonValidationException {
+    public String fromJson(JsonElement json, Type type) throws JsonValidationException {
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
-
         if (json instanceof JsonPrimitive primitive) {
-            if (primitive.isNumber()) {
-                long longValue = primitive.getAsLong();
-                // test for float
-                if (primitive.equals(new JsonPrimitive(longValue))) {
-                    // test for too-large-for-int
-                    int intValue = (int)longValue;
-                    if (longValue != (long)intValue) {
-                        throw new JsonValidationException("value out of bounds: " + longValue);
-                    }
-                    return intValue;
-                }
+            if (primitive.isString()) {
+                return primitive.getAsString();
             }
         }
-
-        throw new JsonValidationException("expected integer, found: " + json);
+        throw new JsonValidationException("expected int, found: " + json);
     }
 
     @Override
-    public JsonElement toJson(Integer value, Type type) {
+    public JsonElement toJson(String value, Type type) {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(type, "type");
         return new JsonPrimitive(value);

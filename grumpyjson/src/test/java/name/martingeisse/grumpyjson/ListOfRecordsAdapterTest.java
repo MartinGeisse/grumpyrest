@@ -8,9 +8,9 @@ package name.martingeisse.grumpyjson;
 
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.JsonObject;
-import name.martingeisse.grumpyjson.builtin.IntegerAdapter;
-import name.martingeisse.grumpyjson.builtin.ListAdapter;
-import name.martingeisse.grumpyjson.builtin.StringAdapter;
+import name.martingeisse.grumpyjson.builtin.IntegerConverter;
+import name.martingeisse.grumpyjson.builtin.ListConverter;
+import name.martingeisse.grumpyjson.builtin.StringConverter;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Type;
@@ -27,10 +27,10 @@ public class ListOfRecordsAdapterTest {
     private final TypeToken<List<Record>> listOfRecordsTypeToken = new TypeToken<>() {};
     private final Type listOfRecordsType = listOfRecordsTypeToken.getType();
 
-    private final JsonRegistry registry = createRegistry(new IntegerAdapter(), new StringAdapter());
+    private final JsonRegistry registry = createRegistry(new IntegerConverter(), new StringConverter());
 
     {
-        registry.addTypeAdapter(new ListAdapter(registry));
+        registry.addTypeAdapter(new ListConverter(registry));
     }
 
     private final JsonTypeAdapter<List<Record>> listOfRecordsAdapter = registry.getTypeAdapter(listOfRecordsTypeToken);

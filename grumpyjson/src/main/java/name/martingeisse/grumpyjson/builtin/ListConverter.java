@@ -21,7 +21,7 @@ import java.util.Objects;
  * because there is no generic way to create instances of such classes while parsing, and the added value of having
  * such types in simple data transfer classes isn't that great anyway.
  */
-public class ListAdapter implements JsonTypeAdapter<List<?>> {
+public class ListConverter implements JsonTypeAdapter<List<?>> {
 
     private final JsonRegistry registry;
 
@@ -30,7 +30,7 @@ public class ListAdapter implements JsonTypeAdapter<List<?>> {
      *
      * @param registry the JSON registry -- needed to fetch the adapter for the element type at run-time
      */
-    public ListAdapter(JsonRegistry registry) {
+    public ListConverter(JsonRegistry registry) {
         this.registry = registry;
     }
 

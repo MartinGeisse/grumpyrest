@@ -7,9 +7,9 @@
 package name.martingeisse.grumpyjson;
 
 import com.google.gson.JsonElement;
-import name.martingeisse.grumpyjson.builtin.ListAdapter;
-import name.martingeisse.grumpyjson.builtin.helper_types.NullableFieldAdapter;
-import name.martingeisse.grumpyjson.builtin.helper_types.OptionalFieldAdapter;
+import name.martingeisse.grumpyjson.builtin.ListConverter;
+import name.martingeisse.grumpyjson.builtin.helper_types.NullableFieldConverter;
+import name.martingeisse.grumpyjson.builtin.helper_types.OptionalFieldConverter;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -43,7 +43,7 @@ public class JsonValidationException extends Exception {
      * framework wrap it. It is only needed when implementing type adapters for custom structured types or custom
      * wrapper types, to implement the catch-and-wrap there.
      * <p>
-     * For examples on how this method is useful, see {@link NullableFieldAdapter} and {@link OptionalFieldAdapter}.
+     * For examples on how this method is useful, see {@link NullableFieldConverter} and {@link OptionalFieldConverter}.
      *
      * @see FieldErrorNode#create(Exception)
      *
@@ -58,7 +58,7 @@ public class JsonValidationException extends Exception {
      * usually not call this method directly. It is only needed when implementing type adapters for custom structured
      * types, to re-throw after the individual field errors have been combined and field paths applied.
      * <p>
-     * For an example on how this method is useful, see {@link RecordAdapter} and {@link ListAdapter}.
+     * For an example on how this method is useful, see {@link RecordConverter} and {@link ListConverter}.
      *
      * @param fieldErrorNode the node that contains one or more actual errors
      */

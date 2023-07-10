@@ -10,10 +10,10 @@ package name.martingeisse.grumpyjson;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import name.martingeisse.grumpyjson.builtin.*;
-import name.martingeisse.grumpyjson.builtin.helper_types.FieldMustBeNullAdapter;
-import name.martingeisse.grumpyjson.builtin.helper_types.NullableFieldAdapter;
-import name.martingeisse.grumpyjson.builtin.helper_types.OptionalFieldAdapter;
-import name.martingeisse.grumpyjson.builtin.helper_types.TypeWrapperAdapter;
+import name.martingeisse.grumpyjson.builtin.helper_types.FieldMustBeNullConverter;
+import name.martingeisse.grumpyjson.builtin.helper_types.NullableFieldConverter;
+import name.martingeisse.grumpyjson.builtin.helper_types.OptionalFieldConverter;
+import name.martingeisse.grumpyjson.builtin.helper_types.TypeWrapperConverter;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -48,19 +48,19 @@ public class JsonEngine {
     public JsonEngine() {
 
         // Java types
-        addTypeAdapter(new BooleanAdapter());
-        addTypeAdapter(new IntegerAdapter());
-        addTypeAdapter(new StringAdapter());
+        addTypeAdapter(new BooleanConverter());
+        addTypeAdapter(new IntegerConverter());
+        addTypeAdapter(new StringConverter());
 
         // collection types
-        addTypeAdapter(new ListAdapter(registry));
+        addTypeAdapter(new ListConverter(registry));
 
         // helper types
-        addTypeAdapter(new FieldMustBeNullAdapter());
-        addTypeAdapter(new NullableFieldAdapter(registry));
-        addTypeAdapter(new OptionalFieldAdapter(registry));
-        addTypeAdapter(new JsonElementAdapter());
-        addTypeAdapter(new TypeWrapperAdapter(registry));
+        addTypeAdapter(new FieldMustBeNullConverter());
+        addTypeAdapter(new NullableFieldConverter(registry));
+        addTypeAdapter(new OptionalFieldConverter(registry));
+        addTypeAdapter(new JsonElementConverter());
+        addTypeAdapter(new TypeWrapperConverter(registry));
 
     }
 

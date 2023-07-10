@@ -7,18 +7,18 @@
 package name.martingeisse.grumpyjson;
 
 import com.google.gson.JsonObject;
-import name.martingeisse.grumpyjson.builtin.IntegerAdapter;
-import name.martingeisse.grumpyjson.builtin.StringAdapter;
+import name.martingeisse.grumpyjson.builtin.IntegerConverter;
+import name.martingeisse.grumpyjson.builtin.StringConverter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static name.martingeisse.grumpyjson.JsonTestUtil.*;
 
-public class ShallowRecordAdapterTest {
+public class ShallowRecordConverterTest {
 
     private record Record(int myInt, String myString) {}
 
-    private final JsonRegistry registry = createRegistry(new IntegerAdapter(), new StringAdapter());
+    private final JsonRegistry registry = createRegistry(new IntegerConverter(), new StringConverter());
     private final JsonTypeAdapter<Record> adapter = registry.getTypeAdapter(Record.class);
 
     @Test

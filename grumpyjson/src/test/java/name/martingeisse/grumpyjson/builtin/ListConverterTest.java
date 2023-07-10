@@ -17,13 +17,13 @@ import java.util.List;
 import static name.martingeisse.grumpyjson.JsonTestUtil.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ListAdapterTest {
+public class ListConverterTest {
 
     private static final Type INTEGER_LIST_TYPE = new TypeToken<List<Integer>>() {}.getType();
     private static final Type STRING_LIST_TYPE = new TypeToken<List<String>>() {}.getType();
 
-    private final JsonRegistry registry = createRegistry(new IntegerAdapter(), new StringAdapter());
-    private final ListAdapter adapter = new ListAdapter(registry);
+    private final JsonRegistry registry = createRegistry(new IntegerConverter(), new StringConverter());
+    private final ListConverter adapter = new ListConverter(registry);
 
     @Test
     public void testValidationHappyCase() throws Exception {

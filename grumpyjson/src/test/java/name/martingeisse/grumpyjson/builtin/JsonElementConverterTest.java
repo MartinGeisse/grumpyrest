@@ -13,9 +13,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 
-public class JsonElementAdapterTest {
+public class JsonElementConverterTest {
 
-    private final JsonElementAdapter adapter = new JsonElementAdapter();
+    private final JsonElementConverter adapter = new JsonElementConverter();
 
     private void check(JsonElement element) {
         assertEquals(element, adapter.fromJson(element, JsonElement.class));
