@@ -27,8 +27,8 @@ public class ListConverterTest {
 
     @Test
     public void testValidationHappyCase() throws Exception {
-        assertEquals(List.of(12, 34), adapter.fromJson(buildIntArray(12, 34), INTEGER_LIST_TYPE));
-        assertEquals(List.of("foo", "bar"), adapter.fromJson(buildStringArray("foo", "bar"), STRING_LIST_TYPE));
+        assertEquals(List.of(12, 34), adapter.deserialize(buildIntArray(12, 34), INTEGER_LIST_TYPE));
+        assertEquals(List.of("foo", "bar"), adapter.deserialize(buildStringArray("foo", "bar"), STRING_LIST_TYPE));
     }
 
     @Test
@@ -74,10 +74,10 @@ public class ListConverterTest {
 
     @Test
     public void testGenerationHappyCase() {
-        assertEquals(buildIntArray(), adapter.toJson(List.of(), INTEGER_LIST_TYPE));
-        assertEquals(buildIntArray(12, 34), adapter.toJson(List.of(12, 34), INTEGER_LIST_TYPE));
-        assertEquals(buildIntArray(), adapter.toJson(List.of(), STRING_LIST_TYPE));
-        assertEquals(buildStringArray("foo", "bar"), adapter.toJson(List.of("foo", "bar"), STRING_LIST_TYPE));
+        assertEquals(buildIntArray(), adapter.serialize(List.of(), INTEGER_LIST_TYPE));
+        assertEquals(buildIntArray(12, 34), adapter.serialize(List.of(12, 34), INTEGER_LIST_TYPE));
+        assertEquals(buildIntArray(), adapter.serialize(List.of(), STRING_LIST_TYPE));
+        assertEquals(buildStringArray("foo", "bar"), adapter.serialize(List.of("foo", "bar"), STRING_LIST_TYPE));
     }
 
     @Test

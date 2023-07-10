@@ -9,8 +9,8 @@ package name.martingeisse.grumpyrest;
 import com.google.gson.reflect.TypeToken;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import name.martingeisse.grumpyjson.JsonGenerationException;
-import name.martingeisse.grumpyjson.JsonValidationException;
+import name.martingeisse.grumpyjson.JsonSerializationException;
+import name.martingeisse.grumpyjson.JsonDeserializationException;
 import name.martingeisse.grumpyrest.request.PathArgument;
 import name.martingeisse.grumpyrest.request.Request;
 import name.martingeisse.grumpyrest.request.path.PathUtil;
@@ -186,17 +186,17 @@ public final class RequestCycle {
         }
 
         @Override
-        public void writeJson(Object value) throws JsonGenerationException, IOException {
+        public void writeJson(Object value) throws JsonSerializationException, IOException {
             api.getJsonEngine().writeTo(value, servletResponse.getOutputStream());
         }
 
         @Override
-        public void writeJson(Object value, TypeToken<?> typeToken) throws JsonGenerationException, IOException {
+        public void writeJson(Object value, TypeToken<?> typeToken) throws JsonSerializationException, IOException {
             api.getJsonEngine().writeTo(value, typeToken, servletResponse.getOutputStream());
         }
 
         @Override
-        public void writeJson(Object value, Type type) throws JsonGenerationException, IOException {
+        public void writeJson(Object value, Type type) throws JsonSerializationException, IOException {
             api.getJsonEngine().writeTo(value, type, servletResponse.getOutputStream());
         }
 
@@ -252,7 +252,7 @@ public final class RequestCycle {
         public <T> T parseBody(Class<T> clazz) {
             try {
                 return api.getJsonEngine().parse(prepareParse(), clazz);
-            } catch (JsonValidationException e) {
+            } catch (JsonDeserializationException e) {
                 throw new FinishRequestException(StandardErrorResponse.requestBodyValidationFailed(e));
             }
         }
@@ -260,7 +260,7 @@ public final class RequestCycle {
         public <T> T parseBody(TypeToken<T> typeToken) {
             try {
                 return api.getJsonEngine().parse(prepareParse(), typeToken);
-            } catch (JsonValidationException e) {
+            } catch (JsonDeserializationException e) {
                 throw new FinishRequestException(StandardErrorResponse.requestBodyValidationFailed(e));
             }
         }
@@ -268,7 +268,7 @@ public final class RequestCycle {
         public Object parseBody(Type type) {
             try {
                 return api.getJsonEngine().parse(prepareParse(), type);
-            } catch (JsonValidationException e) {
+            } catch (JsonDeserializationException e) {
                 throw new FinishRequestException(StandardErrorResponse.requestBodyValidationFailed(e));
             }
         }

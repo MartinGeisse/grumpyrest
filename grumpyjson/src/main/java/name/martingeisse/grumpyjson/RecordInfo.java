@@ -139,7 +139,7 @@ public final class RecordInfo {
             try {
                 return getter.invoke(container);
             } catch (Exception e) {
-                throw new JsonGenerationException("could not invoke getter " + getter + " on " + container);
+                throw new JsonSerializationException("could not invoke getter " + getter + " on " + container);
             }
         }
 

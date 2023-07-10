@@ -17,7 +17,7 @@ import java.util.Objects;
 /**
  * This exception type gets thrown when the incoming JSON does not match the expected structure.
  */
-public class JsonValidationException extends Exception {
+public class JsonDeserializationException extends Exception {
 
     /**
      * needs javadoc because this class is {@link java.io.Serializable}
@@ -26,14 +26,14 @@ public class JsonValidationException extends Exception {
 
     /**
      * Creates an exception for a single error message without a field path. This constructor is typically used in
-     * {@link JsonTypeAdapter#fromJson(JsonElement, Type)} for a JSON primitive, such as a parser for a custom date
+     * {@link JsonTypeAdapter#deserialize(JsonElement, Type)} for a JSON primitive, such as a parser for a custom date
      * format that has encountered a string which does not match the expected pattern.
      * 
      * @see FieldErrorNode#create(String) 
      *
      * @param message the error message
      */
-    public JsonValidationException(String message) {
+    public JsonDeserializationException(String message) {
         this(FieldErrorNode.create(message));
     }
 
@@ -49,7 +49,7 @@ public class JsonValidationException extends Exception {
      *
      * @param cause the internal exception
      */
-    public JsonValidationException(Exception cause) {
+    public JsonDeserializationException(Exception cause) {
         this(FieldErrorNode.create(cause));
     }
 
@@ -62,7 +62,7 @@ public class JsonValidationException extends Exception {
      *
      * @param fieldErrorNode the node that contains one or more actual errors
      */
-    public JsonValidationException(FieldErrorNode fieldErrorNode) {
+    public JsonDeserializationException(FieldErrorNode fieldErrorNode) {
         super("exception during JSON validation");
         this.fieldErrorNode = Objects.requireNonNull(fieldErrorNode, "fieldErrorNode");
     }

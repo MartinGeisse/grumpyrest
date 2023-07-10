@@ -34,8 +34,8 @@ public class DeepRecordConverterTest {
         Inner innerRecord = new Inner(123, "foo");
         Outer outerRecord = new Outer(innerRecord, 456);
 
-        Assertions.assertEquals(outerRecord, outerAdapter.fromJson(outerJson, Outer.class));
-        Assertions.assertEquals(outerJson, outerAdapter.toJson(outerRecord, Record.class));
+        Assertions.assertEquals(outerRecord, outerAdapter.deserialize(outerJson, Outer.class));
+        Assertions.assertEquals(outerJson, outerAdapter.serialize(outerRecord, Record.class));
     }
 
     @Test

@@ -18,7 +18,7 @@ public class FieldMustBeNullConverterTest {
 
     @Test
     public void testValidationHappyCase() throws Exception {
-        Assertions.assertEquals(FieldMustBeNull.INSTANCE, adapter.fromJson(JsonNull.INSTANCE, FieldMustBeNull.class));
+        Assertions.assertEquals(FieldMustBeNull.INSTANCE, adapter.deserialize(JsonNull.INSTANCE, FieldMustBeNull.class));
     }
 
     @Test
@@ -31,7 +31,7 @@ public class FieldMustBeNullConverterTest {
 
     @Test
     public void testGenerationHappyCase() {
-        Assertions.assertEquals(JsonNull.INSTANCE, adapter.toJson(FieldMustBeNull.INSTANCE, FieldMustBeNull.class));
+        Assertions.assertEquals(JsonNull.INSTANCE, adapter.serialize(FieldMustBeNull.INSTANCE, FieldMustBeNull.class));
     }
 
     @Test

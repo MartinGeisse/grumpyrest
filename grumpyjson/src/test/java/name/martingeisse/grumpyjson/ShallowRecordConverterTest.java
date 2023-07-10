@@ -29,8 +29,8 @@ public class ShallowRecordConverterTest {
 
         Record record = new Record(123, "foo");
 
-        Assertions.assertEquals(record, adapter.fromJson(json, Record.class));
-        Assertions.assertEquals(json, adapter.toJson(record, Record.class));
+        Assertions.assertEquals(record, adapter.deserialize(json, Record.class));
+        Assertions.assertEquals(json, adapter.serialize(record, Record.class));
     }
 
     @Test

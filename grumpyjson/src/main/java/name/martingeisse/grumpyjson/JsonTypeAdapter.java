@@ -44,9 +44,9 @@ public interface JsonTypeAdapter<T> {
      * @param json the JSON
      * @param type the type to parse
      * @return the parsed value
-     * @throws JsonValidationException if the JSON does not match the expected structure
+     * @throws JsonDeserializationException if the JSON does not match the expected structure
      */
-    T fromJson(JsonElement json, Type type) throws JsonValidationException;
+    T deserialize(JsonElement json, Type type) throws JsonDeserializationException;
 
     /**
      * Converts a value from an absent JSON fragment. This can be used to return a default for optional object
@@ -57,10 +57,10 @@ public interface JsonTypeAdapter<T> {
      *
      * @param type the type to parse
      * @return the parsed value
-     * @throws JsonValidationException if the JSON does not match the expected structure
+     * @throws JsonDeserializationException if the JSON does not match the expected structure
      */
-    default T fromAbsentJson(Type type) throws JsonValidationException {
-        throw new JsonValidationException(ExceptionMessages.MISSING_PROPERTY);
+    default T deserializeAbsent(Type type) throws JsonDeserializationException {
+        throw new JsonDeserializationException(ExceptionMessages.MISSING_PROPERTY);
     }
 
     /**
@@ -79,9 +79,9 @@ public interface JsonTypeAdapter<T> {
      * @param value the value to convert to JSON
      * @param type the type to convert
      * @return the generated JSON
-     * @throws JsonGenerationException if the value is in an inconsistent state, or in a state that cannot be converted to JSON
+     * @throws JsonSerializationException if the value is in an inconsistent state, or in a state that cannot be converted to JSON
      */
-    JsonElement toJson(T value, Type type) throws JsonGenerationException;
+    JsonElement serialize(T value, Type type) throws JsonSerializationException;
 
     /**
      * Converts a value to JSON in a context in which a non-existing JSON value can be handled, and therefore
@@ -89,15 +89,15 @@ public interface JsonTypeAdapter<T> {
      * case is for optional object properties.
      * <p>
      * Most types cannot vanish, and therefore have no special behavior in a context that supports vanishable values,
-     * so the standard implementation just delegates to {@link #toJson(Object, Type)}.
+     * so the standard implementation just delegates to {@link #serialize(Object, Type)}.
      *
      * @param value the value to convert to JSON
      * @param type the type to convert
      * @return the generated JSON, or nothing in case the value vanishes in JSON
-     * @throws JsonGenerationException if the value is in an inconsistent state, or in a state that cannot be converted to JSON
+     * @throws JsonSerializationException if the value is in an inconsistent state, or in a state that cannot be converted to JSON
      */
-    default Optional<JsonElement> toOptionalJson(T value, Type type) throws JsonGenerationException {
-        return Optional.of(toJson(value, type));
+    default Optional<JsonElement> serializeOptional(T value, Type type) throws JsonSerializationException {
+        return Optional.of(serialize(value, type));
     }
 
 }

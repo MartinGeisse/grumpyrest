@@ -1,7 +1,7 @@
 package name.martingeisse.grumpyrest.response;
 
 import com.google.gson.reflect.TypeToken;
-import name.martingeisse.grumpyjson.JsonGenerationException;
+import name.martingeisse.grumpyjson.JsonSerializationException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -60,10 +60,10 @@ public interface ResponseTransmitter {
      * clean.
      *
      * @param value the value to convert to JSON
-     * @throws JsonGenerationException if the value is in an inconsistent state or in a state that cannot be converted to JSON
+     * @throws JsonSerializationException if the value is in an inconsistent state or in a state that cannot be converted to JSON
      * @throws IOException on I/O errors
      */
-    void writeJson(Object value) throws JsonGenerationException, IOException;
+    void writeJson(Object value) throws JsonSerializationException, IOException;
 
     /**
      * Body method: Converts the specified value to JSON and sends it to the client using the body output stream.
@@ -73,10 +73,10 @@ public interface ResponseTransmitter {
      *
      * @param value the value to convert to JSON
      * @param typeToken a type token for the type used for conversion
-     * @throws JsonGenerationException if the value is in an inconsistent state or in a state that cannot be converted to JSON
+     * @throws JsonSerializationException if the value is in an inconsistent state or in a state that cannot be converted to JSON
      * @throws IOException on I/O errors
      */
-    void writeJson(Object value, TypeToken<?> typeToken) throws JsonGenerationException, IOException;
+    void writeJson(Object value, TypeToken<?> typeToken) throws JsonSerializationException, IOException;
 
     /**
      * Body method: Converts the specified value to JSON and sends it to the client using the body output stream.
@@ -86,9 +86,9 @@ public interface ResponseTransmitter {
      *
      * @param value the value to convert to JSON
      * @param type the type used for conversion
-     * @throws JsonGenerationException if the value is in an inconsistent state or in a state that cannot be converted to JSON
+     * @throws JsonSerializationException if the value is in an inconsistent state or in a state that cannot be converted to JSON
      * @throws IOException on I/O errors
      */
-    void writeJson(Object value, Type type) throws JsonGenerationException, IOException;
+    void writeJson(Object value, Type type) throws JsonSerializationException, IOException;
 
 }

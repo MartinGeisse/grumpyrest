@@ -10,7 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import name.martingeisse.grumpyjson.JsonRegistry;
 import name.martingeisse.grumpyjson.JsonTypeAdapter;
-import name.martingeisse.grumpyjson.JsonValidationException;
+import name.martingeisse.grumpyjson.JsonDeserializationException;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -39,7 +39,7 @@ public class BooleanConverter implements JsonTypeAdapter<Boolean> {
     }
 
     @Override
-    public Boolean fromJson(JsonElement json, Type type) throws JsonValidationException {
+    public Boolean deserialize(JsonElement json, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
 
@@ -49,11 +49,11 @@ public class BooleanConverter implements JsonTypeAdapter<Boolean> {
             }
         }
 
-        throw new JsonValidationException("expected boolean, found: " + json);
+        throw new JsonDeserializationException("expected boolean, found: " + json);
     }
 
     @Override
-    public JsonElement toJson(Boolean value, Type type) {
+    public JsonElement serialize(Boolean value, Type type) {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(type, "type");
         return new JsonPrimitive(value);

@@ -35,14 +35,14 @@ public final class JsonElementConverter implements JsonTypeAdapter<JsonElement> 
     }
 
     @Override
-    public JsonElement fromJson(JsonElement json, Type type) {
+    public JsonElement deserialize(JsonElement json, Type type) {
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
         return json.deepCopy();
     }
 
     @Override
-    public JsonElement toJson(JsonElement value, Type type) {
+    public JsonElement serialize(JsonElement value, Type type) {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(type, "type");
         return value.deepCopy();

@@ -50,8 +50,8 @@ public class TypePassingRecordConverterTest {
         Middle<String> middleRecord = new Middle<>(innerRecord);
         Outer outerRecord = new Outer(middleRecord);
 
-        Assertions.assertEquals(outerRecord, outerAdapter.fromJson(outerJson, Outer.class));
-        Assertions.assertEquals(outerJson, outerAdapter.toJson(outerRecord, Record.class));
+        Assertions.assertEquals(outerRecord, outerAdapter.deserialize(outerJson, Outer.class));
+        Assertions.assertEquals(outerJson, outerAdapter.serialize(outerRecord, Record.class));
     }
 
 }

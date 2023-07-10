@@ -18,9 +18,9 @@ public class IntegerConverterTest {
 
     @Test
     public void testValidationHappyCase() throws Exception {
-        Assertions.assertEquals(0, adapter.fromJson(new JsonPrimitive(0), Integer.TYPE));
-        Assertions.assertEquals(123, adapter.fromJson(new JsonPrimitive(123), Integer.TYPE));
-        Assertions.assertEquals(-123, adapter.fromJson(new JsonPrimitive(-123), Integer.TYPE));
+        Assertions.assertEquals(0, adapter.deserialize(new JsonPrimitive(0), Integer.TYPE));
+        Assertions.assertEquals(123, adapter.deserialize(new JsonPrimitive(123), Integer.TYPE));
+        Assertions.assertEquals(-123, adapter.deserialize(new JsonPrimitive(-123), Integer.TYPE));
     }
 
     @Test
@@ -38,7 +38,7 @@ public class IntegerConverterTest {
 
     @Test
     public void testValidationSmallLong() throws Exception {
-        Assertions.assertEquals(12, adapter.fromJson(new JsonPrimitive(12L), Integer.TYPE));
+        Assertions.assertEquals(12, adapter.deserialize(new JsonPrimitive(12L), Integer.TYPE));
     }
 
     @Test
@@ -48,7 +48,7 @@ public class IntegerConverterTest {
 
     @Test
     public void testGenerationHappyCase() {
-        Assertions.assertEquals(new JsonPrimitive(123), adapter.toJson(123, Integer.TYPE));
+        Assertions.assertEquals(new JsonPrimitive(123), adapter.serialize(123, Integer.TYPE));
     }
 
     @Test

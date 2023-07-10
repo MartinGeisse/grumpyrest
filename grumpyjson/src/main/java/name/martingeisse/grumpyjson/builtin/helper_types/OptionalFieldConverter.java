@@ -38,31 +38,31 @@ public class OptionalFieldConverter implements JsonTypeAdapter<OptionalField<?>>
     }
 
     @Override
-    public OptionalField<?> fromJson(JsonElement json, Type type) throws JsonValidationException {
+    public OptionalField<?> deserialize(JsonElement json, Type type) throws JsonDeserializationException {
         Type innerType = getInner(type);
         JsonTypeAdapter<?> innerAdapter = registry.getTypeAdapter(innerType);
         try {
-            return OptionalField.ofValue(innerAdapter.fromJson(json, innerType));
-        } catch (JsonValidationException e) {
+            return OptionalField.ofValue(innerAdapter.deserialize(json, innerType));
+        } catch (JsonDeserializationException e) {
             throw e;
         } catch (Exception e) {
-            throw new JsonValidationException(e);
+            throw new JsonDeserializationException(e);
         }
     }
 
     @Override
-    public OptionalField<?> fromAbsentJson(Type type) {
+    public OptionalField<?> deserializeAbsent(Type type) {
         getInner(type);
         return OptionalField.ofNothing();
     }
 
     @Override
-    public JsonElement toJson(OptionalField<?> value, Type type) throws JsonGenerationException {
-        throw new JsonGenerationException("found OptionalField in a non-vanishable context");
+    public JsonElement serialize(OptionalField<?> value, Type type) throws JsonSerializationException {
+        throw new JsonSerializationException("found OptionalField in a non-vanishable context");
     }
 
     @Override
-    public Optional<JsonElement> toOptionalJson(OptionalField<?> value, Type type) throws JsonGenerationException {
+    public Optional<JsonElement> serializeOptional(OptionalField<?> value, Type type) throws JsonSerializationException {
         Type innerType = getInner(type);
         if (value.isAbsent()) {
             return Optional.empty();
@@ -70,11 +70,11 @@ public class OptionalFieldConverter implements JsonTypeAdapter<OptionalField<?>>
         @SuppressWarnings("rawtypes") JsonTypeAdapter innerAdapter = registry.getTypeAdapter(innerType);
         try {
             //noinspection unchecked
-            return Optional.of(innerAdapter.toJson(value.getValueOrNothingAsNull(), innerType));
-        } catch (JsonGenerationException e) {
+            return Optional.of(innerAdapter.serialize(value.getValueOrNothingAsNull(), innerType));
+        } catch (JsonSerializationException e) {
             throw e;
         } catch (Exception e) {
-            throw new JsonGenerationException(e);
+            throw new JsonSerializationException(e);
         }
 
     }

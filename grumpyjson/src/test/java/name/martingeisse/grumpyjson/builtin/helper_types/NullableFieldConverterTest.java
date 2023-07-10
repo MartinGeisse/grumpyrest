@@ -10,7 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
 import name.martingeisse.grumpyjson.JsonRegistry;
-import name.martingeisse.grumpyjson.JsonValidationException;
+import name.martingeisse.grumpyjson.JsonDeserializationException;
 import name.martingeisse.grumpyjson.builtin.IntegerConverter;
 import name.martingeisse.grumpyjson.builtin.StringConverter;
 import org.junit.jupiter.api.Test;
@@ -32,10 +32,10 @@ public class NullableFieldConverterTest {
 
     @Test
     public void testValidationHappyCase() throws Exception {
-        assertEquals(NullableField.ofNull(), adapter.fromJson(JsonNull.INSTANCE, NULLABLE_INTEGER_TYPE));
-        assertEquals(NullableField.ofValue(12), adapter.fromJson(new JsonPrimitive(12), NULLABLE_INTEGER_TYPE));
-        assertEquals(NullableField.ofNull(), adapter.fromJson(JsonNull.INSTANCE, NULLABLE_STRING_TYPE));
-        assertEquals(NullableField.ofValue("foo"), adapter.fromJson(new JsonPrimitive("foo"), NULLABLE_STRING_TYPE));
+        assertEquals(NullableField.ofNull(), adapter.deserialize(JsonNull.INSTANCE, NULLABLE_INTEGER_TYPE));
+        assertEquals(NullableField.ofValue(12), adapter.deserialize(new JsonPrimitive(12), NULLABLE_INTEGER_TYPE));
+        assertEquals(NullableField.ofNull(), adapter.deserialize(JsonNull.INSTANCE, NULLABLE_STRING_TYPE));
+        assertEquals(NullableField.ofValue("foo"), adapter.deserialize(new JsonPrimitive("foo"), NULLABLE_STRING_TYPE));
     }
 
     @Test
@@ -62,11 +62,11 @@ public class NullableFieldConverterTest {
 
     @Test
     public void testGenerationHappyCase() {
-        assertEquals(JsonNull.INSTANCE, adapter.toJson(NullableField.ofNull(), NULLABLE_INTEGER_TYPE));
-        assertEquals(new JsonPrimitive(12), adapter.toJson(NullableField.ofValue(12), NULLABLE_INTEGER_TYPE));
+        assertEquals(JsonNull.INSTANCE, adapter.serialize(NullableField.ofNull(), NULLABLE_INTEGER_TYPE));
+        assertEquals(new JsonPrimitive(12), adapter.serialize(NullableField.ofValue(12), NULLABLE_INTEGER_TYPE));
 
-        assertEquals(JsonNull.INSTANCE, adapter.toJson(NullableField.ofNull(), NULLABLE_STRING_TYPE));
-        assertEquals(new JsonPrimitive("foo"), adapter.toJson(NullableField.ofValue("foo"), NULLABLE_STRING_TYPE));
+        assertEquals(JsonNull.INSTANCE, adapter.serialize(NullableField.ofNull(), NULLABLE_STRING_TYPE));
+        assertEquals(new JsonPrimitive("foo"), adapter.serialize(NullableField.ofValue("foo"), NULLABLE_STRING_TYPE));
     }
 
     @Test
@@ -82,9 +82,9 @@ public class NullableFieldConverterTest {
 
     @Test
     public void testDoesNotSupportAbsentFields() {
-        assertEquals(Optional.of(JsonNull.INSTANCE), adapter.toOptionalJson(NullableField.ofNull(), NULLABLE_INTEGER_TYPE));
-        assertEquals(Optional.of(new JsonPrimitive(12)), adapter.toOptionalJson(NullableField.ofValue(12), NULLABLE_INTEGER_TYPE));
-        assertThrows(JsonValidationException.class, () -> adapter.fromAbsentJson(NULLABLE_INTEGER_TYPE));
+        assertEquals(Optional.of(JsonNull.INSTANCE), adapter.serializeOptional(NullableField.ofNull(), NULLABLE_INTEGER_TYPE));
+        assertEquals(Optional.of(new JsonPrimitive(12)), adapter.serializeOptional(NullableField.ofValue(12), NULLABLE_INTEGER_TYPE));
+        assertThrows(JsonDeserializationException.class, () -> adapter.deserializeAbsent(NULLABLE_INTEGER_TYPE));
     }
 
 }

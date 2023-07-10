@@ -38,23 +38,23 @@ public class NullableFieldConverter implements JsonTypeAdapter<NullableField<?>>
     }
 
     @Override
-    public NullableField<?> fromJson(JsonElement json, Type type) throws JsonValidationException {
+    public NullableField<?> deserialize(JsonElement json, Type type) throws JsonDeserializationException {
         Type innerType = TypeUtil.expectSingleParameterizedType(type, NullableField.class);
         if (json.isJsonNull()) {
             return NullableField.ofNull();
         }
         JsonTypeAdapter<?> innerAdapter = registry.getTypeAdapter(innerType);
         try {
-            return NullableField.ofValue(innerAdapter.fromJson(json, innerType));
-        } catch (JsonValidationException e) {
+            return NullableField.ofValue(innerAdapter.deserialize(json, innerType));
+        } catch (JsonDeserializationException e) {
             throw e;
         } catch (Exception e) {
-            throw new JsonValidationException(e);
+            throw new JsonDeserializationException(e);
         }
     }
 
     @Override
-    public JsonElement toJson(NullableField<?> value, Type type) throws JsonGenerationException {
+    public JsonElement serialize(NullableField<?> value, Type type) throws JsonSerializationException {
         Type innerType = TypeUtil.expectSingleParameterizedType(type, NullableField.class);
         if (value.isNull()) {
             return JsonNull.INSTANCE;
@@ -62,11 +62,11 @@ public class NullableFieldConverter implements JsonTypeAdapter<NullableField<?>>
         @SuppressWarnings("rawtypes") JsonTypeAdapter innerAdapter = registry.getTypeAdapter(innerType);
         try {
             //noinspection unchecked
-            return innerAdapter.toJson(value.getValueOrNull(), innerType);
-        } catch (JsonGenerationException e) {
+            return innerAdapter.serialize(value.getValueOrNull(), innerType);
+        } catch (JsonSerializationException e) {
             throw e;
         } catch (Exception e) {
-            throw new JsonGenerationException(e);
+            throw new JsonSerializationException(e);
         }
     }
 

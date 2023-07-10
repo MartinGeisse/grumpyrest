@@ -33,8 +33,8 @@ public class RecordWithOptionalPropertyAdapterTest {
 
         Record recordWithoutValue = new Record(OptionalField.ofNothing());
 
-        Assertions.assertEquals(recordWithoutValue, adapter.fromJson(jsonObjectWithoutValue, Record.class));
-        Assertions.assertEquals(jsonObjectWithoutValue, adapter.toJson(recordWithoutValue, Record.class));
+        Assertions.assertEquals(recordWithoutValue, adapter.deserialize(jsonObjectWithoutValue, Record.class));
+        Assertions.assertEquals(jsonObjectWithoutValue, adapter.serialize(recordWithoutValue, Record.class));
     }
 
     @Test
@@ -44,8 +44,8 @@ public class RecordWithOptionalPropertyAdapterTest {
 
         Record recordWithValue = new Record(OptionalField.ofValue(123));
 
-        Assertions.assertEquals(recordWithValue, adapter.fromJson(jsonObjectWithValue, Record.class));
-        Assertions.assertEquals(jsonObjectWithValue, adapter.toJson(recordWithValue, Record.class));
+        Assertions.assertEquals(recordWithValue, adapter.deserialize(jsonObjectWithValue, Record.class));
+        Assertions.assertEquals(jsonObjectWithValue, adapter.serialize(recordWithValue, Record.class));
     }
 
 }

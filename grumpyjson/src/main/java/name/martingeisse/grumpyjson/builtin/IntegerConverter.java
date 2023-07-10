@@ -10,7 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import name.martingeisse.grumpyjson.JsonRegistry;
 import name.martingeisse.grumpyjson.JsonTypeAdapter;
-import name.martingeisse.grumpyjson.JsonValidationException;
+import name.martingeisse.grumpyjson.JsonDeserializationException;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -39,7 +39,7 @@ public class IntegerConverter implements JsonTypeAdapter<Integer> {
     }
 
     @Override
-    public Integer fromJson(JsonElement json, Type type) throws JsonValidationException {
+    public Integer deserialize(JsonElement json, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
 
@@ -51,18 +51,18 @@ public class IntegerConverter implements JsonTypeAdapter<Integer> {
                     // test for too-large-for-int
                     int intValue = (int)longValue;
                     if (longValue != (long)intValue) {
-                        throw new JsonValidationException("value out of bounds: " + longValue);
+                        throw new JsonDeserializationException("value out of bounds: " + longValue);
                     }
                     return intValue;
                 }
             }
         }
 
-        throw new JsonValidationException("expected integer, found: " + json);
+        throw new JsonDeserializationException("expected integer, found: " + json);
     }
 
     @Override
-    public JsonElement toJson(Integer value, Type type) {
+    public JsonElement serialize(Integer value, Type type) {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(type, "type");
         return new JsonPrimitive(value);

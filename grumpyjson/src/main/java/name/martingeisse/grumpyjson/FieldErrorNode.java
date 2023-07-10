@@ -24,7 +24,7 @@ import java.util.List;
  * An error is generated from a specific JSON value, e.g. from a JSON string whose format does not match a validation
  * pattern. Such an error is created with a message, but does not know the context (field path) in which it occurs,
  * nor does it know about other errors that may occur in other fields. The error is then wrapped in an exception
- * (either {@link JsonValidationException} or {@link JsonGenerationException}) and thrown to propagate it upwards.
+ * (either {@link JsonDeserializationException} or {@link JsonSerializationException}) and thrown to propagate it upwards.
  * Container values further up then process these exceptions and re-throw them, collecting multiple errors and
  * augmenting their field paths. The result is a tree structure of FieldErrorNode that contains all errors that have
  * occurred in the whole JSON structure. This tree structure is then usually flattened to a list of errors and

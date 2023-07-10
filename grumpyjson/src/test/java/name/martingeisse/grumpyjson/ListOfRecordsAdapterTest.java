@@ -49,13 +49,13 @@ public class ListOfRecordsAdapterTest {
         Record record1 = new Record(12, "foo");
         Record record2 = new Record(34, "bar");
 
-        assertEquals(buildArray(), listOfRecordsAdapter.toJson(List.of(), listOfRecordsType));
-        assertEquals(buildArray(object1), listOfRecordsAdapter.toJson(List.of(record1), listOfRecordsType));
-        assertEquals(buildArray(object1, object2), listOfRecordsAdapter.toJson(List.of(record1, record2), listOfRecordsType));
+        assertEquals(buildArray(), listOfRecordsAdapter.serialize(List.of(), listOfRecordsType));
+        assertEquals(buildArray(object1), listOfRecordsAdapter.serialize(List.of(record1), listOfRecordsType));
+        assertEquals(buildArray(object1, object2), listOfRecordsAdapter.serialize(List.of(record1, record2), listOfRecordsType));
 
-        assertEquals(List.of(), listOfRecordsAdapter.fromJson(buildArray(), listOfRecordsType));
-        assertEquals(List.of(record1), listOfRecordsAdapter.fromJson(buildArray(object1), listOfRecordsType));
-        assertEquals(List.of(record1, record2), listOfRecordsAdapter.fromJson(buildArray(object1, object2), listOfRecordsType));
+        assertEquals(List.of(), listOfRecordsAdapter.deserialize(buildArray(), listOfRecordsType));
+        assertEquals(List.of(record1), listOfRecordsAdapter.deserialize(buildArray(object1), listOfRecordsType));
+        assertEquals(List.of(record1, record2), listOfRecordsAdapter.deserialize(buildArray(object1, object2), listOfRecordsType));
     }
 
 }

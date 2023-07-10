@@ -38,16 +38,16 @@ final class AdapterProxy<T> implements JsonTypeAdapter<T> {
     }
 
     @Override
-    public T fromJson(JsonElement json, Type type) throws JsonValidationException {
+    public T deserialize(JsonElement json, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
-        return needTarget().fromJson(json, type);
+        return needTarget().deserialize(json, type);
     }
 
     @Override
-    public JsonElement toJson(T value, Type type) {
+    public JsonElement serialize(T value, Type type) {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(type, "type");
-        return needTarget().toJson(value, type);
+        return needTarget().serialize(value, type);
     }
 }

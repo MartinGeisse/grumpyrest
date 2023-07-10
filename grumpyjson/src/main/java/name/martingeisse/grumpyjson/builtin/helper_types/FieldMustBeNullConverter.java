@@ -8,10 +8,10 @@ package name.martingeisse.grumpyjson.builtin.helper_types;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
-import name.martingeisse.grumpyjson.JsonGenerationException;
+import name.martingeisse.grumpyjson.JsonSerializationException;
 import name.martingeisse.grumpyjson.JsonRegistry;
 import name.martingeisse.grumpyjson.JsonTypeAdapter;
-import name.martingeisse.grumpyjson.JsonValidationException;
+import name.martingeisse.grumpyjson.JsonDeserializationException;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -37,17 +37,17 @@ public class FieldMustBeNullConverter implements JsonTypeAdapter<FieldMustBeNull
     }
 
     @Override
-    public FieldMustBeNull fromJson(JsonElement json, Type type) throws JsonValidationException {
+    public FieldMustBeNull deserialize(JsonElement json, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
         if (json instanceof JsonNull) {
             return FieldMustBeNull.INSTANCE;
         }
-        throw new JsonValidationException("expected null, found: " + json);
+        throw new JsonDeserializationException("expected null, found: " + json);
     }
 
     @Override
-    public JsonElement toJson(FieldMustBeNull value, Type type) throws JsonGenerationException {
+    public JsonElement serialize(FieldMustBeNull value, Type type) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(type, "type");
         return JsonNull.INSTANCE;

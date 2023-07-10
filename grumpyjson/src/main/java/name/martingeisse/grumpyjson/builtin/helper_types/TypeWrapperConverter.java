@@ -7,10 +7,10 @@
 package name.martingeisse.grumpyjson.builtin.helper_types;
 
 import com.google.gson.JsonElement;
-import name.martingeisse.grumpyjson.JsonGenerationException;
+import name.martingeisse.grumpyjson.JsonSerializationException;
 import name.martingeisse.grumpyjson.JsonRegistry;
 import name.martingeisse.grumpyjson.JsonTypeAdapter;
-import name.martingeisse.grumpyjson.JsonValidationException;
+import name.martingeisse.grumpyjson.JsonDeserializationException;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -44,15 +44,15 @@ public class TypeWrapperConverter implements JsonTypeAdapter<TypeWrapper<?>> {
     }
 
     @Override
-    public TypeWrapper<?> fromJson(JsonElement json, Type _ignored) throws JsonValidationException {
+    public TypeWrapper<?> deserialize(JsonElement json, Type _ignored) throws JsonDeserializationException {
         throw new UnsupportedOperationException("TypeWrapper cannot be parsed");
     }
 
     @Override
-    public JsonElement toJson(TypeWrapper<?> value, Type _ignored) throws JsonGenerationException {
+    public JsonElement serialize(TypeWrapper<?> value, Type _ignored) throws JsonSerializationException {
         @SuppressWarnings("rawtypes") JsonTypeAdapter adapter = registry.getTypeAdapter(value.getType());
         //noinspection unchecked
-        return adapter.toJson(value.getValue(), value.getType());
+        return adapter.serialize(value.getValue(), value.getType());
     }
 
 }

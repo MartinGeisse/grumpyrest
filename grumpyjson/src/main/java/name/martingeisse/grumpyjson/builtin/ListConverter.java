@@ -40,7 +40,7 @@ public class ListConverter implements JsonTypeAdapter<List<?>> {
     }
 
     @Override
-    public List<?> fromJson(JsonElement json, Type type) throws JsonValidationException {
+    public List<?> deserialize(JsonElement json, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
         if (json instanceof JsonArray array) {
@@ -50,23 +50,23 @@ public class ListConverter implements JsonTypeAdapter<List<?>> {
             FieldErrorNode errorNode = null;
             for (int i = 0; i < array.size(); i++) {
                 try {
-                    result.add(elementTypeAdapter.fromJson(array.get(i), elementType));
-                } catch (JsonValidationException e) {
+                    result.add(elementTypeAdapter.deserialize(array.get(i), elementType));
+                } catch (JsonDeserializationException e) {
                     errorNode = e.getFieldErrorNode().in(Integer.toString(i)).and(errorNode);
                 } catch (Exception e) {
                     errorNode = FieldErrorNode.create(e).in(Integer.toString(i)).and(errorNode);
                 }
             }
             if (errorNode != null) {
-                throw new JsonValidationException(errorNode);
+                throw new JsonDeserializationException(errorNode);
             }
             return List.copyOf(result);
         }
-        throw new JsonValidationException("expected int, found: " + json);
+        throw new JsonDeserializationException("expected int, found: " + json);
     }
 
     @Override
-    public JsonElement toJson(List<?> value, Type type) throws JsonGenerationException {
+    public JsonElement serialize(List<?> value, Type type) throws JsonSerializationException {
         Type elementType = TypeUtil.expectSingleParameterizedType(type, List.class);
         @SuppressWarnings("rawtypes") JsonTypeAdapter elementTypeAdapter = registry.getTypeAdapter(elementType);
         JsonArray result = new JsonArray();
@@ -74,15 +74,15 @@ public class ListConverter implements JsonTypeAdapter<List<?>> {
         for (int i = 0; i < value.size(); i++) {
             try {
                 //noinspection unchecked
-                result.add(elementTypeAdapter.toJson(value.get(i), elementType));
-            } catch (JsonGenerationException e) {
+                result.add(elementTypeAdapter.serialize(value.get(i), elementType));
+            } catch (JsonSerializationException e) {
                 errorNode = e.getFieldErrorNode().in(Integer.toString(i)).and(errorNode);
             } catch (Exception e) {
                 errorNode = FieldErrorNode.create(e).in(Integer.toString(i)).and(errorNode);
             }
         }
         if (errorNode != null) {
-            throw new JsonGenerationException(errorNode);
+            throw new JsonSerializationException(errorNode);
         }
         return result;
     }

@@ -18,8 +18,8 @@ public class BooleanConverterTest {
 
     @Test
     public void testValidationHappyCase() throws Exception {
-        Assertions.assertEquals(true, adapter.fromJson(new JsonPrimitive(true), Boolean.TYPE));
-        Assertions.assertEquals(false, adapter.fromJson(new JsonPrimitive(false), Boolean.TYPE));
+        Assertions.assertEquals(true, adapter.deserialize(new JsonPrimitive(true), Boolean.TYPE));
+        Assertions.assertEquals(false, adapter.deserialize(new JsonPrimitive(false), Boolean.TYPE));
     }
 
     @Test
@@ -32,8 +32,8 @@ public class BooleanConverterTest {
 
     @Test
     public void testGenerationHappyCase() {
-        Assertions.assertEquals(new JsonPrimitive(true), adapter.toJson(true, Boolean.TYPE));
-        Assertions.assertEquals(new JsonPrimitive(false), adapter.toJson(false, Boolean.TYPE));
+        Assertions.assertEquals(new JsonPrimitive(true), adapter.serialize(true, Boolean.TYPE));
+        Assertions.assertEquals(new JsonPrimitive(false), adapter.serialize(false, Boolean.TYPE));
     }
 
     @Test

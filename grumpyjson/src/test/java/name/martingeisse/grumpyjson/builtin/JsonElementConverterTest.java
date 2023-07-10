@@ -18,11 +18,11 @@ public class JsonElementConverterTest {
     private final JsonElementConverter adapter = new JsonElementConverter();
 
     private void check(JsonElement element) {
-        assertEquals(element, adapter.fromJson(element, JsonElement.class));
+        assertEquals(element, adapter.deserialize(element, JsonElement.class));
     }
 
     private void checkNotSame(JsonElement element) {
-        assertNotSame(element, adapter.fromJson(element, JsonElement.class));
+        assertNotSame(element, adapter.deserialize(element, JsonElement.class));
     }
 
     @Test

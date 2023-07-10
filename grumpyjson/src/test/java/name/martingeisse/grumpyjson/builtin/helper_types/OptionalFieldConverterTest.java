@@ -9,9 +9,9 @@ package name.martingeisse.grumpyjson.builtin.helper_types;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.reflect.TypeToken;
-import name.martingeisse.grumpyjson.JsonGenerationException;
+import name.martingeisse.grumpyjson.JsonSerializationException;
 import name.martingeisse.grumpyjson.JsonRegistry;
-import name.martingeisse.grumpyjson.JsonValidationException;
+import name.martingeisse.grumpyjson.JsonDeserializationException;
 import name.martingeisse.grumpyjson.builtin.IntegerConverter;
 import name.martingeisse.grumpyjson.builtin.StringConverter;
 import org.junit.jupiter.api.Test;
@@ -33,10 +33,10 @@ public class OptionalFieldConverterTest {
 
     @Test
     public void testValidationHappyCase() throws Exception {
-        assertEquals(OptionalField.ofNothing(), adapter.fromAbsentJson(OPTIONAL_INTEGER_TYPE));
-        assertEquals(OptionalField.ofValue(12), adapter.fromJson(new JsonPrimitive(12), OPTIONAL_INTEGER_TYPE));
-        assertEquals(OptionalField.ofNothing(), adapter.fromAbsentJson(OPTIONAL_STRING_TYPE));
-        assertEquals(OptionalField.ofValue("foo"), adapter.fromJson(new JsonPrimitive("foo"), OPTIONAL_STRING_TYPE));
+        assertEquals(OptionalField.ofNothing(), adapter.deserializeAbsent(OPTIONAL_INTEGER_TYPE));
+        assertEquals(OptionalField.ofValue(12), adapter.deserialize(new JsonPrimitive(12), OPTIONAL_INTEGER_TYPE));
+        assertEquals(OptionalField.ofNothing(), adapter.deserializeAbsent(OPTIONAL_STRING_TYPE));
+        assertEquals(OptionalField.ofValue("foo"), adapter.deserialize(new JsonPrimitive("foo"), OPTIONAL_STRING_TYPE));
     }
 
     @Test
@@ -60,34 +60,34 @@ public class OptionalFieldConverterTest {
 
     @Test
     public void testGenerationHappyCase() {
-        assertEquals(Optional.empty(), adapter.toOptionalJson(OptionalField.ofNothing(), OPTIONAL_INTEGER_TYPE));
-        assertEquals(Optional.of(new JsonPrimitive(12)), adapter.toOptionalJson(OptionalField.ofValue(12), OPTIONAL_INTEGER_TYPE));
+        assertEquals(Optional.empty(), adapter.serializeOptional(OptionalField.ofNothing(), OPTIONAL_INTEGER_TYPE));
+        assertEquals(Optional.of(new JsonPrimitive(12)), adapter.serializeOptional(OptionalField.ofValue(12), OPTIONAL_INTEGER_TYPE));
 
-        assertEquals(Optional.empty(), adapter.toOptionalJson(OptionalField.ofNothing(), OPTIONAL_STRING_TYPE));
-        assertEquals(Optional.of(new JsonPrimitive("foo")), adapter.toOptionalJson(OptionalField.ofValue("foo"), OPTIONAL_STRING_TYPE));
+        assertEquals(Optional.empty(), adapter.serializeOptional(OptionalField.ofNothing(), OPTIONAL_STRING_TYPE));
+        assertEquals(Optional.of(new JsonPrimitive("foo")), adapter.serializeOptional(OptionalField.ofValue("foo"), OPTIONAL_STRING_TYPE));
     }
 
     @Test
     public void testGenerationWithNull() {
         //noinspection DataFlowIssue
-        assertThrows(NullPointerException.class, () -> adapter.toOptionalJson(null, OPTIONAL_INTEGER_TYPE));
+        assertThrows(NullPointerException.class, () -> adapter.serializeOptional(null, OPTIONAL_INTEGER_TYPE));
     }
 
     @Test
     public void testGenerationWithWrongType() {
-        assertThrows(JsonGenerationException.class, () -> adapter.toOptionalJson(OptionalField.ofValue(12), OPTIONAL_STRING_TYPE));
-        assertThrows(JsonGenerationException.class, () -> adapter.toOptionalJson(OptionalField.ofValue("foo"), OPTIONAL_INTEGER_TYPE));
+        assertThrows(JsonSerializationException.class, () -> adapter.serializeOptional(OptionalField.ofValue(12), OPTIONAL_STRING_TYPE));
+        assertThrows(JsonSerializationException.class, () -> adapter.serializeOptional(OptionalField.ofValue("foo"), OPTIONAL_INTEGER_TYPE));
     }
 
     @Test
     public void testOnlyWorksInVanishableLocations() {
-        assertThrows(JsonGenerationException.class, () -> adapter.toJson(OptionalField.ofNothing(), OPTIONAL_INTEGER_TYPE));
-        assertThrows(JsonGenerationException.class, () -> adapter.toJson(OptionalField.ofValue(12), OPTIONAL_INTEGER_TYPE));
+        assertThrows(JsonSerializationException.class, () -> adapter.serialize(OptionalField.ofNothing(), OPTIONAL_INTEGER_TYPE));
+        assertThrows(JsonSerializationException.class, () -> adapter.serialize(OptionalField.ofValue(12), OPTIONAL_INTEGER_TYPE));
     }
 
     @Test
     public void testDoesNotSupportNull() {
-        assertThrows(JsonValidationException.class, () -> adapter.fromJson(JsonNull.INSTANCE, OPTIONAL_INTEGER_TYPE));
+        assertThrows(JsonDeserializationException.class, () -> adapter.deserialize(JsonNull.INSTANCE, OPTIONAL_INTEGER_TYPE));
     }
 
 

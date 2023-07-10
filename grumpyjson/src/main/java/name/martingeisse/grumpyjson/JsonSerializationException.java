@@ -23,7 +23,7 @@ import java.util.Objects;
  * then the cause that wants to turn it into JSON anyway is faulty. Because it is a bug, and is therefore unexpected,
  * this class extends {@link RuntimeException}, not {@link Exception}.
  */
-public class JsonGenerationException extends RuntimeException {
+public class JsonSerializationException extends RuntimeException {
 
     /**
      * needs javadoc because this class is {@link java.io.Serializable}
@@ -32,14 +32,14 @@ public class JsonGenerationException extends RuntimeException {
 
     /**
      * Creates an exception for a single error message without a field path. This constructor is typically used in
-     * {@link JsonTypeAdapter#toJson(Object, Type)} at the specific place where an inconsistent or non-JSON-able value
+     * {@link JsonTypeAdapter#serialize(Object, Type)} at the specific place where an inconsistent or non-JSON-able value
      * was found.
      *
      * @see FieldErrorNode#create(String)
      *
      * @param message the error message
      */
-    public JsonGenerationException(String message) {
+    public JsonSerializationException(String message) {
         this(FieldErrorNode.create(message));
     }
 
@@ -55,7 +55,7 @@ public class JsonGenerationException extends RuntimeException {
      *
      * @param cause the internal exception
      */
-    public JsonGenerationException(Exception cause) {
+    public JsonSerializationException(Exception cause) {
         this(FieldErrorNode.create(cause));
     }
 
@@ -68,7 +68,7 @@ public class JsonGenerationException extends RuntimeException {
      *
      * @param fieldErrorNode the node that contains one or more actual errors
      */
-    public JsonGenerationException(FieldErrorNode fieldErrorNode) {
+    public JsonSerializationException(FieldErrorNode fieldErrorNode) {
         super("exception during JSON generation");
         this.fieldErrorNode = Objects.requireNonNull(fieldErrorNode, "fieldErrorNode");
     }

@@ -7,7 +7,7 @@
 package name.martingeisse.grumpyrest.response.standard;
 
 import name.martingeisse.grumpyjson.FieldErrorNode;
-import name.martingeisse.grumpyjson.JsonValidationException;
+import name.martingeisse.grumpyjson.JsonDeserializationException;
 import name.martingeisse.grumpyrest.response.Response;
 import name.martingeisse.grumpyrest.response.ResponseTransmitter;
 
@@ -75,7 +75,7 @@ public record StandardErrorResponse(int status, String message, List<Field> fiel
      * @param e the exceptionfrom the failed validation
      * @return the instance of this class
      */
-    public static StandardErrorResponse requestBodyValidationFailed(JsonValidationException e) {
+    public static StandardErrorResponse requestBodyValidationFailed(JsonDeserializationException e) {
         List<Field> translatedErrors = new ArrayList<>();
         for (FieldErrorNode.FlattenedError flattenedError : e.getFieldErrorNode().flatten()) {
             translatedErrors.add(new Field(flattenedError.getPathAsString(), flattenedError.message()));

@@ -38,14 +38,14 @@ public class TypeWrapperConverterTest {
 
     @Test
     public void testFromJson() {
-        assertThrows(UnsupportedOperationException.class, () -> adapter.fromJson(new JsonPrimitive(123), TypeWrapper.class));
+        assertThrows(UnsupportedOperationException.class, () -> adapter.deserialize(new JsonPrimitive(123), TypeWrapper.class));
     }
 
     @Test
     public void testToJsonPrimitive() {
         List<Integer> list = List.of(1, 2, 3);
         TypeWrapper<?> wrapper = new TypeWrapper<>(list) {};
-        assertEquals(JsonTestUtil.buildIntArray(1, 2, 3), adapter.toJson(wrapper, wrapper.getClass()));
+        assertEquals(JsonTestUtil.buildIntArray(1, 2, 3), adapter.serialize(wrapper, wrapper.getClass()));
     }
 
 }

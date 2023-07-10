@@ -18,8 +18,8 @@ public class StringConverterTest {
 
     @Test
     public void testValidationHappyCase() throws Exception {
-        Assertions.assertEquals("", adapter.fromJson(new JsonPrimitive(""), String.class));
-        Assertions.assertEquals("abc", adapter.fromJson(new JsonPrimitive("abc"), String.class));
+        Assertions.assertEquals("", adapter.deserialize(new JsonPrimitive(""), String.class));
+        Assertions.assertEquals("abc", adapter.deserialize(new JsonPrimitive("abc"), String.class));
     }
 
     @Test
@@ -32,7 +32,7 @@ public class StringConverterTest {
 
     @Test
     public void testGenerationHappyCase() {
-        Assertions.assertEquals(new JsonPrimitive("foo"), adapter.toJson("foo", String.class));
+        Assertions.assertEquals(new JsonPrimitive("foo"), adapter.serialize("foo", String.class));
     }
 
     @Test
