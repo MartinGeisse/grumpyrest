@@ -6,6 +6,8 @@
  */
 package name.martingeisse.grumpyjson;
 
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
+import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.util.StringUtil;
 
 import java.util.ArrayList;

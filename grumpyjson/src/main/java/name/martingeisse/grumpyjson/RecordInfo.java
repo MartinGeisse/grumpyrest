@@ -6,6 +6,7 @@
  */
 package name.martingeisse.grumpyjson;
 
+import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.util.TypeUtil;
 
 import java.lang.reflect.*;

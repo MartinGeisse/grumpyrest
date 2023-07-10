@@ -9,6 +9,8 @@ package name.martingeisse.grumpyjson.builtin.helper_types;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import name.martingeisse.grumpyjson.*;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
+import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.util.TypeUtil;
 
 import java.lang.reflect.Type;

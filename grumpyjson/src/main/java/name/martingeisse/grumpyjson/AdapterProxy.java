@@ -7,6 +7,7 @@
 package name.martingeisse.grumpyjson;
 
 import com.google.gson.JsonElement;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 
 import java.lang.reflect.Type;
 import java.util.Objects;

@@ -1,7 +1,7 @@
 package name.martingeisse.grumpyrest.response;
 
 import com.google.gson.reflect.TypeToken;
-import name.martingeisse.grumpyjson.JsonSerializationException;
+import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 
 import java.io.IOException;
 import java.io.OutputStream;

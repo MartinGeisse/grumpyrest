@@ -7,7 +7,7 @@
 package name.martingeisse.grumpyrest.response.standard;
 
 import name.martingeisse.grumpyjson.FieldErrorNode;
-import name.martingeisse.grumpyjson.JsonDeserializationException;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyrest.response.Response;
 import name.martingeisse.grumpyrest.response.ResponseTransmitter;
 

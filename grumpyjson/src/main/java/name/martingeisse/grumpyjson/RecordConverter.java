@@ -8,6 +8,8 @@ package name.martingeisse.grumpyjson;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
+import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

@@ -10,7 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import name.martingeisse.grumpyjson.JsonRegistry;
 import name.martingeisse.grumpyjson.JsonTypeAdapter;
-import name.martingeisse.grumpyjson.JsonDeserializationException;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 
 import java.lang.reflect.Type;
 import java.util.Objects;

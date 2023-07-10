@@ -10,7 +10,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
 import name.martingeisse.grumpyjson.JsonRegistry;
-import name.martingeisse.grumpyjson.JsonDeserializationException;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.builtin.IntegerConverter;
 import name.martingeisse.grumpyjson.builtin.StringConverter;
 import org.junit.jupiter.api.Test;

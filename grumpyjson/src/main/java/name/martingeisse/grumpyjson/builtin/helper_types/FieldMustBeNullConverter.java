@@ -8,10 +8,10 @@ package name.martingeisse.grumpyjson.builtin.helper_types;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
-import name.martingeisse.grumpyjson.JsonSerializationException;
+import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.JsonRegistry;
 import name.martingeisse.grumpyjson.JsonTypeAdapter;
-import name.martingeisse.grumpyjson.JsonDeserializationException;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 
 import java.lang.reflect.Type;
 import java.util.Objects;

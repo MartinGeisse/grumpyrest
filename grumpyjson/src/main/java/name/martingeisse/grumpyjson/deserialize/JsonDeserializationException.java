@@ -4,9 +4,12 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-package name.martingeisse.grumpyjson;
+package name.martingeisse.grumpyjson.deserialize;
 
 import com.google.gson.JsonElement;
+import name.martingeisse.grumpyjson.FieldErrorNode;
+import name.martingeisse.grumpyjson.JsonTypeAdapter;
+import name.martingeisse.grumpyjson.RecordConverter;
 import name.martingeisse.grumpyjson.builtin.ListConverter;
 import name.martingeisse.grumpyjson.builtin.helper_types.NullableFieldConverter;
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalFieldConverter;
