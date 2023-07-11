@@ -28,7 +28,7 @@ public class OptionalFieldConverter implements JsonTypeAdapter<OptionalField<?>>
     /**
      * Constructor.
      *
-     * @param registries the JSON registry -- needed to fetch the adapter for the contained type at run-time
+     * @param registries needed to fetch the converter for the contained type at run-time
      */
     public OptionalFieldConverter(JsonRegistries registries) {
         this.registries = registries;

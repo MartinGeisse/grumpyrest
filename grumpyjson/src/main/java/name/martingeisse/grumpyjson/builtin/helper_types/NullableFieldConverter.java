@@ -28,7 +28,7 @@ public class NullableFieldConverter implements JsonTypeAdapter<NullableField<?>>
     /**
      * Constructor.
      *
-     * @param registries the JSON registry -- needed to fetch the adapter for the contained type at run-time
+     * @param registries needed to fetch the converter for the contained type at run-time
      */
     public NullableFieldConverter(JsonRegistries registries) {
         this.registries = registries;
