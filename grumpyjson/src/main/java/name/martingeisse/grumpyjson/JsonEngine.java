@@ -71,9 +71,8 @@ public class JsonEngine {
      *
      * @param converter the dual converter to register
      */
-    public void registerDualConverter(JsonTypeAdapter<?> converter) {
-        Objects.requireNonNull(converter, "converter");
-        registries.register(converter);
+    public <T extends JsonSerializer<?> & JsonDeserializer> void registerDualConverter(T converter) {
+        registries.registerDualConverter(converter);
     }
 
     /**
@@ -83,6 +82,14 @@ public class JsonEngine {
      */
     public JsonRegistries getRegistries() {
         return registries;
+    }
+
+    public final JsonSerializerRegistry getSerializerRegistry() {
+        return registries.serializerRegistry();
+    }
+
+    public final JsonDeserializerRegistry getDeserializerRegistry() {
+        return registries.deserializerRegistry();
     }
 
     /**
