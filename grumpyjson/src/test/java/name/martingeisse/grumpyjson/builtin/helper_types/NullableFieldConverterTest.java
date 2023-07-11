@@ -30,6 +30,10 @@ public class NullableFieldConverterTest {
     private final JsonRegistries registries = createRegistry(new IntegerConverter(), new StringConverter());
     private final NullableFieldConverter converter = new NullableFieldConverter(registries);
 
+    public NullableFieldConverterTest() {
+        registries.seal();
+    }
+
     @Test
     public void testDeserializationHappyCase() throws Exception {
         assertEquals(NullableField.ofNull(), converter.deserialize(JsonNull.INSTANCE, NULLABLE_INTEGER_TYPE));
@@ -42,11 +46,11 @@ public class NullableFieldConverterTest {
     @SuppressWarnings("rawtypes")
     public void testUnboundTypeParameter() {
         // see ListAdapterTest for information on *why* things are expected to behave this way
-        assertFalse(converter.supportsType(NullableField.class));
-        assertFalse(converter.supportsType(new TypeToken<NullableField>() {}.getType()));
-        assertTrue(converter.supportsType(new TypeToken<NullableField<?>>() {}.getType()));
-        assertTrue(converter.supportsType(new TypeToken<NullableField<Integer>>() {}.getType()));
-        assertTrue(converter.supportsType(new TypeToken<NullableField<OutputStream>>() {}.getType()));
+        assertFalse(converter.supportsTypeForDeserialization(NullableField.class));
+        assertFalse(converter.supportsTypeForDeserialization(new TypeToken<NullableField>() {}.getType()));
+        assertTrue(converter.supportsTypeForDeserialization(new TypeToken<NullableField<?>>() {}.getType()));
+        assertTrue(converter.supportsTypeForDeserialization(new TypeToken<NullableField<Integer>>() {}.getType()));
+        assertTrue(converter.supportsTypeForDeserialization(new TypeToken<NullableField<OutputStream>>() {}.getType()));
     }
 
     @Test
@@ -58,28 +62,20 @@ public class NullableFieldConverterTest {
 
     @Test
     public void testSerializationHappyCase() {
-        assertEquals(JsonNull.INSTANCE, converter.serialize(NullableField.ofNull(), NULLABLE_INTEGER_TYPE));
-        assertEquals(new JsonPrimitive(12), converter.serialize(NullableField.ofValue(12), NULLABLE_INTEGER_TYPE));
-
-        assertEquals(JsonNull.INSTANCE, converter.serialize(NullableField.ofNull(), NULLABLE_STRING_TYPE));
-        assertEquals(new JsonPrimitive("foo"), converter.serialize(NullableField.ofValue("foo"), NULLABLE_STRING_TYPE));
+        assertEquals(JsonNull.INSTANCE, converter.serialize(NullableField.ofNull()));
+        assertEquals(new JsonPrimitive(12), converter.serialize(NullableField.ofValue(12)));
+        assertEquals(new JsonPrimitive("foo"), converter.serialize(NullableField.ofValue("foo")));
     }
 
     @Test
     public void testSerializationWithNull() {
-        assertFailsSerializationWithNpe(converter, null, NULLABLE_INTEGER_TYPE);
-    }
-
-    @Test
-    public void testSerializationWithWrongType() {
-        assertFailsSerialization(converter, NullableField.ofValue(12), NULLABLE_STRING_TYPE);
-        assertFailsSerialization(converter, NullableField.ofValue("foo"), NULLABLE_INTEGER_TYPE);
+        assertFailsSerializationWithNpe(converter, null);
     }
 
     @Test
     public void testDoesNotSupportAbsentFields() {
-        assertEquals(Optional.of(JsonNull.INSTANCE), converter.serializeOptional(NullableField.ofNull(), NULLABLE_INTEGER_TYPE));
-        assertEquals(Optional.of(new JsonPrimitive(12)), converter.serializeOptional(NullableField.ofValue(12), NULLABLE_INTEGER_TYPE));
+        assertEquals(Optional.of(JsonNull.INSTANCE), converter.serializeOptional(NullableField.ofNull()));
+        assertEquals(Optional.of(new JsonPrimitive(12)), converter.serializeOptional(NullableField.ofValue(12)));
         assertThrows(JsonDeserializationException.class, () -> converter.deserializeAbsent(NULLABLE_INTEGER_TYPE));
     }
 

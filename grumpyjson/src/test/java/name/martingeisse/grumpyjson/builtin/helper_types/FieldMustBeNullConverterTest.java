@@ -31,12 +31,12 @@ public class FieldMustBeNullConverterTest {
 
     @Test
     public void testSerializationHappyCase() {
-        Assertions.assertEquals(JsonNull.INSTANCE, converter.serialize(FieldMustBeNull.INSTANCE, FieldMustBeNull.class));
+        Assertions.assertEquals(JsonNull.INSTANCE, converter.serialize(FieldMustBeNull.INSTANCE));
     }
 
     @Test
     public void testSerializationWithNull() {
-        assertFailsSerializationWithNpe(converter, null, FieldMustBeNull.class);
+        assertFailsSerializationWithNpe(converter, null);
     }
 
 }
