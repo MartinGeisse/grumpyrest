@@ -114,15 +114,15 @@ public class JsonEngine {
     }
 
     // -----------------------------------------------------------------------
-    // parse
+    // deserialize
     // -----------------------------------------------------------------------
 
     /**
-     * Parses JSON from a {@link String}.
+     * deserializes JSON from a {@link String}.
      *
      * @param source the source string
-     * @param clazz the target type to parse to
-     * @return the parsed value
+     * @param clazz the target type to deserialize to
+     * @return the deserialized value
      * @param <T> the static target type
      * @throws JsonDeserializationException if the JSON is malformed or does not match the target type
      */
@@ -133,11 +133,11 @@ public class JsonEngine {
     }
 
     /**
-     * Parses JSON from a {@link String}.
+     * deserializes JSON from a {@link String}.
      *
      * @param source the source string
-     * @param typeToken a type token for the target type to parse to
-     * @return the parsed value
+     * @param typeToken a type token for the target type to deserialize to
+     * @return the deserialized value
      * @param <T> the static target type
      * @throws JsonDeserializationException if the JSON is malformed or does not match the target type
      */
@@ -148,11 +148,11 @@ public class JsonEngine {
     }
 
     /**
-     * Parses JSON from a {@link String}.
+     * deserializes JSON from a {@link String}.
      *
      * @param source the source string
-     * @param type the target type to parse to
-     * @return the parsed value
+     * @param type the target type to deserialize to
+     * @return the deserialized value
      * @throws JsonDeserializationException if the JSON is malformed or does not match the target type
      */
     public Object deserialize(String source, Type type) throws JsonDeserializationException {
@@ -162,12 +162,12 @@ public class JsonEngine {
     }
 
     /**
-     * Parses JSON from an {@link InputStream}. As demanded by the MIME type application/json, the input must be
+     * deserializes JSON from an {@link InputStream}. As demanded by the MIME type application/json, the input must be
      * UTF-8 encoded.
      *
      * @param source the source stream
-     * @param clazz the target type to parse to
-     * @return the parsed value
+     * @param clazz the target type to deserialize to
+     * @return the deserialized value
      * @param <T> the static target type
      * @throws JsonDeserializationException if the JSON is malformed or does not match the target type
      */
@@ -178,12 +178,12 @@ public class JsonEngine {
     }
 
     /**
-     * Parses JSON from an {@link InputStream}. As demanded by the MIME type application/json, the input must be
+     * deserializes JSON from an {@link InputStream}. As demanded by the MIME type application/json, the input must be
      * UTF-8 encoded.
      *
      * @param source the source stream
-     * @param typeToken a type token for the target type to parse to
-     * @return the parsed value
+     * @param typeToken a type token for the target type to deserialize to
+     * @return the deserialized value
      * @param <T> the static target type
      * @throws JsonDeserializationException if the JSON is malformed or does not match the target type
      */
@@ -194,12 +194,12 @@ public class JsonEngine {
     }
 
     /**
-     * Parses JSON from an {@link InputStream}. As demanded by the MIME type application/json, the input must be
+     * deserializes JSON from an {@link InputStream}. As demanded by the MIME type application/json, the input must be
      * UTF-8 encoded.
      *
      * @param source the source stream
-     * @param type the target type to parse to
-     * @return the parsed value
+     * @param type the target type to deserialize to
+     * @return the deserialized value
      * @throws JsonDeserializationException if the JSON is malformed or does not match the target type
      */
     public Object deserialize(InputStream source, Type type) throws JsonDeserializationException {
@@ -209,11 +209,11 @@ public class JsonEngine {
     }
 
     /**
-     * Parses JSON from an {@link Reader}.
+     * deserializes JSON from an {@link Reader}.
      *
      * @param source the source reader
-     * @param clazz the target type to parse to
-     * @return the parsed value
+     * @param clazz the target type to deserialize to
+     * @return the deserialized value
      * @param <T> the static target type
      * @throws JsonDeserializationException if the JSON is malformed or does not match the target type
      */
@@ -224,11 +224,11 @@ public class JsonEngine {
     }
 
     /**
-     * Parses JSON from an {@link Reader}.
+     * deserializes JSON from an {@link Reader}.
      *
      * @param source the source reader
-     * @param typeToken a type token for the target type to parse to
-     * @return the parsed value
+     * @param typeToken a type token for the target type to deserialize to
+     * @return the deserialized value
      * @param <T> the static target type
      * @throws JsonDeserializationException if the JSON is malformed or does not match the target type
      */
@@ -240,11 +240,11 @@ public class JsonEngine {
     }
 
     /**
-     * Parses JSON from an {@link Reader}.
+     * deserializes JSON from an {@link Reader}.
      *
      * @param source the source reader
-     * @param type the target type to parse to
-     * @return the parsed value
+     * @param type the target type to deserialize to
+     * @return the deserialized value
      * @throws JsonDeserializationException if the JSON is malformed or does not match the target type
      */
     public Object deserialize(Reader source, Type type) throws JsonDeserializationException {
@@ -260,7 +260,7 @@ public class JsonEngine {
         }
         if (json == null) {
             // this happens if the source does not even contain malformed JSON, but just nothing (EOF)
-            throw new JsonDeserializationException("no JSON to parse");
+            throw new JsonDeserializationException("no JSON to deserialize");
         }
         return registries.get(type).deserialize(json, type);
     }
@@ -280,11 +280,11 @@ public class JsonEngine {
     }
 
     /**
-     * Parses JSON from a {@link JsonElement}.
+     * deserializes JSON from a {@link JsonElement}.
      *
      * @param source the source element
-     * @param clazz the target type to parse to
-     * @return the parsed value
+     * @param clazz the target type to deserialize to
+     * @return the deserialized value
      * @param <T> the static target type
      * @throws JsonDeserializationException if the JSON does not match the target type
      */
@@ -295,11 +295,11 @@ public class JsonEngine {
     }
 
     /**
-     * Parses JSON from a {@link JsonElement}.
+     * deserializes JSON from a {@link JsonElement}.
      *
      * @param source the source element
-     * @param typeToken a type token for the target type to parse to
-     * @return the parsed value
+     * @param typeToken a type token for the target type to deserialize to
+     * @return the deserialized value
      * @param <T> the static target type
      * @throws JsonDeserializationException if the JSON does not match the target type
      */
@@ -311,11 +311,11 @@ public class JsonEngine {
     }
 
     /**
-     * Parses JSON from a {@link JsonElement}.
+     * deserializes JSON from a {@link JsonElement}.
      *
      * @param source the source element
-     * @param type the target type to parse to
-     * @return the parsed value
+     * @param type the target type to deserialize to
+     * @return the deserialized value
      * @throws JsonDeserializationException if the JSON does not match the target type
      */
     public Object deserialize(JsonElement source, Type type) throws JsonDeserializationException {
@@ -331,7 +331,7 @@ public class JsonEngine {
     /**
      * Turns a value into a JSON string.
      *
-     * @param value the value to convert
+     * @param value the value to serialize
      * @return the JSON string
      * @throws JsonSerializationException if the value is in an inconsistent state or a state that cannot be turned into JSON
      */
