@@ -26,7 +26,7 @@ import java.util.Objects;
  * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistries#clear()}.
  */
-public class ListConverter implements JsonTypeAdapter<List<?>> {
+public class ListConverter implements JsonSerializer<List<?>>, JsonDeserializer {
 
     private final JsonRegistries registries;
 
@@ -40,7 +40,7 @@ public class ListConverter implements JsonTypeAdapter<List<?>> {
     }
 
     @Override
-    public boolean supportsType(Type type) {
+    public boolean supportsTypeForDeserialization(Type type) {
         return TypeUtil.isSingleParameterizedType(type, List.class) != null;
     }
 
@@ -67,7 +67,12 @@ public class ListConverter implements JsonTypeAdapter<List<?>> {
             }
             return List.copyOf(result);
         }
-        throw new JsonDeserializationException("expected int, found: " + json);
+        throw new JsonDeserializationException("expected list, found: " + json);
+    }
+
+    @Override
+    public boolean supportsClassForSerialization(Class<?> clazz) {
+        return List.class.isAssignableFrom(clazz);
     }
 
     @Override

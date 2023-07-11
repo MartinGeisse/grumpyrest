@@ -8,7 +8,10 @@ package name.martingeisse.grumpyjson.builtin;
 
 import com.google.gson.JsonElement;
 import name.martingeisse.grumpyjson.JsonRegistries;
-import name.martingeisse.grumpyjson.JsonTypeAdapter;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
+import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -19,7 +22,7 @@ import java.util.Objects;
  * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistries#clear()}.
  */
-public final class JsonElementConverter implements JsonTypeAdapter<JsonElement> {
+public final class JsonElementConverter implements JsonSerializer<JsonElement>, JsonDeserializer {
 
     /**
      * Constructor
@@ -29,22 +32,27 @@ public final class JsonElementConverter implements JsonTypeAdapter<JsonElement> 
     }
 
     @Override
-    public boolean supportsType(Type type) {
+    public boolean supportsTypeForDeserialization(Type type) {
         Objects.requireNonNull(type, "type");
         return (type instanceof Class<?> clazz) && JsonElement.class.isAssignableFrom(clazz);
     }
 
     @Override
-    public JsonElement deserialize(JsonElement json, Type type) {
+    public JsonElement deserialize(JsonElement json, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
         return json.deepCopy();
     }
 
     @Override
-    public JsonElement serialize(JsonElement value, Type type) {
+    public boolean supportsClassForSerialization(Class<?> clazz) {
+        Objects.requireNonNull(clazz, "clazz");
+        return JsonElement.class.isAssignableFrom(clazz);
+    }
+
+    @Override
+    public JsonElement serialize(JsonElement value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
-        Objects.requireNonNull(type, "type");
         return value.deepCopy();
     }
 

@@ -9,8 +9,10 @@ package name.martingeisse.grumpyjson.builtin;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import name.martingeisse.grumpyjson.JsonRegistries;
-import name.martingeisse.grumpyjson.JsonTypeAdapter;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
+import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -23,7 +25,7 @@ import java.util.Objects;
  * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistries#clear()}.
  */
-public class BooleanConverter implements JsonTypeAdapter<Boolean> {
+public class BooleanConverter implements JsonSerializer<Boolean>, JsonDeserializer {
 
     /**
      * Constructor
@@ -33,7 +35,7 @@ public class BooleanConverter implements JsonTypeAdapter<Boolean> {
     }
 
     @Override
-    public boolean supportsType(Type type) {
+    public boolean supportsTypeForDeserialization(Type type) {
         Objects.requireNonNull(type, "type");
         return type.equals(Boolean.TYPE) || type.equals(Boolean.class);
     }
@@ -53,9 +55,14 @@ public class BooleanConverter implements JsonTypeAdapter<Boolean> {
     }
 
     @Override
-    public JsonElement serialize(Boolean value, Type type) {
+    public boolean supportsClassForSerialization(Class<?> clazz) {
+        Objects.requireNonNull(clazz, "clazz");
+        return clazz.equals(Boolean.TYPE) || clazz.equals(Boolean.class);
+    }
+
+    @Override
+    public JsonElement serialize(Boolean value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
-        Objects.requireNonNull(type, "type");
         return new JsonPrimitive(value);
     }
 
