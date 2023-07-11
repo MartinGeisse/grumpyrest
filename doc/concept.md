@@ -25,7 +25,7 @@ Particular differences with typical REST frameworks:
   coercion from number to string or from string to number will be done by default. An empty JSON object, empty JSON
   array, false, 0, null and missing fields are all different things that are not considered equal. If you want to
   bend these rules for specific types or fields, use an appropriate type for that which defines a relaxed mapping.
-  If you want to bend these rules for all of your JSON mapping, replace the built-in type adapters by your own which
+  If you want to bend these rules for all of your JSON mapping, replace the built-in converters by your own which
   define a relaxed mapping.
 
 ## What about performance?
@@ -75,7 +75,7 @@ A JSON array can be mapped to a List:
     [1, 2, 3]
 
 JSON primitives are mapped to Java's built-in types, both boxed and unboxed. No coercion takes place, so for example
-the number 123 cannot be parsed into a String-typed field (unless you override the type adapter for type String to
+the number 123 cannot be parsed into a String-typed field (unless you override the converter for type String to
 accept numbers).
 
 ### Nullable and Optional Properties
@@ -99,7 +99,7 @@ just too easy to get wrong, and especially, are ambiguous with respect to the fa
 nullable or optional. It may even be both: An OptionalField<NullableField<T>> on the Java side maps to a JSON field
 that may be absent, or null, or have a value.
 
-Unknown properties in records cause an error too. A type adapter which collects extra properties in a Map<> may be
+Unknown properties in records cause an error too. A converter which collects extra properties in a Map<> may be
 defined in the  future.
 
 ### Validation
@@ -134,5 +134,5 @@ SignUpRequestBody. If the username cannot be empty, check that too in the same c
 must be specific in many places and must be validated to be nonempty (and possibly at least 5 characters, and not
 contain ASCII control characters nor offensive words), define a UserName type that checks these things in its
 constructor. If you have an existing typpe chose constructor cannot be changed, wrap it in a type that defines
-its validity rules. Or, as the last resort, you can define a custom type adapter and register it in the JsonRegistry
+its validity rules. Or, as the last resort, you can define a custom converter and register it in the JsonRegistries
 that defines how a type gets parsed and serialized. But there is no validation after parsing, period.

@@ -41,9 +41,10 @@ these styles. Just use `List<SomeConcreteType>` and you will get exactly that.
 
 ## Custom Types
 
-You can extend grumpyrest with custom types, both for request body parsing and response body generation. Both cases
-are implemented as a class that implements `JsonTypeAdapter` and gets registered in the `JsonRegistry` of the
-`JsonEngine` like this:
+You can extend grumpyrest with custom types, both for request body parsing and response body generation. For that
+you'll have to write a class that implements `JsonSerializer` and/or `JsonDeserializer` and gets registered in the
+`JsonRegistries` (actually the `JsonSerializerRegistry` and/or `JsonDeserializerRegistry`) of the `JsonEngine` like
+this:
 
 ```
 restApi.getJsonEngine().addTypeAdapter(new MyTypeAdapter());
