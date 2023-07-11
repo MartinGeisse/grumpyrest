@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import static name.martingeisse.grumpyjson.JsonTestUtil.createRegistry;
 
-public class RecordWithOptionalPropertyAdapterTest {
+public class RecordWithOptionalPropertyConverterTest {
 
     private record Record(OptionalField<Integer> myInt) {}
 
