@@ -254,7 +254,7 @@ public final class RequestCycle {
 
         public <T> T parseBody(Class<T> clazz) {
             try {
-                return api.getJsonEngine().parse(prepareParse(), clazz);
+                return api.getJsonEngine().deserialize(prepareParse(), clazz);
             } catch (JsonDeserializationException e) {
                 throw new FinishRequestException(StandardErrorResponse.requestBodyValidationFailed(e));
             }
@@ -262,7 +262,7 @@ public final class RequestCycle {
 
         public <T> T parseBody(TypeToken<T> typeToken) {
             try {
-                return api.getJsonEngine().parse(prepareParse(), typeToken);
+                return api.getJsonEngine().deserialize(prepareParse(), typeToken);
             } catch (JsonDeserializationException e) {
                 throw new FinishRequestException(StandardErrorResponse.requestBodyValidationFailed(e));
             }
@@ -270,7 +270,7 @@ public final class RequestCycle {
 
         public Object parseBody(Type type) {
             try {
-                return api.getJsonEngine().parse(prepareParse(), type);
+                return api.getJsonEngine().deserialize(prepareParse(), type);
             } catch (JsonDeserializationException e) {
                 throw new FinishRequestException(StandardErrorResponse.requestBodyValidationFailed(e));
             }

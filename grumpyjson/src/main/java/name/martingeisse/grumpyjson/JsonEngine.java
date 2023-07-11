@@ -120,10 +120,10 @@ public class JsonEngine {
      * @param <T> the static target type
      * @throws JsonDeserializationException if the JSON is malformed or does not match the target type
      */
-    public <T> T parse(String source, Class<T> clazz) throws JsonDeserializationException {
+    public <T> T deserialize(String source, Class<T> clazz) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(clazz, "clazz");
-        return parse(wrapSource(source), clazz);
+        return deserialize(wrapSource(source), clazz);
     }
 
     /**
@@ -135,10 +135,10 @@ public class JsonEngine {
      * @param <T> the static target type
      * @throws JsonDeserializationException if the JSON is malformed or does not match the target type
      */
-    public <T> T parse(String source, TypeToken<T> typeToken) throws JsonDeserializationException {
+    public <T> T deserialize(String source, TypeToken<T> typeToken) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(typeToken, "typeToken");
-        return parse(wrapSource(source), typeToken);
+        return deserialize(wrapSource(source), typeToken);
     }
 
     /**
@@ -149,10 +149,10 @@ public class JsonEngine {
      * @return the parsed value
      * @throws JsonDeserializationException if the JSON is malformed or does not match the target type
      */
-    public Object parse(String source, Type type) throws JsonDeserializationException {
+    public Object deserialize(String source, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(type, "type");
-        return parse(wrapSource(source), type);
+        return deserialize(wrapSource(source), type);
     }
 
     /**
@@ -165,10 +165,10 @@ public class JsonEngine {
      * @param <T> the static target type
      * @throws JsonDeserializationException if the JSON is malformed or does not match the target type
      */
-    public <T> T parse(InputStream source, Class<T> clazz) throws JsonDeserializationException {
+    public <T> T deserialize(InputStream source, Class<T> clazz) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(clazz, "clazz");
-        return parse(wrapSource(source), clazz);
+        return deserialize(wrapSource(source), clazz);
     }
 
     /**
@@ -181,10 +181,10 @@ public class JsonEngine {
      * @param <T> the static target type
      * @throws JsonDeserializationException if the JSON is malformed or does not match the target type
      */
-    public <T> T parse(InputStream source, TypeToken<T> typeToken) throws JsonDeserializationException {
+    public <T> T deserialize(InputStream source, TypeToken<T> typeToken) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(typeToken, "typeToken");
-        return parse(wrapSource(source), typeToken);
+        return deserialize(wrapSource(source), typeToken);
     }
 
     /**
@@ -196,10 +196,10 @@ public class JsonEngine {
      * @return the parsed value
      * @throws JsonDeserializationException if the JSON is malformed or does not match the target type
      */
-    public Object parse(InputStream source, Type type) throws JsonDeserializationException {
+    public Object deserialize(InputStream source, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(type, "type");
-        return parse(wrapSource(source), type);
+        return deserialize(wrapSource(source), type);
     }
 
     /**
@@ -211,10 +211,10 @@ public class JsonEngine {
      * @param <T> the static target type
      * @throws JsonDeserializationException if the JSON is malformed or does not match the target type
      */
-    public <T> T parse(Reader source, Class<T> clazz) throws JsonDeserializationException {
+    public <T> T deserialize(Reader source, Class<T> clazz) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(clazz, "clazz");
-        return clazz.cast(parse(source, (Type) clazz));
+        return clazz.cast(deserialize(source, (Type) clazz));
     }
 
     /**
@@ -226,11 +226,11 @@ public class JsonEngine {
      * @param <T> the static target type
      * @throws JsonDeserializationException if the JSON is malformed or does not match the target type
      */
-    public <T> T parse(Reader source, TypeToken<T> typeToken) throws JsonDeserializationException {
+    public <T> T deserialize(Reader source, TypeToken<T> typeToken) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(typeToken, "typeToken");
         //noinspection unchecked
-        return (T)parse(source, typeToken.getType());
+        return (T) deserialize(source, typeToken.getType());
     }
 
     /**
@@ -241,7 +241,7 @@ public class JsonEngine {
      * @return the parsed value
      * @throws JsonDeserializationException if the JSON is malformed or does not match the target type
      */
-    public Object parse(Reader source, Type type) throws JsonDeserializationException {
+    public Object deserialize(Reader source, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(type, "type");
         JsonElement json;
@@ -282,10 +282,10 @@ public class JsonEngine {
      * @param <T> the static target type
      * @throws JsonDeserializationException if the JSON does not match the target type
      */
-    public <T> T parse(JsonElement source, Class<T> clazz) throws JsonDeserializationException {
+    public <T> T deserialize(JsonElement source, Class<T> clazz) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(clazz, "clazz");
-        return clazz.cast(parse(source, (Type) clazz));
+        return clazz.cast(deserialize(source, (Type) clazz));
     }
 
     /**
@@ -297,11 +297,11 @@ public class JsonEngine {
      * @param <T> the static target type
      * @throws JsonDeserializationException if the JSON does not match the target type
      */
-    public <T> T parse(JsonElement source, TypeToken<T> typeToken) throws JsonDeserializationException {
+    public <T> T deserialize(JsonElement source, TypeToken<T> typeToken) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(typeToken, "typeToken");
         //noinspection unchecked
-        return (T)parse(source, typeToken.getType());
+        return (T) deserialize(source, typeToken.getType());
     }
 
     /**
@@ -312,7 +312,7 @@ public class JsonEngine {
      * @return the parsed value
      * @throws JsonDeserializationException if the JSON does not match the target type
      */
-    public Object parse(JsonElement source, Type type) throws JsonDeserializationException {
+    public Object deserialize(JsonElement source, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(type, "type");
         return registry.get(type).deserialize(source, type);
@@ -329,7 +329,7 @@ public class JsonEngine {
      * @return the JSON string
      * @throws JsonSerializationException if the value is in an inconsistent state or a state that cannot be turned into JSON
      */
-    public String stringify(Object value) throws JsonSerializationException {
+    public String serializeToString(Object value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
         return stringDestination(writer -> writeTo(value, writer));
     }
@@ -343,7 +343,7 @@ public class JsonEngine {
      * @return the JSON string
      * @throws JsonSerializationException if the value is in an inconsistent state or a state that cannot be turned into JSON
      */
-    public String stringify(Object value, TypeToken<?> typeToken) throws JsonSerializationException {
+    public String serializeToString(Object value, TypeToken<?> typeToken) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(typeToken, "typeToken");
         return stringDestination(writer -> writeTo(value, typeToken, writer));
@@ -358,7 +358,7 @@ public class JsonEngine {
      * @return the JSON string
      * @throws JsonSerializationException if the value is in an inconsistent state or a state that cannot be turned into JSON
      */
-    public String stringify(Object value, Type type) throws JsonSerializationException {
+    public String serializeToString(Object value, Type type) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(type, "type");
         return stringDestination(writer -> writeTo(value, type, writer));
