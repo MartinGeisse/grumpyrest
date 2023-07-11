@@ -29,6 +29,7 @@ public class QuerystringParserRegistryTest {
     public void testRecord() throws Exception {
         record Foo(int x, String y) {}
         QuerystringParserRegistry registry = new QuerystringParserRegistry(fromStringParserRegistry);
+        registry.seal();
         Assertions.assertEquals(
             new Foo(5, "abc"),
             registry.get(Foo.class).parse(Map.of("x", "5", "y", "abc"), Foo.class)
@@ -51,6 +52,7 @@ public class QuerystringParserRegistryTest {
     public void testRecordWithOptionalField() throws Exception {
         record Foo(int x, OptionalField<String> y) {}
         QuerystringParserRegistry registry = new QuerystringParserRegistry(fromStringParserRegistry);
+        registry.seal();
         Assertions.assertEquals(
             new Foo(5, OptionalField.ofValue("abc")),
             registry.get(Foo.class).parse(Map.of("x", "5", "y", "abc"), Foo.class)

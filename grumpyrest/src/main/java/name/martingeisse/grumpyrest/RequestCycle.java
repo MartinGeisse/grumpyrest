@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
+import name.martingeisse.grumpyjson.registry.NotRegisteredException;
 import name.martingeisse.grumpyrest.request.PathArgument;
 import name.martingeisse.grumpyrest.request.Request;
 import name.martingeisse.grumpyrest.request.path.PathUtil;
@@ -232,6 +233,8 @@ public final class RequestCycle {
                 if (result == null) {
                     throw new QuerystringParsingException(Map.of("(root)", "querystring parser returned null"));
                 }
+            } catch (NotRegisteredException e) {
+                throw new QuerystringParsingException(Map.of("(root)", e.getMessage()));
             } catch (QuerystringParsingException e) {
                 originalException = e;
                 // duplicate-parameter errors take precedence here
