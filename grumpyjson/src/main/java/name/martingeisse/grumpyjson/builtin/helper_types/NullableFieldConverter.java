@@ -8,20 +8,22 @@ package name.martingeisse.grumpyjson.builtin.helper_types;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
-import name.martingeisse.grumpyjson.*;
+import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
+import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import name.martingeisse.grumpyjson.util.TypeUtil;
 
 import java.lang.reflect.Type;
 
 /**
- * The {@link JsonTypeAdapter} for {@link NullableField}.
+ * The converter for {@link NullableField}.
  * <p>
- * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
+ * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistries#clear()}.
  */
-public class NullableFieldConverter implements JsonTypeAdapter<NullableField<?>> {
+public class NullableFieldConverter implements JsonSerializer<NullableField<?>>, JsonDeserializer {
 
     private final JsonRegistries registries;
 
@@ -44,14 +46,12 @@ public class NullableFieldConverter implements JsonTypeAdapter<NullableField<?>>
         Type innerType = TypeUtil.expectSingleParameterizedType(type, NullableField.class);
         if (json.isJsonNull()) {
             return NullableField.ofNull();
-        }
-        JsonTypeAdapter<?> innerAdapter = registries.get(innerType);
-        try {
-            return NullableField.ofValue(innerAdapter.deserialize(json, innerType));
-        } catch (JsonDeserializationException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new JsonDeserializationException(e);
+        } else {
+            try {
+                return NullableField.ofValue(registries.deserialize(json, innerType));
+            } catch (Exception e) {
+                throw new JsonDeserializationException(e);
+            }
         }
     }
 
@@ -64,15 +64,12 @@ public class NullableFieldConverter implements JsonTypeAdapter<NullableField<?>>
     public JsonElement serialize(NullableField<?> value) throws JsonSerializationException {
         if (value.isNull()) {
             return JsonNull.INSTANCE;
-        }
-        @SuppressWarnings("rawtypes") JsonTypeAdapter innerAdapter = registries.get(innerType);
-        try {
-            //noinspection unchecked
-            return innerAdapter.serialize(value.getValueOrNull(), innerType);
-        } catch (JsonSerializationException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new JsonSerializationException(e);
+        } else {
+            try {
+                return registries.serialize(value.getValueOrNull());
+            } catch (Exception e) {
+                throw new JsonSerializationException(e);
+            }
         }
     }
 

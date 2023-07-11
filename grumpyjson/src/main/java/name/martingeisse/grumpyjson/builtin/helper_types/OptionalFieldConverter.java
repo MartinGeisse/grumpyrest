@@ -16,12 +16,12 @@ import java.lang.reflect.Type;
 import java.util.Optional;
 
 /**
- * The {@link JsonTypeAdapter} for {@link OptionalField}.
+ * The converter for {@link OptionalField}.
  * <p>
- * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
+ * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistries#clear()}.
  */
-public class OptionalFieldConverter implements JsonTypeAdapter<OptionalField<?>> {
+public class OptionalFieldConverter implements JsonSerializer<OptionalField<?>>, JsonDeserializer {
 
     private final JsonRegistries registries;
 
