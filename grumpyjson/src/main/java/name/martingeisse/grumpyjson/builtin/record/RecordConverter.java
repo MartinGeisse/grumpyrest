@@ -10,17 +10,19 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import name.martingeisse.grumpyjson.ExceptionMessages;
 import name.martingeisse.grumpyjson.FieldErrorNode;
-import name.martingeisse.grumpyjson.builtin.record.RecordInfo;
+import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
+import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
 
 /**
- * A RecordAdapter is build for the raw type (class) of a record, so a single RecordAdapter handles all parameterized
- * types for that raw type.
+ * A RecordConverter is built for the raw type (class) of a record, so a single instance handles all
+ * parameterized types for that raw type.
  * <p>
  * At run time (potential optimization: at adapter selection time) the adapter is used for a concrete parameterized
  * type. This type must be concrete in the sense that it cannot contain type variables anymore (nor wildcards -- we
@@ -41,20 +43,20 @@ import java.util.*;
  *
  * @param <T> the record type
  */
-public final class RecordConverter<T> implements JsonTypeAdapter<T> {
+public final class RecordConverter<T> implements JsonSerializer<T>, JsonDeserializer {
 
     private final RecordInfo recordInfo;
     private final JsonRegistries registries;
 
     RecordConverter(Class<T> clazz, JsonRegistries registries) {
         Objects.requireNonNull(clazz, "clazz");
-        Objects.requireNonNull(registries, "registry");
+        Objects.requireNonNull(registries, "registries");
         this.recordInfo = new RecordInfo(clazz);
         this.registries = registries;
     }
 
     @Override
-    public boolean supportsType(Type type) {
+    public boolean supportsTypeForDeserialization(Type type) {
         Objects.requireNonNull(type, "type");
         if (type instanceof Class<?>) {
             return type.equals(recordInfo.getRecordClass());
@@ -84,11 +86,11 @@ public final class RecordConverter<T> implements JsonTypeAdapter<T> {
                 }
                 try {
                     Type concreteFieldType = componentInfo.getConcreteType(recordType);
-                    @SuppressWarnings("rawtypes") JsonTypeAdapter adapter = registries.get(concreteFieldType);
+                    JsonDeserializer deserializer = registries.getDeserializer(concreteFieldType);
                     if (propertyJson == null) {
-                        fieldValues[i] = adapter.deserializeAbsent(concreteFieldType);
+                        fieldValues[i] = deserializer.deserializeAbsent(concreteFieldType);
                     } else {
-                        fieldValues[i] = adapter.deserialize(propertyJson, concreteFieldType);
+                        fieldValues[i] = deserializer.deserialize(propertyJson, concreteFieldType);
                     }
                 } catch (JsonDeserializationException e) {
                     errorNode = e.getFieldErrorNode().in(name).and(errorNode);
@@ -112,15 +114,19 @@ public final class RecordConverter<T> implements JsonTypeAdapter<T> {
                 throw new JsonDeserializationException(errorNode);
             }
             //noinspection unchecked
-            return (T)recordInfo.invokeConstructor(fieldValues);
+            return (T) recordInfo.invokeConstructor(fieldValues);
         }
         throw new JsonDeserializationException("expected object, found: " + json);
     }
 
     @Override
-    public JsonElement serialize(T record, Type recordType) {
+    public boolean supportsClassForSerialization(Class<?> clazz) {
+        return clazz.equals(recordInfo.getRecordClass());
+    }
+
+    @Override
+    public JsonElement serialize(T record) {
         Objects.requireNonNull(record, "value");
-        Objects.requireNonNull(recordType, "recordType");
         JsonObject jsonObject = new JsonObject();
         FieldErrorNode errorNode = null;
         for (RecordInfo.ComponentInfo componentInfo : recordInfo.getComponentInfos()) {
@@ -130,9 +136,7 @@ public final class RecordConverter<T> implements JsonTypeAdapter<T> {
                 if (value == null) {
                     throw new JsonSerializationException("field is null");
                 }
-                Type concreteFieldType = componentInfo.getConcreteType(recordType);
-                @SuppressWarnings("rawtypes") JsonTypeAdapter adapter = registries.get(concreteFieldType);
-                @SuppressWarnings("unchecked") Optional<JsonElement> optionalJson = adapter.serializeOptional(value, concreteFieldType);
+                Optional<JsonElement> optionalJson = registries.serializeOptional(value);
                 optionalJson.ifPresent(jsonElement -> jsonObject.add(name, jsonElement));
             } catch (JsonSerializationException e) {
                 errorNode = e.getFieldErrorNode().in(name).and(errorNode);

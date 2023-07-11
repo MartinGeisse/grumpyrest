@@ -8,9 +8,13 @@ package name.martingeisse.grumpyjson.builtin;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import name.martingeisse.grumpyjson.*;
+import name.martingeisse.grumpyjson.FieldErrorNode;
+import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.registry.NotRegisteredException;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
+import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import name.martingeisse.grumpyjson.util.TypeUtil;
 
 import java.lang.reflect.Type;
@@ -19,9 +23,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * This converter handles type List&lt;...&gt;. It does not handle subclasses such as ArrayList or ImmutableList
- * because there is no generic way to create instances of such classes while parsing, and the added value of having
- * such types in simple data transfer classes isn't that great anyway.
+ * This converter handles type List&lt;...&gt; for deserialization, and classes List and its subclasses for
+ * serialization.
  * <p>
  * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistries#clear()}.
@@ -50,7 +53,12 @@ public class ListConverter implements JsonSerializer<List<?>>, JsonDeserializer 
         Objects.requireNonNull(type, "type");
         if (json instanceof JsonArray array) {
             Type elementType = TypeUtil.expectSingleParameterizedType(type, List.class);
-            @SuppressWarnings("rawtypes") JsonTypeAdapter elementDeserializer = registries.get(elementType);
+            JsonDeserializer elementDeserializer;
+            try {
+                elementDeserializer = registries.getDeserializer(elementType);
+            } catch (NotRegisteredException e) {
+                throw new JsonDeserializationException(e.getMessage());
+            }
             List<Object> result = new ArrayList<>();
             FieldErrorNode errorNode = null;
             for (int i = 0; i < array.size(); i++) {
@@ -76,15 +84,12 @@ public class ListConverter implements JsonSerializer<List<?>>, JsonDeserializer 
     }
 
     @Override
-    public JsonElement serialize(List<?> value, Type type) throws JsonSerializationException {
-        Type elementType = TypeUtil.expectSingleParameterizedType(type, List.class);
-        @SuppressWarnings("rawtypes") JsonTypeAdapter elementTypeAdapter = registries.get(elementType);
+    public JsonElement serialize(List<?> value) throws JsonSerializationException {
         JsonArray result = new JsonArray();
         FieldErrorNode errorNode = null;
         for (int i = 0; i < value.size(); i++) {
             try {
-                //noinspection unchecked
-                result.add(elementTypeAdapter.serialize(value.get(i), elementType));
+                result.add(registries.serialize(value.get(i)));
             } catch (JsonSerializationException e) {
                 errorNode = e.getFieldErrorNode().in(Integer.toString(i)).and(errorNode);
             } catch (Exception e) {
