@@ -59,7 +59,7 @@ public final class RestApi {
      * <p>
      * From-string parsers, JSON Type adapters and response factories: After construction, this API object will have
      * default from-string parsers (for path / querystring parameters) and default response factories registered. It
-     * will also use a newly created {@link JsonRegistries} which has default type adapters registered. All of these
+     * will also use a newly created {@link JsonEngine} which has default type adapters registered. All of these
      * defaults can be removed to support special cases that, for example, use different rules / formats or require a
      * more lenient parser. In normal cases, the defaults support standard types out of the box and support for
      * application types can be added without removing any of the standard implementations.
@@ -150,7 +150,7 @@ public final class RestApi {
     }
 
     /**
-     * Adds a {@link ResponseFactory} to support new kinds of response values. This includes exception types for
+     * Registers a {@link ResponseFactory} to support new kinds of response values. This includes exception types for
      * which a specific response shall be generated (by default, exceptions just cause a standard 500 response).
      * <p>
      * Note that support for new JSON-able types should not be implemented as a response factory, but by
@@ -177,7 +177,7 @@ public final class RestApi {
     }
 
     /**
-     * Adds a from-string parser to support new types of path parameters and querystring parameters. This is needed,
+     * Registers a from-string parser to support new types of path parameters and querystring parameters. This is needed,
      * for example, to support a custom date format in the path or querystring. Note that you might need to call
      * {@link #getFromStringParserRegistry()} to remove standard parsers if you want that custom format to be mapped
      * to one of the built-in types such as {@link LocalDate}.
@@ -187,7 +187,7 @@ public final class RestApi {
      * parser that uses a different format than key/value pairs separated by &amp; and = characters, see
      * {@link #getQuerystringParserRegistry()}.
      *
-     * @param parser the parser to add
+     * @param parser the parser to register
      */
     public void registerFromStringParser(FromStringParser parser) {
         fromStringParserRegistry.register(parser);
@@ -220,7 +220,7 @@ public final class RestApi {
      *     <li>If the type to parse the whole querystring as cannot use an auto-generated record parser, for example
      *       because it cannot be a Java record for some reason</li>
      * </ul>
-     * There is no "addQuerystringParser()" method just so nobody is confused and thinks that you need to use it to
+     * There is no "registerQuerystringParser()" method just so nobody is confused and thinks that you need to use it to
      * support custom field types.
      *
      * @return the whole querystring parser registry
