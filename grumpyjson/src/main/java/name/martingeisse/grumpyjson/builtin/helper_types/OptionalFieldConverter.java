@@ -7,9 +7,11 @@
 package name.martingeisse.grumpyjson.builtin.helper_types;
 
 import com.google.gson.JsonElement;
-import name.martingeisse.grumpyjson.*;
+import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
+import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import name.martingeisse.grumpyjson.util.TypeUtil;
 
 import java.lang.reflect.Type;
@@ -35,18 +37,14 @@ public class OptionalFieldConverter implements JsonSerializer<OptionalField<?>>,
     }
 
     @Override
-    public boolean supportsType(Type type) {
+    public boolean supportsTypeForDeserialization(Type type) {
         return TypeUtil.isSingleParameterizedType(type, OptionalField.class) != null;
     }
 
     @Override
     public OptionalField<?> deserialize(JsonElement json, Type type) throws JsonDeserializationException {
-        Type innerType = getInner(type);
-        JsonTypeAdapter<?> innerAdapter = registries.get(innerType);
         try {
-            return OptionalField.ofValue(innerAdapter.deserialize(json, innerType));
-        } catch (JsonDeserializationException e) {
-            throw e;
+            return OptionalField.ofValue(registries.deserialize(json, getInner(type)));
         } catch (Exception e) {
             throw new JsonDeserializationException(e);
         }
@@ -59,26 +57,26 @@ public class OptionalFieldConverter implements JsonSerializer<OptionalField<?>>,
     }
 
     @Override
-    public JsonElement serialize(OptionalField<?> value, Type type) throws JsonSerializationException {
+    public boolean supportsClassForSerialization(Class<?> clazz) {
+        return clazz.equals(OptionalField.class);
+    }
+
+    @Override
+    public JsonElement serialize(OptionalField<?> value) throws JsonSerializationException {
         throw new JsonSerializationException("found OptionalField in a non-vanishable context");
     }
 
     @Override
-    public Optional<JsonElement> serializeOptional(OptionalField<?> value, Type type) throws JsonSerializationException {
-        Type innerType = getInner(type);
+    public Optional<JsonElement> serializeOptional(OptionalField<?> value) throws JsonSerializationException {
         if (value.isAbsent()) {
             return Optional.empty();
+        } else {
+            try {
+                return Optional.of(registries.serialize(value.getValueOrNothingAsNull()));
+            } catch (Exception e) {
+                throw new JsonSerializationException(e);
+            }
         }
-        @SuppressWarnings("rawtypes") JsonTypeAdapter innerAdapter = registries.get(innerType);
-        try {
-            //noinspection unchecked
-            return Optional.of(innerAdapter.serialize(value.getValueOrNothingAsNull(), innerType));
-        } catch (JsonSerializationException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new JsonSerializationException(e);
-        }
-
     }
 
     private Type getInner(Type outer) {

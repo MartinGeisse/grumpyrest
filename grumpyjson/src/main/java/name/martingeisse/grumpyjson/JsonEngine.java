@@ -13,7 +13,6 @@ import name.martingeisse.grumpyjson.builtin.*;
 import name.martingeisse.grumpyjson.builtin.helper_types.FieldMustBeNullConverter;
 import name.martingeisse.grumpyjson.builtin.helper_types.NullableFieldConverter;
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalFieldConverter;
-import name.martingeisse.grumpyjson.builtin.helper_types.TypeWrapperConverter;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializerRegistry;
@@ -68,7 +67,6 @@ public class JsonEngine {
         registerDualConverter(new NullableFieldConverter(registries));
         registerDualConverter(new OptionalFieldConverter(registries));
         registerDualConverter(new JsonElementConverter());
-        registerDualConverter(new TypeWrapperConverter(registries));
 
     }
 
@@ -124,25 +122,25 @@ public class JsonEngine {
     }
 
     /**
-     * Checks whether the specified type is supported by this engine
+     * Checks whether the specified class is supported for serialization by this engine
      *
-     * @param type the type to check
-     * @return true if supporte, false if not
+     * @param clazz the class to check
+     * @return true if supported, false if not
      */
-    public boolean supportsType(Type type) {
-        Objects.requireNonNull(type, "type");
-        return registries.supports(type);
+    public boolean supportsClassForSerialization(Class<?> clazz) {
+        Objects.requireNonNull(clazz, "clazz");
+        return registries.supportsClassForSerialization(clazz);
     }
 
     /**
-     * Checks whether the specified type is supported by this engine
+     * Checks whether the specified type is supported for deserialization by this engine
      *
-     * @param typeToken a type token for the type to check
-     * @return true if supporte, false if not
+     * @param type the type to check
+     * @return true if supported, false if not
      */
-    public boolean supportsType(TypeToken<?> typeToken) {
-        Objects.requireNonNull(typeToken, "type");
-        return registries.supports(typeToken.getType());
+    public boolean supportsTypeForDeserialization(Type type) {
+        Objects.requireNonNull(type, "type");
+        return registries.supportsTypeForDeserialization(type);
     }
 
     // -----------------------------------------------------------------------
