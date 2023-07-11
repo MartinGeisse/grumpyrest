@@ -11,21 +11,27 @@ import name.martingeisse.grumpyjson.builtin.IntegerConverter;
 import name.martingeisse.grumpyjson.builtin.StringConverter;
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalField;
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalFieldConverter;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static name.martingeisse.grumpyjson.JsonTestUtil.createRegistry;
+import static name.martingeisse.grumpyjson.JsonTestUtil.createRegistries;
 
 public class RecordWithOptionalPropertyConverterTest {
 
     private record Record(OptionalField<Integer> myInt) {}
 
-    private final JsonRegistries registries = createRegistry(new IntegerConverter(), new StringConverter());
-    {
-        registries.register(new OptionalFieldConverter(registries));
-    }
-    private final JsonTypeAdapter<Record> converter = registries.get(Record.class);
+    private final JsonSerializer<Record> serializer;
+    private final JsonDeserializer deserializer;
 
+    public RecordWithOptionalPropertyConverterTest() throws Exception {
+        JsonRegistries registries = createRegistries(new IntegerConverter(), new StringConverter());
+        registries.registerDualConverter(new OptionalFieldConverter(registries));
+        registries.seal();
+        serializer = registries.getSerializer(Record.class);
+        deserializer = registries.getDeserializer(Record.class);
+    }
 
     @Test
     public void testHappyCaseWithAbsentOptionalProperty() throws Exception {
@@ -33,8 +39,8 @@ public class RecordWithOptionalPropertyConverterTest {
 
         Record recordWithoutValue = new Record(OptionalField.ofNothing());
 
-        Assertions.assertEquals(recordWithoutValue, converter.deserialize(jsonObjectWithoutValue, Record.class));
-        Assertions.assertEquals(jsonObjectWithoutValue, converter.serialize(recordWithoutValue, Record.class));
+        Assertions.assertEquals(recordWithoutValue, deserializer.deserialize(jsonObjectWithoutValue, Record.class));
+        Assertions.assertEquals(jsonObjectWithoutValue, serializer.serialize(recordWithoutValue));
     }
 
     @Test
@@ -44,8 +50,8 @@ public class RecordWithOptionalPropertyConverterTest {
 
         Record recordWithValue = new Record(OptionalField.ofValue(123));
 
-        Assertions.assertEquals(recordWithValue, converter.deserialize(jsonObjectWithValue, Record.class));
-        Assertions.assertEquals(jsonObjectWithValue, converter.serialize(recordWithValue, Record.class));
+        Assertions.assertEquals(recordWithValue, deserializer.deserialize(jsonObjectWithValue, Record.class));
+        Assertions.assertEquals(jsonObjectWithValue, serializer.serialize(recordWithValue));
     }
 
 }
