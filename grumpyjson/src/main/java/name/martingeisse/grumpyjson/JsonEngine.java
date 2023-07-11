@@ -341,36 +341,6 @@ public class JsonEngine {
     }
 
     /**
-     * Turns a value into a JSON string.
-     *
-     * @param value the value to convert
-     * @param typeToken a type token for type to convert. This is useful if the value is an instance of a generic
-     *                  type and the static type arguments of that generic type are needed for conversion to JSON.
-     * @return the JSON string
-     * @throws JsonSerializationException if the value is in an inconsistent state or a state that cannot be turned into JSON
-     */
-    public String serializeToString(Object value, TypeToken<?> typeToken) throws JsonSerializationException {
-        Objects.requireNonNull(value, "value");
-        Objects.requireNonNull(typeToken, "typeToken");
-        return stringDestination(writer -> writeTo(value, typeToken, writer));
-    }
-
-    /**
-     * Turns a value into a JSON string.
-     *
-     * @param value the value to convert
-     * @param type the type to convert. This is useful if the value is an instance of a generic
-     *                  type and the static type arguments of that generic type are needed for conversion to JSON.
-     * @return the JSON string
-     * @throws JsonSerializationException if the value is in an inconsistent state or a state that cannot be turned into JSON
-     */
-    public String serializeToString(Object value, Type type) throws JsonSerializationException {
-        Objects.requireNonNull(value, "value");
-        Objects.requireNonNull(type, "type");
-        return stringDestination(writer -> writeTo(value, type, writer));
-    }
-
-    /**
      * Turns a value into JSON that is written to an output stream. As demanded by the MIME type application/json,
      * the output will be UTF-8 encoded.
      *
@@ -385,40 +355,6 @@ public class JsonEngine {
     }
 
     /**
-     * Turns a value into JSON that is written to an output stream. As demanded by the MIME type application/json,
-     * the output will be UTF-8 encoded.
-     *
-     * @param value the value to convert
-     * @param typeToken a type token for the type to convert. This is useful if the value is an instance of a generic
-     *                  type and the static type arguments of that generic type are needed for conversion to JSON.
-     * @param destination the stream to write to
-     * @throws JsonSerializationException if the value is in an inconsistent state or a state that cannot be turned into JSON
-     */
-    public void writeTo(Object value, TypeToken<?> typeToken, OutputStream destination) throws JsonSerializationException {
-        Objects.requireNonNull(value, "value");
-        Objects.requireNonNull(typeToken, "typeToken");
-        Objects.requireNonNull(destination, "destination");
-        wrapDestination(destination, writer -> writeTo(value, typeToken, writer));
-    }
-
-    /**
-     * Turns a value into JSON that is written to an output stream. As demanded by the MIME type application/json,
-     * the output will be UTF-8 encoded.
-     *
-     * @param value the value to convert
-     * @param type the type to convert. This is useful if the value is an instance of a generic
-     *                  type and the static type arguments of that generic type are needed for conversion to JSON.
-     * @param destination the stream to write to
-     * @throws JsonSerializationException if the value is in an inconsistent state or a state that cannot be turned into JSON
-     */
-    public void writeTo(Object value, Type type, OutputStream destination) throws JsonSerializationException {
-        Objects.requireNonNull(value, "value");
-        Objects.requireNonNull(type, "type");
-        Objects.requireNonNull(destination, "destination");
-        wrapDestination(destination, writer -> writeTo(value, type, writer));
-    }
-
-    /**
      * Turns a value into JSON that is written to a writer.
      *
      * @param value the value to convert
@@ -428,41 +364,9 @@ public class JsonEngine {
     public void writeTo(Object value, Writer destination) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(destination, "destination");
-        writeTo(value, value.getClass(), destination);
-    }
-
-    /**
-     * Turns a value into JSON that is written to a writer.
-     *
-     * @param value the value to convert
-     * @param typeToken a type token for the type to convert. This is useful if the value is an instance of a generic
-     *                  type and the static type arguments of that generic type are needed for conversion to JSON.
-     * @param destination the writer to write to
-     * @throws JsonSerializationException if the value is in an inconsistent state or a state that cannot be turned into JSON
-     */
-    public void writeTo(Object value, TypeToken<?> typeToken, Writer destination) throws JsonSerializationException {
-        Objects.requireNonNull(value, "value");
-        Objects.requireNonNull(typeToken, "typeToken");
-        Objects.requireNonNull(destination, "destination");
-        writeTo(value, typeToken.getType(), destination);
-    }
-
-    /**
-     * Turns a value into JSON that is written to a writer.
-     *
-     * @param value the value to convert
-     * @param type the type to convert. This is useful if the value is an instance of a generic
-     *                  type and the static type arguments of that generic type are needed for conversion to JSON.
-     * @param destination the writer to write to
-     * @throws JsonSerializationException if the value is in an inconsistent state or a state that cannot be turned into JSON
-     */
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public void writeTo(Object value, Type type, Writer destination) throws JsonSerializationException {
-        Objects.requireNonNull(value, "value");
-        Objects.requireNonNull(type, "type");
-        Objects.requireNonNull(destination, "destination");
-        JsonTypeAdapter adapter = registries.get(type);
-        gson.toJson(adapter.serialize(value, type), destination);
+        @SuppressWarnings("rawtypes") JsonTypeAdapter adapter = registries.get(value.getClass());
+        //noinspection unchecked
+        gson.toJson(adapter.serialize(value, value.getClass()), destination);
     }
 
     /**
@@ -474,39 +378,9 @@ public class JsonEngine {
      */
     public JsonElement toJsonElement(Object value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
-        return toJsonElement(value, value.getClass());
-    }
-
-    /**
-     * Turns a value into a {@link JsonElement}.
-     *
-     * @param value the value to convert
-     * @param typeToken a type token for the type to convert. This is useful if the value is an instance of a generic
-     *                  type and the static type arguments of that generic type are needed for conversion to JSON.
-     * @return the JSON element
-     * @throws JsonSerializationException if the value is in an inconsistent state or a state that cannot be turned into JSON
-     */
-    public JsonElement toJsonElement(Object value, TypeToken<?> typeToken) throws JsonSerializationException {
-        Objects.requireNonNull(value, "value");
-        Objects.requireNonNull(typeToken, "typeToken");
-        return toJsonElement(value, typeToken.getType());
-    }
-
-    /**
-     * Turns a value into a {@link JsonElement}.
-     *
-     * @param value the value to convert
-     * @param type the type to convert. This is useful if the value is an instance of a generic
-     *                  type and the static type arguments of that generic type are needed for conversion to JSON.
-     * @return the JSON element
-     * @throws JsonSerializationException if the value is in an inconsistent state or a state that cannot be turned into JSON
-     */
-    public JsonElement toJsonElement(Object value, Type type) throws JsonSerializationException {
-        Objects.requireNonNull(value, "value");
-        Objects.requireNonNull(type, "type");
-        @SuppressWarnings("rawtypes") JsonTypeAdapter adapter = registries.get(type);
+        @SuppressWarnings("rawtypes") JsonTypeAdapter adapter = registries.get(value.getClass());
         //noinspection unchecked
-        return adapter.serialize(value, type);
+        return adapter.serialize(value, value.getClass());
     }
 
     // -----------------------------------------------------------------------

@@ -65,30 +65,4 @@ public interface ResponseTransmitter {
      */
     void writeJson(Object value) throws JsonSerializationException, IOException;
 
-    /**
-     * Body method: Converts the specified value to JSON and sends it to the client using the body output stream.
-     * <p>
-     * This method does not set the Content-Type to JSON to keep the separation into header methods and body methods
-     * clean.
-     *
-     * @param value the value to convert to JSON
-     * @param typeToken a type token for the type used for conversion
-     * @throws JsonSerializationException if the value is in an inconsistent state or in a state that cannot be converted to JSON
-     * @throws IOException on I/O errors
-     */
-    void writeJson(Object value, TypeToken<?> typeToken) throws JsonSerializationException, IOException;
-
-    /**
-     * Body method: Converts the specified value to JSON and sends it to the client using the body output stream.
-     * <p>
-     * This method does not set the Content-Type to JSON to keep the separation into header methods and body methods
-     * clean.
-     *
-     * @param value the value to convert to JSON
-     * @param type the type used for conversion
-     * @throws JsonSerializationException if the value is in an inconsistent state or in a state that cannot be converted to JSON
-     * @throws IOException on I/O errors
-     */
-    void writeJson(Object value, Type type) throws JsonSerializationException, IOException;
-
 }

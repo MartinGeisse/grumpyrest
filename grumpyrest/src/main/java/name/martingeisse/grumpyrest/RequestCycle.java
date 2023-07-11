@@ -9,9 +9,9 @@ package name.martingeisse.grumpyrest;
 import com.google.gson.reflect.TypeToken;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.registry.NotRegisteredException;
+import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyrest.request.PathArgument;
 import name.martingeisse.grumpyrest.request.Request;
 import name.martingeisse.grumpyrest.request.path.PathUtil;
@@ -189,16 +189,6 @@ public final class RequestCycle {
         @Override
         public void writeJson(Object value) throws JsonSerializationException, IOException {
             api.getJsonEngine().writeTo(value, servletResponse.getOutputStream());
-        }
-
-        @Override
-        public void writeJson(Object value, TypeToken<?> typeToken) throws JsonSerializationException, IOException {
-            api.getJsonEngine().writeTo(value, typeToken, servletResponse.getOutputStream());
-        }
-
-        @Override
-        public void writeJson(Object value, Type type) throws JsonSerializationException, IOException {
-            api.getJsonEngine().writeTo(value, type, servletResponse.getOutputStream());
         }
 
     }
