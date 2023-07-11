@@ -8,7 +8,9 @@ package name.martingeisse.grumpyrest;
 
 import name.martingeisse.grumpyjson.JsonEngine;
 import name.martingeisse.grumpyjson.JsonRegistries;
-import name.martingeisse.grumpyjson.JsonTypeAdapter;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.serialize.JsonSerializer;
+import name.martingeisse.grumpyjson.serialize.JsonSerializerRegistry;
 import name.martingeisse.grumpyrest.request.HttpMethod;
 import name.martingeisse.grumpyrest.request.path.Path;
 import name.martingeisse.grumpyrest.request.querystring.QuerystringParser;
@@ -154,10 +156,10 @@ public final class RestApi {
      * which a specific response shall be generated (by default, exceptions just cause a standard 500 response).
      * <p>
      * Note that support for new JSON-able types should not be implemented as a response factory, but by
-     * registering a {@link JsonTypeAdapter} with the {@link JsonRegistries} returned by {@link #getJsonEngine()} /
-     * {@link JsonEngine#getRegistries()}. A custom response factory, OTOH, would be appropriate to send a JSON response
-     * (using the {@link JsonEngine} implicitly by calling one of the {@link ResponseTransmitter#writeJson} methods)
-     * together with a custom HTTP status code or custom HTTP headers.
+     * registering a {@link JsonSerializer} with the {@link JsonRegistries} / {@link JsonSerializerRegistry} returned
+     * by {@link #getJsonEngine()} / {@link JsonEngine#getRegistries()}. A custom response factory, OTOH, would be
+     * appropriate to send a JSON response (using the {@link JsonEngine} implicitly by calling one of the
+     * {@link ResponseTransmitter#writeJson} methods) together with a custom HTTP status code or custom HTTP headers.
      *
      * @param responseFactory the response factory to register
      */
@@ -231,7 +233,7 @@ public final class RestApi {
 
     /**
      * Getter method for the {@link JsonEngine}. This method is needed to register custom types for request/response
-     * bodies using custom {@link JsonTypeAdapter}s.
+     * bodies using custom {@link JsonSerializer}s and {@link JsonDeserializer}s.
      * <p>
      * (We might consider adding convenience methods to register converters here in RestApi)
      *

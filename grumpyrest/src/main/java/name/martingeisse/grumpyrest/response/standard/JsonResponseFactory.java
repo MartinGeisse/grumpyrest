@@ -25,7 +25,7 @@ public final class JsonResponseFactory implements ResponseFactory {
 
     @Override
     public Response createResponse(RequestCycle requestCycle, Object value) {
-        if (value == null || !requestCycle.getApi().getJsonEngine().supportsType(value.getClass())) {
+        if (value == null || !requestCycle.getApi().getJsonEngine().supportsClassForSerialization(value.getClass())) {
             return null;
         }
         return createResponseForSupportedValue(value);
