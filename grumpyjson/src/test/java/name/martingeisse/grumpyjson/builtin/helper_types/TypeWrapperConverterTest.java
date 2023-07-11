@@ -28,24 +28,24 @@ public class TypeWrapperConverterTest {
     {
         registries.register(new ListConverter(registries));
     }
-    private final TypeWrapperConverter adapter = new TypeWrapperConverter(registries);
+    private final TypeWrapperConverter converter = new TypeWrapperConverter(registries);
 
     @Test
     public void testSupportsType() {
-        assertTrue(adapter.supportsType(TypeWrapper.class));
-        assertTrue(adapter.supportsType(INTEGER_TYPE_WRAPPER_TYPE));
+        assertTrue(converter.supportsType(TypeWrapper.class));
+        assertTrue(converter.supportsType(INTEGER_TYPE_WRAPPER_TYPE));
     }
 
     @Test
     public void testFromJson() {
-        assertThrows(UnsupportedOperationException.class, () -> adapter.deserialize(new JsonPrimitive(123), TypeWrapper.class));
+        assertThrows(UnsupportedOperationException.class, () -> converter.deserialize(new JsonPrimitive(123), TypeWrapper.class));
     }
 
     @Test
     public void testToJsonPrimitive() {
         List<Integer> list = List.of(1, 2, 3);
         TypeWrapper<?> wrapper = new TypeWrapper<>(list) {};
-        assertEquals(JsonTestUtil.buildIntArray(1, 2, 3), adapter.serialize(wrapper, wrapper.getClass()));
+        assertEquals(JsonTestUtil.buildIntArray(1, 2, 3), converter.serialize(wrapper, wrapper.getClass()));
     }
 
 }

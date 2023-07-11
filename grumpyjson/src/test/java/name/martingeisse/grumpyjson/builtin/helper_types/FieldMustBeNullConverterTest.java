@@ -14,29 +14,29 @@ import static name.martingeisse.grumpyjson.JsonTestUtil.*;
 
 public class FieldMustBeNullConverterTest {
 
-    private final FieldMustBeNullConverter adapter = new FieldMustBeNullConverter();
+    private final FieldMustBeNullConverter converter = new FieldMustBeNullConverter();
 
     @Test
-    public void testValidationHappyCase() throws Exception {
-        Assertions.assertEquals(FieldMustBeNull.INSTANCE, adapter.deserialize(JsonNull.INSTANCE, FieldMustBeNull.class));
+    public void testDeserializationHappyCase() throws Exception {
+        Assertions.assertEquals(FieldMustBeNull.INSTANCE, converter.deserialize(JsonNull.INSTANCE, FieldMustBeNull.class));
     }
 
     @Test
-    public void testValidationWrongType() {
-        forNonPrimitive(json -> assertFailsDeserialization(adapter, json, Integer.TYPE));
-        forBooleans(json -> assertFailsDeserialization(adapter, json, Integer.TYPE));
-        forNumbers(json -> assertFailsDeserialization(adapter, json, Integer.TYPE));
-        forStrings(json -> assertFailsDeserialization(adapter, json, Integer.TYPE));
+    public void testDeserializationWrongType() {
+        forNonPrimitive(json -> assertFailsDeserialization(converter, json, Integer.TYPE));
+        forBooleans(json -> assertFailsDeserialization(converter, json, Integer.TYPE));
+        forNumbers(json -> assertFailsDeserialization(converter, json, Integer.TYPE));
+        forStrings(json -> assertFailsDeserialization(converter, json, Integer.TYPE));
     }
 
     @Test
-    public void testGenerationHappyCase() {
-        Assertions.assertEquals(JsonNull.INSTANCE, adapter.serialize(FieldMustBeNull.INSTANCE, FieldMustBeNull.class));
+    public void testSerializationHappyCase() {
+        Assertions.assertEquals(JsonNull.INSTANCE, converter.serialize(FieldMustBeNull.INSTANCE, FieldMustBeNull.class));
     }
 
     @Test
-    public void testGenerationWithNull() {
-        assertFailsSerializationWithNpe(adapter, null, FieldMustBeNull.class);
+    public void testSerializationWithNull() {
+        assertFailsSerializationWithNpe(converter, null, FieldMustBeNull.class);
     }
 
 }
