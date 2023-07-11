@@ -230,10 +230,10 @@ public final class RestApi {
     }
 
     /**
-     * Getter method for the {@link JsonEngine}. This method is needed to add custom types for request/response bodies
-     * using custom {@link JsonTypeAdapter}s.
+     * Getter method for the {@link JsonEngine}. This method is needed to register custom types for request/response
+     * bodies using custom {@link JsonTypeAdapter}s.
      * <p>
-     * (We might consider adding convenience methods to add type adapters here in RestApi)
+     * (We might consider adding convenience methods to register converters here in RestApi)
      *
      * @return the JSON registries
      */
