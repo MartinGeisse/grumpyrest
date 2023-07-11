@@ -6,6 +6,7 @@
  */
 package name.martingeisse.grumpyrest.response;
 
+import name.martingeisse.grumpyjson.registry.Registry;
 import name.martingeisse.grumpyrest.RequestCycle;
 import name.martingeisse.grumpyrest.RestApi;
 
@@ -15,13 +16,17 @@ import java.util.List;
 /**
  * Allows to register {@link ResponseFactory}s that provide {@link Response} implementations for other types
  * of response values.
+ * <p>
+ * This class does not extend {@link Registry} because it does not work with keys reported by its registrables (i.e.
+ * response factories), but directly calls all factories and uses the first non-null result.
  */
 public class ResponseFactoryRegistry {
 
     private final List<ResponseFactory> factories = new ArrayList<>();
 
     /**
-     * Constructor. This constructor does not add any factories, but the {@link RestApi} calling this constructor does.
+     * Constructor. This constructor does not register any factories, but the {@link RestApi} calling this constructor
+     * does.
      */
     public ResponseFactoryRegistry() {
     }
@@ -35,9 +40,9 @@ public class ResponseFactoryRegistry {
     }
 
     /**
-     * Adds a response factory to this registry, to be used when converting a response value to a {@link Response}.
+     * Registers a response factory to this registry, to be used when converting a response value to a {@link Response}.
      *
-     * @param factory the response factory to add
+     * @param factory the response factory to register
      */
     public void register(ResponseFactory factory) {
         factories.add(factory);
@@ -45,7 +50,7 @@ public class ResponseFactoryRegistry {
 
     /**
      * Converts a response value to a {@link Response} using an appropriate response factory from this registry.
-     * If multiple response factories support conversion of that value, then the one added earlier takes precedence.
+     * If multiple response factories support conversion of that value, then the one registered earlier takes precedence.
      *
      * @param requestCycle the request cycle to create a response for. This is passed in case the response factory
      *                     wants to do special stuff like look into request properties.
