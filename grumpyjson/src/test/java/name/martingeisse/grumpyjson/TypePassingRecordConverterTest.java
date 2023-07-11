@@ -9,8 +9,11 @@ package name.martingeisse.grumpyjson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import name.martingeisse.grumpyjson.builtin.IntegerConverter;
 import name.martingeisse.grumpyjson.builtin.ListConverter;
 import name.martingeisse.grumpyjson.builtin.StringConverter;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -32,11 +35,16 @@ public class TypePassingRecordConverterTest {
     private record Middle<T>(Inner<T> inner) {}
     private record Outer(Middle<String> middle) {}
 
-    private final JsonRegistries registries = createRegistry(new StringConverter());
-    {
-        registries.register(new ListConverter(registries));
+    private final JsonSerializer<Outer> serializer;
+    private final JsonDeserializer deserializer;
+
+    public TypePassingRecordConverterTest() throws Exception {
+        JsonRegistries registries = createRegistries(new IntegerConverter(), new StringConverter());
+        registries.registerDualConverter(new ListConverter(registries));
+        registries.seal();
+        serializer = registries.getSerializer(Outer.class);
+        deserializer = registries.getDeserializer(Outer.class);
     }
-    private final JsonTypeAdapter<Outer> outerConverter = registries.get(Outer.class);
 
     @Test
     public void testHappyCase() throws Exception {
@@ -50,8 +58,8 @@ public class TypePassingRecordConverterTest {
         Middle<String> middleRecord = new Middle<>(innerRecord);
         Outer outerRecord = new Outer(middleRecord);
 
-        Assertions.assertEquals(outerRecord, outerConverter.deserialize(outerJson, Outer.class));
-        Assertions.assertEquals(outerJson, outerConverter.serialize(outerRecord, Record.class));
+        Assertions.assertEquals(outerRecord, deserializer.deserialize(outerJson, Outer.class));
+        Assertions.assertEquals(outerJson, serializer.serialize(outerRecord));
     }
 
 }

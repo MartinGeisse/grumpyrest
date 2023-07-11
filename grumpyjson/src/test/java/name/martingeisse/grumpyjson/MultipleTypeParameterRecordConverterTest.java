@@ -10,11 +10,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import name.martingeisse.grumpyjson.builtin.IntegerConverter;
 import name.martingeisse.grumpyjson.builtin.StringConverter;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static name.martingeisse.grumpyjson.JsonTestUtil.buildCustomObject;
-import static name.martingeisse.grumpyjson.JsonTestUtil.createRegistry;
+import static name.martingeisse.grumpyjson.JsonTestUtil.createRegistries;
 
 /**
  * This test ensures that handling multiple type parameters works. We also swap their order.
@@ -25,8 +27,15 @@ public class MultipleTypeParameterRecordConverterTest {
     private record Middle<P, Q>(Inner<Q, P> inner) {}
     private record Outer(Middle<Integer, String> middle) {}
 
-    private final JsonRegistries registries = createRegistry(new IntegerConverter(), new StringConverter());
-    private final JsonTypeAdapter<Outer> outerConverter = registries.get(Outer.class);
+    private final JsonSerializer<Outer> serializer;
+    private final JsonDeserializer deserializer;
+
+    public MultipleTypeParameterRecordConverterTest() throws Exception {
+        JsonRegistries registries = createRegistries(new IntegerConverter(), new StringConverter());
+        registries.seal();
+        serializer = registries.getSerializer(Outer.class);
+        deserializer = registries.getDeserializer(Outer.class);
+    }
 
     @Test
     public void testHappyCase() throws Exception {
@@ -38,8 +47,8 @@ public class MultipleTypeParameterRecordConverterTest {
         Middle<Integer, String> middleRecord = new Middle<>(innerRecord);
         Outer outerRecord = new Outer(middleRecord);
 
-        Assertions.assertEquals(outerRecord, outerConverter.deserialize(outerJson, Outer.class));
-        Assertions.assertEquals(outerJson, outerConverter.serialize(outerRecord, Record.class));
+        Assertions.assertEquals(outerRecord, deserializer.deserialize(outerJson, Outer.class));
+        Assertions.assertEquals(outerJson, serializer.serialize(outerRecord));
     }
 
 }

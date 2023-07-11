@@ -9,6 +9,8 @@ package name.martingeisse.grumpyjson;
 import com.google.gson.JsonObject;
 import name.martingeisse.grumpyjson.builtin.IntegerConverter;
 import name.martingeisse.grumpyjson.builtin.StringConverter;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -19,8 +21,15 @@ public class DeepRecordConverterTest {
     private record Inner(int myInt, String myString) {}
     private record Outer(Inner inner, int anotherInt) {}
 
-    private final JsonRegistries registries = createRegistry(new IntegerConverter(), new StringConverter());
-    private final JsonTypeAdapter<Outer> outerAdapter = registries.get(Outer.class);
+    private final JsonSerializer<Outer> serializer;
+    private final JsonDeserializer deserializer;
+
+    public DeepRecordConverterTest() throws Exception {
+        JsonRegistries registries = createRegistries(new IntegerConverter(), new StringConverter());
+        registries.seal();
+        serializer = registries.getSerializer(Outer.class);
+        deserializer = registries.getDeserializer(Outer.class);
+    }
 
     @Test
     public void testHappyCase() throws Exception {
@@ -34,8 +43,8 @@ public class DeepRecordConverterTest {
         Inner innerRecord = new Inner(123, "foo");
         Outer outerRecord = new Outer(innerRecord, 456);
 
-        Assertions.assertEquals(outerRecord, outerAdapter.deserialize(outerJson, Outer.class));
-        Assertions.assertEquals(outerJson, outerAdapter.serialize(outerRecord, Record.class));
+        Assertions.assertEquals(outerRecord, deserializer.deserialize(outerJson, Outer.class));
+        Assertions.assertEquals(outerJson, serializer.serialize(outerRecord));
     }
 
     @Test
@@ -47,7 +56,7 @@ public class DeepRecordConverterTest {
         outerJson.addProperty("anotherInt", 456);
 
         JsonTestUtil.assertFieldErrors(
-                assertFailsDeserialization(outerAdapter, outerJson, Outer.class),
+                assertFailsDeserialization(deserializer, outerJson, Outer.class),
                 new FieldErrorNode.FlattenedError(ExceptionMessages.MISSING_PROPERTY, "inner", "myString")
         );
     }
@@ -58,7 +67,7 @@ public class DeepRecordConverterTest {
         outerJson.addProperty("anotherInt", 456);
 
         JsonTestUtil.assertFieldErrors(
-                assertFailsDeserialization(outerAdapter, outerJson, Outer.class),
+                assertFailsDeserialization(deserializer, outerJson, Outer.class),
                 new FieldErrorNode.FlattenedError(ExceptionMessages.MISSING_PROPERTY, "inner")
         );
     }
@@ -72,7 +81,7 @@ public class DeepRecordConverterTest {
         outerJson.add("inner", innerJson);
 
         JsonTestUtil.assertFieldErrors(
-                assertFailsDeserialization(outerAdapter, outerJson, Outer.class),
+                assertFailsDeserialization(deserializer, outerJson, Outer.class),
                 new FieldErrorNode.FlattenedError(ExceptionMessages.MISSING_PROPERTY, "anotherInt")
         );
     }
@@ -84,7 +93,7 @@ public class DeepRecordConverterTest {
         outerJson.addProperty("anotherInt", 456);
 
         JsonTestUtil.assertFieldErrors(
-                assertFailsDeserialization(outerAdapter, outerJson, Outer.class),
+                assertFailsDeserialization(deserializer, outerJson, Outer.class),
                 new FieldErrorNode.FlattenedError("expected object, found: \"foo\"", "inner")
         );
     }
