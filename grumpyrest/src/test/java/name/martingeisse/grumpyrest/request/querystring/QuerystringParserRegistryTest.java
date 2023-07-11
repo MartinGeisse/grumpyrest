@@ -23,6 +23,7 @@ public class QuerystringParserRegistryTest {
         fromStringParserRegistry.register(new StringFromStringParser());
         fromStringParserRegistry.register(new IntegerFromStringParser());
         fromStringParserRegistry.register(new OptionalFieldParser(fromStringParserRegistry));
+        fromStringParserRegistry.seal();
     }
 
     @Test

@@ -26,6 +26,7 @@ public class OptionalFieldParserTest {
         registry.register(new StringFromStringParser());
         registry.register(new IntegerFromStringParser());
         OptionalFieldParser parser = new OptionalFieldParser(registry);
+        registry.seal();
 
         Type optionalIntegerType = new TypeToken<OptionalField<Integer>>() {}.getType();
 

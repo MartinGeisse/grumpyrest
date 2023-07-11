@@ -19,6 +19,7 @@ public class FromStringParserRegistryTest {
         FromStringParserRegistry registry = new FromStringParserRegistry();
         registry.register(new StringFromStringParser());
         registry.register(new IntegerFromStringParser());
+        registry.seal();
 
         assertTrue(registry.supports(Integer.TYPE));
         assertTrue(registry.supports(Integer.class));
@@ -46,6 +47,7 @@ public class FromStringParserRegistryTest {
     public void testStringNotRegisteredCase() throws Exception {
         FromStringParserRegistry registry = new FromStringParserRegistry();
         registry.register(new IntegerFromStringParser());
+        registry.seal();
 
         assertTrue(registry.supports(Integer.TYPE));
         assertTrue(registry.supports(Integer.class));
