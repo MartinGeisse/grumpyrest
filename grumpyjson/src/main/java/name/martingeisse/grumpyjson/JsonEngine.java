@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  * out-of-date) if the configuration gets changed afterwards.
  * <p>
  * A new instance of this class has stanndard type adapters registered for convenience. More type adapters can be
- * added using {@link #registerTypeAdapter(JsonTypeAdapter)}. If the standard type adapters are not desired, you can call
+ * added using {@link #registerDual(JsonTypeAdapter)}. If the standard type adapters are not desired, you can call
  * {@link #getRegistry()} and then {@link JsonRegistries#clear()} to remove all currently registered type
  * adapters.
  */
@@ -50,19 +50,19 @@ public class JsonEngine {
     public JsonEngine() {
 
         // Java types
-        registerTypeAdapter(new BooleanConverter());
-        registerTypeAdapter(new IntegerConverter());
-        registerTypeAdapter(new StringConverter());
+        registerDual(new BooleanConverter());
+        registerDual(new IntegerConverter());
+        registerDual(new StringConverter());
 
         // collection types
-        registerTypeAdapter(new ListConverter(registries));
+        registerDual(new ListConverter(registries));
 
         // helper types
-        registerTypeAdapter(new FieldMustBeNullConverter());
-        registerTypeAdapter(new NullableFieldConverter(registries));
-        registerTypeAdapter(new OptionalFieldConverter(registries));
-        registerTypeAdapter(new JsonElementConverter());
-        registerTypeAdapter(new TypeWrapperConverter(registries));
+        registerDual(new FieldMustBeNullConverter());
+        registerDual(new NullableFieldConverter(registries));
+        registerDual(new OptionalFieldConverter(registries));
+        registerDual(new JsonElementConverter());
+        registerDual(new TypeWrapperConverter(registries));
 
     }
 
@@ -71,7 +71,7 @@ public class JsonEngine {
      *
      * @param adapter the type adapter to add
      */
-    public void registerTypeAdapter(JsonTypeAdapter<?> adapter) {
+    public void registerDual(JsonTypeAdapter<?> adapter) {
         Objects.requireNonNull(adapter, "adapter");
         registries.register(adapter);
     }
