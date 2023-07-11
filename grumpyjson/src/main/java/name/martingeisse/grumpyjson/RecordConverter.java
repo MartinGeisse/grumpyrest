@@ -8,6 +8,7 @@ package name.martingeisse.grumpyjson;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import name.martingeisse.grumpyjson.builtin.record.RecordInfo;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 
