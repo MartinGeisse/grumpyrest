@@ -192,4 +192,10 @@ public final class JsonRegistries {
         return adapter;
     }
 
+    /**
+     * Seals the registries, moving from the configuration phase to the run-time phase.
+     */
+    public void seal() {
+    }
+
 }
