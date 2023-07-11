@@ -90,5 +90,4 @@ public class OptionalFieldConverterTest {
         assertThrows(JsonDeserializationException.class, () -> converter.deserialize(JsonNull.INSTANCE, OPTIONAL_INTEGER_TYPE));
     }
 
-
 }

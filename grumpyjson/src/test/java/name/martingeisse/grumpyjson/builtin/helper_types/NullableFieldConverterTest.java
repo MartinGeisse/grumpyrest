@@ -43,14 +43,10 @@ public class NullableFieldConverterTest {
     public void testUnboundTypeParameter() {
         // see ListAdapterTest for information on *why* things are expected to behave this way
         assertFalse(converter.supportsType(NullableField.class));
-        assertFalse(converter.supportsType(new TypeToken<NullableField>() {
-        }.getType()));
-        assertTrue(converter.supportsType(new TypeToken<NullableField<?>>() {
-        }.getType()));
-        assertTrue(converter.supportsType(new TypeToken<NullableField<Integer>>() {
-        }.getType()));
-        assertTrue(converter.supportsType(new TypeToken<NullableField<OutputStream>>() {
-        }.getType()));
+        assertFalse(converter.supportsType(new TypeToken<NullableField>() {}.getType()));
+        assertTrue(converter.supportsType(new TypeToken<NullableField<?>>() {}.getType()));
+        assertTrue(converter.supportsType(new TypeToken<NullableField<Integer>>() {}.getType()));
+        assertTrue(converter.supportsType(new TypeToken<NullableField<OutputStream>>() {}.getType()));
     }
 
     @Test
