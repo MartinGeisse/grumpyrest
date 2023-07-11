@@ -9,8 +9,8 @@ package name.martingeisse.grumpyjson.builtin.helper_types;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.reflect.TypeToken;
-import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.JsonRegistries;
+import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.builtin.IntegerConverter;
 import name.martingeisse.grumpyjson.builtin.StringConverter;
@@ -28,8 +28,12 @@ public class OptionalFieldConverterTest {
     private static final Type OPTIONAL_INTEGER_TYPE = new TypeToken<OptionalField<Integer>>() {}.getType();
     private static final Type OPTIONAL_STRING_TYPE = new TypeToken<OptionalField<String>>() {}.getType();
 
-    private final JsonRegistries registries = createRegistry(new IntegerConverter(), new StringConverter());
+    private final JsonRegistries registries = createRegistries(new IntegerConverter(), new StringConverter());
     private final OptionalFieldConverter converter = new OptionalFieldConverter(registries);
+
+    public OptionalFieldConverterTest() {
+        registries.seal();
+    }
 
     @Test
     public void testDeserializationHappyCase() throws Exception {
@@ -43,11 +47,11 @@ public class OptionalFieldConverterTest {
     @SuppressWarnings("rawtypes")
     public void testUnboundTypeParameter() {
         // see ListAdapterTest for information on *why* things are expected to behave this way
-        assertFalse(converter.supportsType(OptionalField.class));
-        assertFalse(converter.supportsType(new TypeToken<OptionalField>() {}.getType()));
-        assertTrue(converter.supportsType(new TypeToken<OptionalField<?>>() {}.getType()));
-        assertTrue(converter.supportsType(new TypeToken<OptionalField<Integer>>() {}.getType()));
-        assertTrue(converter.supportsType(new TypeToken<OptionalField<OutputStream>>() {}.getType()));
+        assertFalse(converter.supportsTypeForDeserialization(OptionalField.class));
+        assertFalse(converter.supportsTypeForDeserialization(new TypeToken<OptionalField>() {}.getType()));
+        assertTrue(converter.supportsTypeForDeserialization(new TypeToken<OptionalField<?>>() {}.getType()));
+        assertTrue(converter.supportsTypeForDeserialization(new TypeToken<OptionalField<Integer>>() {}.getType()));
+        assertTrue(converter.supportsTypeForDeserialization(new TypeToken<OptionalField<OutputStream>>() {}.getType()));
     }
 
     @Test
@@ -60,29 +64,21 @@ public class OptionalFieldConverterTest {
 
     @Test
     public void testSerializationHappyCase() {
-        assertEquals(Optional.empty(), converter.serializeOptional(OptionalField.ofNothing(), OPTIONAL_INTEGER_TYPE));
-        assertEquals(Optional.of(new JsonPrimitive(12)), converter.serializeOptional(OptionalField.ofValue(12), OPTIONAL_INTEGER_TYPE));
-
-        assertEquals(Optional.empty(), converter.serializeOptional(OptionalField.ofNothing(), OPTIONAL_STRING_TYPE));
-        assertEquals(Optional.of(new JsonPrimitive("foo")), converter.serializeOptional(OptionalField.ofValue("foo"), OPTIONAL_STRING_TYPE));
+        assertEquals(Optional.empty(), converter.serializeOptional(OptionalField.ofNothing()));
+        assertEquals(Optional.of(new JsonPrimitive(12)), converter.serializeOptional(OptionalField.ofValue(12)));
+        assertEquals(Optional.of(new JsonPrimitive("foo")), converter.serializeOptional(OptionalField.ofValue("foo")));
     }
 
     @Test
     public void testSerializationWithNull() {
         //noinspection DataFlowIssue
-        assertThrows(NullPointerException.class, () -> converter.serializeOptional(null, OPTIONAL_INTEGER_TYPE));
-    }
-
-    @Test
-    public void testSerializationWithWrongType() {
-        assertThrows(JsonSerializationException.class, () -> converter.serializeOptional(OptionalField.ofValue(12), OPTIONAL_STRING_TYPE));
-        assertThrows(JsonSerializationException.class, () -> converter.serializeOptional(OptionalField.ofValue("foo"), OPTIONAL_INTEGER_TYPE));
+        assertThrows(NullPointerException.class, () -> converter.serializeOptional(null));
     }
 
     @Test
     public void testOnlyWorksInVanishableLocations() {
-        assertThrows(JsonSerializationException.class, () -> converter.serialize(OptionalField.ofNothing(), OPTIONAL_INTEGER_TYPE));
-        assertThrows(JsonSerializationException.class, () -> converter.serialize(OptionalField.ofValue(12), OPTIONAL_INTEGER_TYPE));
+        assertThrows(JsonSerializationException.class, () -> converter.serialize(OptionalField.ofNothing()));
+        assertThrows(JsonSerializationException.class, () -> converter.serialize(OptionalField.ofValue(12)));
     }
 
     @Test

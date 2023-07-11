@@ -32,13 +32,13 @@ public class BooleanConverterTest {
 
     @Test
     public void testSerializationHappyCase() {
-        Assertions.assertEquals(new JsonPrimitive(true), converter.serialize(true, Boolean.TYPE));
-        Assertions.assertEquals(new JsonPrimitive(false), converter.serialize(false, Boolean.TYPE));
+        Assertions.assertEquals(new JsonPrimitive(true), converter.serialize(true));
+        Assertions.assertEquals(new JsonPrimitive(false), converter.serialize(false));
     }
 
     @Test
     public void testSerializationWithNull() {
-        assertFailsSerializationWithNpe(converter, null, Boolean.TYPE);
+        assertFailsSerializationWithNpe(converter, null);
     }
 
 }

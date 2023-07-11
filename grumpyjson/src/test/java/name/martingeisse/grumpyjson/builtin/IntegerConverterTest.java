@@ -48,12 +48,12 @@ public class IntegerConverterTest {
 
     @Test
     public void testSerializationHappyCase() {
-        Assertions.assertEquals(new JsonPrimitive(123), converter.serialize(123, Integer.TYPE));
+        Assertions.assertEquals(new JsonPrimitive(123), converter.serialize(123));
     }
 
     @Test
     public void testSerializationWithNull() {
-        assertFailsSerializationWithNpe(converter, null, Integer.TYPE);
+        assertFailsSerializationWithNpe(converter, null);
     }
 
 }

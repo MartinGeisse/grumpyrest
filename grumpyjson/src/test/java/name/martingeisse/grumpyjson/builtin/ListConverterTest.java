@@ -22,8 +22,12 @@ public class ListConverterTest {
     private static final Type INTEGER_LIST_TYPE = new TypeToken<List<Integer>>() {}.getType();
     private static final Type STRING_LIST_TYPE = new TypeToken<List<String>>() {}.getType();
 
-    private final JsonRegistries registries = createRegistry(new IntegerConverter(), new StringConverter());
+    private final JsonRegistries registries = createRegistries(new IntegerConverter(), new StringConverter());
     private final ListConverter converter = new ListConverter(registries);
+
+    public ListConverterTest() {
+        registries.seal();
+    }
 
     @Test
     public void testDeserializationHappyCase() throws Exception {
@@ -38,8 +42,8 @@ public class ListConverterTest {
         // This type is not supported because it contains an unbound type parameter. In other words, grumpyjson does
         // not know which type to de-serialize the list elements as. It does not matter whether the type is specified
         // as a class object or as a type token.
-        assertFalse(converter.supportsType(List.class));
-        assertFalse(converter.supportsType(new TypeToken<List>() {}.getType()));
+        assertFalse(converter.supportsTypeForDeserialization(List.class));
+        assertFalse(converter.supportsTypeForDeserialization(new TypeToken<List>() {}.getType()));
 
         // This is an edge case: the type parameter from List is now bound, but it is bound to a wildcard.
         // The adapter will report this to be supported because we do not want to waste time to recursively check that
@@ -47,14 +51,14 @@ public class ListConverterTest {
         // not to predict whether there will be any problems when using it. And there *will* be problems, because
         // actually using the adapter like this will try to get the (element) adapter for type "?" from the registry,
         // which does not exist.
-        assertTrue(converter.supportsType(new TypeToken<List<?>>() {}.getType()));
+        assertTrue(converter.supportsTypeForDeserialization(new TypeToken<List<?>>() {}.getType()));
 
         // When the type parameter is bound to a concrete type, then the type is supported.
-        assertTrue(converter.supportsType(new TypeToken<List<Integer>>() {}.getType()));
+        assertTrue(converter.supportsTypeForDeserialization(new TypeToken<List<Integer>>() {}.getType()));
 
         // Just like the wildcard case, the List adapter does not care if the element type is a concrete type
         // for which there is no adapter.
-        assertTrue(converter.supportsType(new TypeToken<List<OutputStream>>() {}.getType()));
+        assertTrue(converter.supportsTypeForDeserialization(new TypeToken<List<OutputStream>>() {}.getType()));
 
     }
 
@@ -74,21 +78,14 @@ public class ListConverterTest {
 
     @Test
     public void testSerializationHappyCase() {
-        assertEquals(buildIntArray(), converter.serialize(List.of(), INTEGER_LIST_TYPE));
-        assertEquals(buildIntArray(12, 34), converter.serialize(List.of(12, 34), INTEGER_LIST_TYPE));
-        assertEquals(buildIntArray(), converter.serialize(List.of(), STRING_LIST_TYPE));
-        assertEquals(buildStringArray("foo", "bar"), converter.serialize(List.of("foo", "bar"), STRING_LIST_TYPE));
+        assertEquals(buildIntArray(), converter.serialize(List.of()));
+        assertEquals(buildIntArray(12, 34), converter.serialize(List.of(12, 34)));
+        assertEquals(buildStringArray("foo", "bar"), converter.serialize(List.of("foo", "bar")));
     }
 
     @Test
     public void testSerializationWithNull() {
-        assertFailsSerializationWithNpe(converter, null, INTEGER_LIST_TYPE);
-    }
-
-    @Test
-    public void testSerializationWithWrongType() {
-        assertFailsSerialization(converter, List.of(12, 34), STRING_LIST_TYPE);
-        assertFailsSerialization(converter, List.of("foo", "bar"), INTEGER_LIST_TYPE);
+        assertFailsSerializationWithNpe(converter, null);
     }
 
 }
