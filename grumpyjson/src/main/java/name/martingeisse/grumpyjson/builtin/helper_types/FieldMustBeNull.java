@@ -7,8 +7,8 @@
 package name.martingeisse.grumpyjson.builtin.helper_types;
 
 /**
- * This can be used to implement a property that must be null during validation, and always serializes as null. Such
- * a property obviously does not add any information to the data structure, but might be useful to maintain
+ * This can be used to implement a property that must be null during deserialziation, and always serializes as null.
+ * Such a property obviously does not add any information to the data structure, but might be useful to maintain
  * compatibility with a field that was used in previous versions.
  * <p>
  * This can be wrapped in {@link OptionalField} to allow the field to be absent or null, as well as control whether the

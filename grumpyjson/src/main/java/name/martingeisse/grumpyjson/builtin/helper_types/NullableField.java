@@ -15,8 +15,8 @@ import java.util.Objects;
  * A nullable field is not by itself optional, i.e. cannot be absent from the JSON. To get a property that can be
  * absent, null, or something, use OptionalField&lt;NullableField&lt;YourType&gt;&gt;.
  * <p>
- * A nullable field does not map to a null reference on the Java side, and using a null reference during JSON generation
- * throws an exception. Instead, a JSON null is mapped to and from a NullableField that {@link #isNull()}.
+ * A nullable field does not map to a null reference on the Java side, and using a null reference during JSON
+ * serialization throws an exception. Instead, a JSON null is mapped to and from a NullableField that {@link #isNull()}.
  *
  * @param <T> the type of the contained value
  */

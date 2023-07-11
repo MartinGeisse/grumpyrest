@@ -10,13 +10,13 @@ import java.util.Objects;
 
 /**
  * This can be used to wrap a property and allow it to be absent in JSON. Normally, a missing property in the JSON
- * will cause a validation error.
+ * will cause a deserialization error.
  * <p>
  * An optional field is not by itself nullable, i.e. cannot be JSON null. To get a property that can be absent, null,
  * or something, use OptionalField&lt;NullableField&lt;YourType&gt;&gt;.
  * <p>
  * An optional field does not map to a null reference on the Java side, and using a null reference during JSON
- * generation throws an exception. Instead, a missing JSON property is mapped to and from an {@link OptionalField}
+ * serialization throws an exception. Instead, a missing JSON property is mapped to and from an {@link OptionalField}
  * that {@link #isAbsent()}.
  *
  * @param <T> the type of the contained value
