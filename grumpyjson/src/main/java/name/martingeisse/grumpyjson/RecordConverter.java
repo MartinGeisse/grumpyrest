@@ -82,7 +82,7 @@ public final class RecordConverter<T> implements JsonTypeAdapter<T> {
                 }
                 try {
                     Type concreteFieldType = componentInfo.getConcreteType(recordType);
-                    @SuppressWarnings("rawtypes") JsonTypeAdapter adapter = registry.getTypeAdapter(concreteFieldType);
+                    @SuppressWarnings("rawtypes") JsonTypeAdapter adapter = registry.get(concreteFieldType);
                     if (propertyJson == null) {
                         fieldValues[i] = adapter.deserializeAbsent(concreteFieldType);
                     } else {
@@ -129,7 +129,7 @@ public final class RecordConverter<T> implements JsonTypeAdapter<T> {
                     throw new JsonSerializationException("field is null");
                 }
                 Type concreteFieldType = componentInfo.getConcreteType(recordType);
-                @SuppressWarnings("rawtypes") JsonTypeAdapter adapter = registry.getTypeAdapter(concreteFieldType);
+                @SuppressWarnings("rawtypes") JsonTypeAdapter adapter = registry.get(concreteFieldType);
                 @SuppressWarnings("unchecked") Optional<JsonElement> optionalJson = adapter.serializeOptional(value, concreteFieldType);
                 optionalJson.ifPresent(jsonElement -> jsonObject.add(name, jsonElement));
             } catch (JsonSerializationException e) {

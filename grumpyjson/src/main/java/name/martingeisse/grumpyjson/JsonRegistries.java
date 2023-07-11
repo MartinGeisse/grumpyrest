@@ -41,7 +41,7 @@ public final class JsonRegistries {
      * Removes all type adapters from this registry. This is useful because the registry that is used by a newly
      * created {@link JsonEngine} contains default adapters, and the code using it might not want to use them.
      */
-    public void clearTypeAdapters() {
+    public void clear() {
         adapterList.clear();
     }
 
@@ -51,7 +51,7 @@ public final class JsonRegistries {
      *
      * @param adapter the adapter to add
      */
-    public void registerTypeAdapter(JsonTypeAdapter<?> adapter) {
+    public void register(JsonTypeAdapter<?> adapter) {
         adapterList.add(Objects.requireNonNull(adapter, "adapter"));
     }
 
@@ -69,7 +69,7 @@ public final class JsonRegistries {
      * @param type the type to check
      * @return true if supported, false if not
      */
-    public boolean supportsType(Type type) {
+    public boolean supports(Type type) {
         Objects.requireNonNull(type, "type");
         if (supportsAdapterAutoGeneration(type)) {
             return true;
@@ -107,29 +107,29 @@ public final class JsonRegistries {
     }
 
     /**
-     * This is a convenience wrapper for {@link #getTypeAdapter(Type)} in case the type is a raw class object. It
+     * This is a convenience wrapper for {@link #get(Type)} in case the type is a raw class object. It
      * returns the adapter as a typed adapter.
      *
      * @param clazz the class to return an adapter for
      * @return the type adapter
      * @param <T> the adapted type as a static type
      */
-    public <T> JsonTypeAdapter<T> getTypeAdapter(Class<T> clazz) {
+    public <T> JsonTypeAdapter<T> get(Class<T> clazz) {
         //noinspection unchecked
-        return (JsonTypeAdapter<T>)getTypeAdapter((Type)clazz);
+        return (JsonTypeAdapter<T>) get((Type)clazz);
     }
 
     /**
-     * This is a convenience wrapper for {@link #getTypeAdapter(Type)} in case the type is a not raw class object but
+     * This is a convenience wrapper for {@link #get(Type)} in case the type is a not raw class object but
      * can be specified statically using a type token. It returns the adapter as a typed adapter.
      *
      * @param typeToken a type token for the type to return an adapter for
      * @return the type adapter
      * @param <T> the adapted type as a static type
      */
-    public <T> JsonTypeAdapter<T> getTypeAdapter(TypeToken<T> typeToken) {
+    public <T> JsonTypeAdapter<T> get(TypeToken<T> typeToken) {
         //noinspection unchecked
-        return (JsonTypeAdapter<T>)getTypeAdapter(typeToken.getType());
+        return (JsonTypeAdapter<T>) get(typeToken.getType());
     }
 
     /**
@@ -141,7 +141,7 @@ public final class JsonRegistries {
      * @param type the type to return an adapter for
      * @return the type adapter
      */
-    public JsonTypeAdapter<?> getTypeAdapter(Type type) {
+    public JsonTypeAdapter<?> get(Type type) {
         Objects.requireNonNull(type, "type");
 
         // computeIfAbsent() cannot be used, if it behaves as it should, because recursively adding recognized types

@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
  * <p>
  * A new instance of this class has stanndard type adapters registered for convenience. More type adapters can be
  * added using {@link #registerTypeAdapter(JsonTypeAdapter)}. If the standard type adapters are not desired, you can call
- * {@link #getRegistry()} and then {@link JsonRegistries#clearTypeAdapters()} to remove all currently registered type
+ * {@link #getRegistry()} and then {@link JsonRegistries#clear()} to remove all currently registered type
  * adapters.
  */
 public class JsonEngine {
@@ -73,7 +73,7 @@ public class JsonEngine {
      */
     public void registerTypeAdapter(JsonTypeAdapter<?> adapter) {
         Objects.requireNonNull(adapter, "adapter");
-        registry.registerTypeAdapter(adapter);
+        registry.register(adapter);
     }
 
     /**
@@ -93,7 +93,7 @@ public class JsonEngine {
      */
     public boolean supportsType(Type type) {
         Objects.requireNonNull(type, "type");
-        return registry.supportsType(type);
+        return registry.supports(type);
     }
 
     /**
@@ -104,7 +104,7 @@ public class JsonEngine {
      */
     public boolean supportsType(TypeToken<?> typeToken) {
         Objects.requireNonNull(typeToken, "type");
-        return registry.supportsType(typeToken.getType());
+        return registry.supports(typeToken.getType());
     }
 
     // -----------------------------------------------------------------------
@@ -256,7 +256,7 @@ public class JsonEngine {
             // this happens if the source does not even contain malformed JSON, but just nothing (EOF)
             throw new JsonDeserializationException("no JSON to parse");
         }
-        return registry.getTypeAdapter(type).deserialize(json, type);
+        return registry.get(type).deserialize(json, type);
     }
 
     // the message looks like this: "at line 1 column 20 path"
@@ -315,7 +315,7 @@ public class JsonEngine {
     public Object parse(JsonElement source, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(type, "type");
-        return registry.getTypeAdapter(type).deserialize(source, type);
+        return registry.get(type).deserialize(source, type);
     }
 
     // -----------------------------------------------------------------------
@@ -455,7 +455,7 @@ public class JsonEngine {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(type, "type");
         Objects.requireNonNull(destination, "destination");
-        JsonTypeAdapter adapter = registry.getTypeAdapter(type);
+        JsonTypeAdapter adapter = registry.get(type);
         gson.toJson(adapter.serialize(value, type), destination);
     }
 
@@ -498,7 +498,7 @@ public class JsonEngine {
     public JsonElement toJsonElement(Object value, Type type) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(type, "type");
-        @SuppressWarnings("rawtypes") JsonTypeAdapter adapter = registry.getTypeAdapter(type);
+        @SuppressWarnings("rawtypes") JsonTypeAdapter adapter = registry.get(type);
         //noinspection unchecked
         return adapter.serialize(value, type);
     }

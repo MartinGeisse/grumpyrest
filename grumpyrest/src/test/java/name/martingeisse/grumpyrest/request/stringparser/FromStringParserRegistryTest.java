@@ -17,13 +17,13 @@ public class FromStringParserRegistryTest {
     @Test
     public void testHappyCase() throws Exception {
         FromStringParserRegistry registry = new FromStringParserRegistry();
-        registry.registerParser(new StringFromStringParser());
-        registry.registerParser(new IntegerFromStringParser());
+        registry.register(new StringFromStringParser());
+        registry.register(new IntegerFromStringParser());
 
-        assertTrue(registry.supportsType(Integer.TYPE));
-        assertTrue(registry.supportsType(Integer.class));
-        assertTrue(registry.supportsType(String.class));
-        assertFalse(registry.supportsType(Boolean.class));
+        assertTrue(registry.supports(Integer.TYPE));
+        assertTrue(registry.supports(Integer.class));
+        assertTrue(registry.supports(String.class));
+        assertFalse(registry.supports(Boolean.class));
 
         assertEquals(5, registry.parseFromString("5", Integer.TYPE));
         assertEquals(5, registry.parseFromString("5", Integer.class));
@@ -45,12 +45,12 @@ public class FromStringParserRegistryTest {
     @Test
     public void testStringNotRegisteredCase() throws Exception {
         FromStringParserRegistry registry = new FromStringParserRegistry();
-        registry.registerParser(new IntegerFromStringParser());
+        registry.register(new IntegerFromStringParser());
 
-        assertTrue(registry.supportsType(Integer.TYPE));
-        assertTrue(registry.supportsType(Integer.class));
-        assertFalse(registry.supportsType(String.class));
-        assertFalse(registry.supportsType(Boolean.class));
+        assertTrue(registry.supports(Integer.TYPE));
+        assertTrue(registry.supports(Integer.class));
+        assertFalse(registry.supports(String.class));
+        assertFalse(registry.supports(Boolean.class));
 
         assertEquals(5, registry.parseFromString("5", Integer.TYPE));
         assertEquals(5, registry.parseFromString("5", Integer.class));

@@ -22,7 +22,7 @@ import java.lang.reflect.Type;
  * do not provide any benefit when parsing JSON. You should only use type wrappers as the top-level value.
  * <p>
  * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
- * calling {@link JsonRegistries#clearTypeAdapters()}.
+ * calling {@link JsonRegistries#clear()}.
  */
 public class TypeWrapperConverter implements JsonTypeAdapter<TypeWrapper<?>> {
 
@@ -50,7 +50,7 @@ public class TypeWrapperConverter implements JsonTypeAdapter<TypeWrapper<?>> {
 
     @Override
     public JsonElement serialize(TypeWrapper<?> value, Type _ignored) throws JsonSerializationException {
-        @SuppressWarnings("rawtypes") JsonTypeAdapter adapter = registry.getTypeAdapter(value.getType());
+        @SuppressWarnings("rawtypes") JsonTypeAdapter adapter = registry.get(value.getType());
         //noinspection unchecked
         return adapter.serialize(value.getValue(), value.getType());
     }

@@ -26,7 +26,7 @@ public class TypeWrapperConverterTest {
 
     private final JsonRegistries registry = createRegistry(new IntegerConverter());
     {
-        registry.registerTypeAdapter(new ListConverter(registry));
+        registry.register(new ListConverter(registry));
     }
     private final TypeWrapperConverter adapter = new TypeWrapperConverter(registry);
 

@@ -20,7 +20,7 @@ import java.util.Map;
 public interface QuerystringParser {
 
     /**
-     * Checks if this adapter supports the specified type.
+     * Checks if this parser supports the specified type.
      *
      * @param type the type to check
      * @return true if supported, false if not

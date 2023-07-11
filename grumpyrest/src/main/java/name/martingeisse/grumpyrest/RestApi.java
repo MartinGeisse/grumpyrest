@@ -190,7 +190,7 @@ public final class RestApi {
      * @param parser the parser to add
      */
     public void registerFromStringParser(FromStringParser parser) {
-        fromStringParserRegistry.registerParser(parser);
+        fromStringParserRegistry.register(parser);
     }
 
     /**

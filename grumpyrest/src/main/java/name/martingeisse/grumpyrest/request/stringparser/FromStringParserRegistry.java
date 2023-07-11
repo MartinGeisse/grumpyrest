@@ -40,7 +40,7 @@ public class FromStringParserRegistry implements ParseFromStringService {
      * Removes all parsers from this registry. This is useful because the registry that is used by a newly
      * created {@link RestApi} contains default parsers, and the code using it might not want to use them.
      */
-    public void clearParsers() {
+    public void clear() {
         parserList.clear();
     }
 
@@ -50,7 +50,7 @@ public class FromStringParserRegistry implements ParseFromStringService {
      *
      * @param parser the parser to add
      */
-    public void registerParser(FromStringParser parser) {
+    public void register(FromStringParser parser) {
         parserList.add(Objects.requireNonNull(parser, "parser"));
     }
 
@@ -68,7 +68,7 @@ public class FromStringParserRegistry implements ParseFromStringService {
      * @param type the type to check
      * @return true if supported, false if not
      */
-    public boolean supportsType(Type type) {
+    public boolean supports(Type type) {
         Objects.requireNonNull(type, "type");
         if (parserMap.containsKey(type)) {
             return true;
@@ -89,7 +89,7 @@ public class FromStringParserRegistry implements ParseFromStringService {
      * @param type the type to return an adapter for
      * @return the type adapter
      */
-    public FromStringParser getParser(Type type) throws FromStringParserException {
+    public FromStringParser get(Type type) throws FromStringParserException {
         Objects.requireNonNull(type, "type");
 
         // computeIfAbsent() cannot be used, if it behaves as it should, because recursively adding recognized types
@@ -119,7 +119,7 @@ public class FromStringParserRegistry implements ParseFromStringService {
 
     @Override
     public Object parseFromString(String text, Type type) throws FromStringParserException {
-        return getParser(type).parseFromString(text, type);
+        return get(type).parseFromString(text, type);
     }
 
 }

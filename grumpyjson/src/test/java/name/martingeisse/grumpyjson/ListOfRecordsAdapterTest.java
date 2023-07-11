@@ -30,10 +30,10 @@ public class ListOfRecordsAdapterTest {
     private final JsonRegistries registry = createRegistry(new IntegerConverter(), new StringConverter());
 
     {
-        registry.registerTypeAdapter(new ListConverter(registry));
+        registry.register(new ListConverter(registry));
     }
 
-    private final JsonTypeAdapter<List<Record>> listOfRecordsAdapter = registry.getTypeAdapter(listOfRecordsTypeToken);
+    private final JsonTypeAdapter<List<Record>> listOfRecordsAdapter = registry.get(listOfRecordsTypeToken);
 
     @Test
     public void testGenerationHappyCase() throws Exception {

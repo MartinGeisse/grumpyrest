@@ -228,7 +228,7 @@ public final class RequestCycle {
             Object result = null;
             QuerystringParsingException originalException = null;
             try {
-                result = api.getQuerystringParserRegistry().getParser(type).parse(querystringSingle, type);
+                result = api.getQuerystringParserRegistry().get(type).parse(querystringSingle, type);
                 if (result == null) {
                     throw new QuerystringParsingException(Map.of("(root)", "querystring parser returned null"));
                 }

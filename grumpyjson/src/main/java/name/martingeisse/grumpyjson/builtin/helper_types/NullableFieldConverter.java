@@ -19,7 +19,7 @@ import java.lang.reflect.Type;
  * The {@link JsonTypeAdapter} for {@link NullableField}.
  * <p>
  * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
- * calling {@link JsonRegistries#clearTypeAdapters()}.
+ * calling {@link JsonRegistries#clear()}.
  */
 public class NullableFieldConverter implements JsonTypeAdapter<NullableField<?>> {
 
@@ -45,7 +45,7 @@ public class NullableFieldConverter implements JsonTypeAdapter<NullableField<?>>
         if (json.isJsonNull()) {
             return NullableField.ofNull();
         }
-        JsonTypeAdapter<?> innerAdapter = registry.getTypeAdapter(innerType);
+        JsonTypeAdapter<?> innerAdapter = registry.get(innerType);
         try {
             return NullableField.ofValue(innerAdapter.deserialize(json, innerType));
         } catch (JsonDeserializationException e) {
@@ -61,7 +61,7 @@ public class NullableFieldConverter implements JsonTypeAdapter<NullableField<?>>
         if (value.isNull()) {
             return JsonNull.INSTANCE;
         }
-        @SuppressWarnings("rawtypes") JsonTypeAdapter innerAdapter = registry.getTypeAdapter(innerType);
+        @SuppressWarnings("rawtypes") JsonTypeAdapter innerAdapter = registry.get(innerType);
         try {
             //noinspection unchecked
             return innerAdapter.serialize(value.getValueOrNull(), innerType);

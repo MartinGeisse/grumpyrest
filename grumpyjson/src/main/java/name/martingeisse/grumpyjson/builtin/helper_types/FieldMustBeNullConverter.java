@@ -20,7 +20,7 @@ import java.util.Objects;
  * The converter for {@link FieldMustBeNull}.
  * <p>
  * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
- * calling {@link JsonRegistries#clearTypeAdapters()}.
+ * calling {@link JsonRegistries#clear()}.
  */
 public class FieldMustBeNullConverter implements JsonTypeAdapter<FieldMustBeNull> {
 

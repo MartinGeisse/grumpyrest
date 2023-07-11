@@ -22,7 +22,7 @@ import java.util.Objects;
  * strings by this converter.
  * <p>
  * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
- * calling {@link JsonRegistries#clearTypeAdapters()}.
+ * calling {@link JsonRegistries#clear()}.
  */
 public class StringConverter implements JsonTypeAdapter<String> {
 

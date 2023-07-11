@@ -20,9 +20,9 @@ public class QuerystringParserRegistryTest {
 
     private static final FromStringParserRegistry fromStringParserRegistry = new FromStringParserRegistry();
     static {
-        fromStringParserRegistry.registerParser(new StringFromStringParser());
-        fromStringParserRegistry.registerParser(new IntegerFromStringParser());
-        fromStringParserRegistry.registerParser(new OptionalFieldParser(fromStringParserRegistry));
+        fromStringParserRegistry.register(new StringFromStringParser());
+        fromStringParserRegistry.register(new IntegerFromStringParser());
+        fromStringParserRegistry.register(new OptionalFieldParser(fromStringParserRegistry));
     }
 
     @Test
@@ -31,19 +31,19 @@ public class QuerystringParserRegistryTest {
         QuerystringParserRegistry registry = new QuerystringParserRegistry(fromStringParserRegistry);
         Assertions.assertEquals(
             new Foo(5, "abc"),
-            registry.getParser(Foo.class).parse(Map.of("x", "5", "y", "abc"), Foo.class)
+            registry.get(Foo.class).parse(Map.of("x", "5", "y", "abc"), Foo.class)
         );
         Assertions.assertThrows(
             QuerystringParsingException.class,
-            () -> registry.getParser(Foo.class).parse(Map.of("x", "5 ", "y", "abc"), Foo.class)
+            () -> registry.get(Foo.class).parse(Map.of("x", "5 ", "y", "abc"), Foo.class)
         );
         Assertions.assertThrows(
             QuerystringParsingException.class,
-            () -> registry.getParser(Foo.class).parse(Map.of("x", "5"), Foo.class)
+            () -> registry.get(Foo.class).parse(Map.of("x", "5"), Foo.class)
         );
         Assertions.assertThrows(
             QuerystringParsingException.class,
-            () -> registry.getParser(Foo.class).parse(Map.of("x", "5", "y", "abc", "z", "zzz"), Foo.class)
+            () -> registry.get(Foo.class).parse(Map.of("x", "5", "y", "abc", "z", "zzz"), Foo.class)
         );
     }
 
@@ -53,19 +53,19 @@ public class QuerystringParserRegistryTest {
         QuerystringParserRegistry registry = new QuerystringParserRegistry(fromStringParserRegistry);
         Assertions.assertEquals(
             new Foo(5, OptionalField.ofValue("abc")),
-            registry.getParser(Foo.class).parse(Map.of("x", "5", "y", "abc"), Foo.class)
+            registry.get(Foo.class).parse(Map.of("x", "5", "y", "abc"), Foo.class)
         );
         Assertions.assertThrows(
             QuerystringParsingException.class,
-            () -> registry.getParser(Foo.class).parse(Map.of("x", "5 ", "y", "abc"), Foo.class)
+            () -> registry.get(Foo.class).parse(Map.of("x", "5 ", "y", "abc"), Foo.class)
         );
         Assertions.assertEquals(
             new Foo(5, OptionalField.ofNothing()),
-            registry.getParser(Foo.class).parse(Map.of("x", "5"), Foo.class)
+            registry.get(Foo.class).parse(Map.of("x", "5"), Foo.class)
         );
         Assertions.assertThrows(
             QuerystringParsingException.class,
-            () -> registry.getParser(Foo.class).parse(Map.of("x", "5", "y", "abc", "z", "zzz"), Foo.class)
+            () -> registry.get(Foo.class).parse(Map.of("x", "5", "y", "abc", "z", "zzz"), Foo.class)
         );
     }
 

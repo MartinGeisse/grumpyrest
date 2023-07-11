@@ -235,7 +235,7 @@ public class JsonTestUtil {
     public static JsonRegistries createRegistry(JsonTypeAdapter<?>... adapters) {
         JsonRegistries registry = new JsonRegistries();
         for (JsonTypeAdapter<?> adapter : adapters) {
-            registry.registerTypeAdapter(adapter);
+            registry.register(adapter);
         }
         return registry;
     }

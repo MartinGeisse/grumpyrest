@@ -22,9 +22,9 @@ public class RecordWithOptionalPropertyAdapterTest {
 
     private final JsonRegistries registry = createRegistry(new IntegerConverter(), new StringConverter());
     {
-        registry.registerTypeAdapter(new OptionalFieldConverter(registry));
+        registry.register(new OptionalFieldConverter(registry));
     }
-    private final JsonTypeAdapter<Record> adapter = registry.getTypeAdapter(Record.class);
+    private final JsonTypeAdapter<Record> adapter = registry.get(Record.class);
 
 
     @Test

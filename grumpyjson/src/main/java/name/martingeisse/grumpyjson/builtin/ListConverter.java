@@ -47,7 +47,7 @@ public class ListConverter implements JsonTypeAdapter<List<?>> {
         Objects.requireNonNull(type, "type");
         if (json instanceof JsonArray array) {
             Type elementType = TypeUtil.expectSingleParameterizedType(type, List.class);
-            @SuppressWarnings("rawtypes") JsonTypeAdapter elementTypeAdapter = registry.getTypeAdapter(elementType);
+            @SuppressWarnings("rawtypes") JsonTypeAdapter elementTypeAdapter = registry.get(elementType);
             List<Object> result = new ArrayList<>();
             FieldErrorNode errorNode = null;
             for (int i = 0; i < array.size(); i++) {
@@ -70,7 +70,7 @@ public class ListConverter implements JsonTypeAdapter<List<?>> {
     @Override
     public JsonElement serialize(List<?> value, Type type) throws JsonSerializationException {
         Type elementType = TypeUtil.expectSingleParameterizedType(type, List.class);
-        @SuppressWarnings("rawtypes") JsonTypeAdapter elementTypeAdapter = registry.getTypeAdapter(elementType);
+        @SuppressWarnings("rawtypes") JsonTypeAdapter elementTypeAdapter = registry.get(elementType);
         JsonArray result = new JsonArray();
         FieldErrorNode errorNode = null;
         for (int i = 0; i < value.size(); i++) {

@@ -19,7 +19,7 @@ import java.util.Optional;
  * The {@link JsonTypeAdapter} for {@link OptionalField}.
  * <p>
  * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
- * calling {@link JsonRegistries#clearTypeAdapters()}.
+ * calling {@link JsonRegistries#clear()}.
  */
 public class OptionalFieldConverter implements JsonTypeAdapter<OptionalField<?>> {
 
@@ -42,7 +42,7 @@ public class OptionalFieldConverter implements JsonTypeAdapter<OptionalField<?>>
     @Override
     public OptionalField<?> deserialize(JsonElement json, Type type) throws JsonDeserializationException {
         Type innerType = getInner(type);
-        JsonTypeAdapter<?> innerAdapter = registry.getTypeAdapter(innerType);
+        JsonTypeAdapter<?> innerAdapter = registry.get(innerType);
         try {
             return OptionalField.ofValue(innerAdapter.deserialize(json, innerType));
         } catch (JsonDeserializationException e) {
@@ -69,7 +69,7 @@ public class OptionalFieldConverter implements JsonTypeAdapter<OptionalField<?>>
         if (value.isAbsent()) {
             return Optional.empty();
         }
-        @SuppressWarnings("rawtypes") JsonTypeAdapter innerAdapter = registry.getTypeAdapter(innerType);
+        @SuppressWarnings("rawtypes") JsonTypeAdapter innerAdapter = registry.get(innerType);
         try {
             //noinspection unchecked
             return Optional.of(innerAdapter.serialize(value.getValueOrNothingAsNull(), innerType));

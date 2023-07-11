@@ -53,7 +53,7 @@ public final class QuerystringParserRegistry {
     /**
      * Removes all parsers from this registry.
      */
-    public void clearParsers() {
+    public void clear() {
         parserList.clear();
     }
 
@@ -62,7 +62,7 @@ public final class QuerystringParserRegistry {
      *
      * @param parser the parser to add
      */
-    public void addParser(QuerystringParser parser) {
+    public void register(QuerystringParser parser) {
         parserList.add(Objects.requireNonNull(parser, "parser"));
     }
 
@@ -77,7 +77,7 @@ public final class QuerystringParserRegistry {
      * @param type the type to check
      * @return true if supported, false if not
      */
-    public boolean supportsType(Type type) {
+    public boolean supports(Type type) {
         Objects.requireNonNull(type, "type");
         if (supportsParserAutoGeneration(type)) {
             return true;
@@ -121,7 +121,7 @@ public final class QuerystringParserRegistry {
      * @param type the type to return a parser for
      * @return the parser
      */
-    public QuerystringParser getParser(Type type) {
+    public QuerystringParser get(Type type) {
         Objects.requireNonNull(type, "type");
 
         // computeIfAbsent() cannot be used, if it behaves as it should, because recursively adding recognized types
