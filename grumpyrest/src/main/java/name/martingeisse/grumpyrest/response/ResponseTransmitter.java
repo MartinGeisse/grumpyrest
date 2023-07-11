@@ -1,11 +1,9 @@
 package name.martingeisse.grumpyrest.response;
 
-import com.google.gson.reflect.TypeToken;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.Type;
 
 /**
  * This interface is used by the {@link Response} to transmit itself to the client.
