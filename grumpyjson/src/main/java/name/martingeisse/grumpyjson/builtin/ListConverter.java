@@ -25,15 +25,15 @@ import java.util.Objects;
  */
 public class ListConverter implements JsonTypeAdapter<List<?>> {
 
-    private final JsonRegistries registry;
+    private final JsonRegistries registries;
 
     /**
      * Constructor.
      *
-     * @param registry the JSON registry -- needed to fetch the adapter for the element type at run-time
+     * @param registries the JSON registry -- needed to fetch the adapter for the element type at run-time
      */
-    public ListConverter(JsonRegistries registry) {
-        this.registry = registry;
+    public ListConverter(JsonRegistries registries) {
+        this.registries = registries;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ListConverter implements JsonTypeAdapter<List<?>> {
         Objects.requireNonNull(type, "type");
         if (json instanceof JsonArray array) {
             Type elementType = TypeUtil.expectSingleParameterizedType(type, List.class);
-            @SuppressWarnings("rawtypes") JsonTypeAdapter elementTypeAdapter = registry.get(elementType);
+            @SuppressWarnings("rawtypes") JsonTypeAdapter elementTypeAdapter = registries.get(elementType);
             List<Object> result = new ArrayList<>();
             FieldErrorNode errorNode = null;
             for (int i = 0; i < array.size(); i++) {
@@ -70,7 +70,7 @@ public class ListConverter implements JsonTypeAdapter<List<?>> {
     @Override
     public JsonElement serialize(List<?> value, Type type) throws JsonSerializationException {
         Type elementType = TypeUtil.expectSingleParameterizedType(type, List.class);
-        @SuppressWarnings("rawtypes") JsonTypeAdapter elementTypeAdapter = registry.get(elementType);
+        @SuppressWarnings("rawtypes") JsonTypeAdapter elementTypeAdapter = registries.get(elementType);
         JsonArray result = new JsonArray();
         FieldErrorNode errorNode = null;
         for (int i = 0; i < value.size(); i++) {

@@ -26,10 +26,10 @@ import java.lang.reflect.Type;
  */
 public class TypeWrapperConverter implements JsonTypeAdapter<TypeWrapper<?>> {
 
-    private final JsonRegistries registry;
+    private final JsonRegistries registries;
 
-    public TypeWrapperConverter(JsonRegistries registry) {
-        this.registry = registry;
+    public TypeWrapperConverter(JsonRegistries registries) {
+        this.registries = registries;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class TypeWrapperConverter implements JsonTypeAdapter<TypeWrapper<?>> {
 
     @Override
     public JsonElement serialize(TypeWrapper<?> value, Type _ignored) throws JsonSerializationException {
-        @SuppressWarnings("rawtypes") JsonTypeAdapter adapter = registry.get(value.getType());
+        @SuppressWarnings("rawtypes") JsonTypeAdapter adapter = registries.get(value.getType());
         //noinspection unchecked
         return adapter.serialize(value.getValue(), value.getType());
     }

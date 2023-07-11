@@ -27,13 +27,13 @@ public class ListOfRecordsAdapterTest {
     private final TypeToken<List<Record>> listOfRecordsTypeToken = new TypeToken<>() {};
     private final Type listOfRecordsType = listOfRecordsTypeToken.getType();
 
-    private final JsonRegistries registry = createRegistry(new IntegerConverter(), new StringConverter());
+    private final JsonRegistries registries = createRegistry(new IntegerConverter(), new StringConverter());
 
     {
-        registry.register(new ListConverter(registry));
+        registries.register(new ListConverter(registries));
     }
 
-    private final JsonTypeAdapter<List<Record>> listOfRecordsAdapter = registry.get(listOfRecordsTypeToken);
+    private final JsonTypeAdapter<List<Record>> listOfRecordsAdapter = registries.get(listOfRecordsTypeToken);
 
     @Test
     public void testGenerationHappyCase() throws Exception {

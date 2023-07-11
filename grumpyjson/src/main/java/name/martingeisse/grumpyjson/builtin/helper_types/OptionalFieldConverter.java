@@ -23,15 +23,15 @@ import java.util.Optional;
  */
 public class OptionalFieldConverter implements JsonTypeAdapter<OptionalField<?>> {
 
-    private final JsonRegistries registry;
+    private final JsonRegistries registries;
 
     /**
      * Constructor.
      *
-     * @param registry the JSON registry -- needed to fetch the adapter for the contained type at run-time
+     * @param registries the JSON registry -- needed to fetch the adapter for the contained type at run-time
      */
-    public OptionalFieldConverter(JsonRegistries registry) {
-        this.registry = registry;
+    public OptionalFieldConverter(JsonRegistries registries) {
+        this.registries = registries;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class OptionalFieldConverter implements JsonTypeAdapter<OptionalField<?>>
     @Override
     public OptionalField<?> deserialize(JsonElement json, Type type) throws JsonDeserializationException {
         Type innerType = getInner(type);
-        JsonTypeAdapter<?> innerAdapter = registry.get(innerType);
+        JsonTypeAdapter<?> innerAdapter = registries.get(innerType);
         try {
             return OptionalField.ofValue(innerAdapter.deserialize(json, innerType));
         } catch (JsonDeserializationException e) {
@@ -69,7 +69,7 @@ public class OptionalFieldConverter implements JsonTypeAdapter<OptionalField<?>>
         if (value.isAbsent()) {
             return Optional.empty();
         }
-        @SuppressWarnings("rawtypes") JsonTypeAdapter innerAdapter = registry.get(innerType);
+        @SuppressWarnings("rawtypes") JsonTypeAdapter innerAdapter = registries.get(innerType);
         try {
             //noinspection unchecked
             return Optional.of(innerAdapter.serialize(value.getValueOrNothingAsNull(), innerType));

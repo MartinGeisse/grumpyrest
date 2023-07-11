@@ -24,11 +24,11 @@ public class TypeWrapperConverterTest {
 
     private static final Type INTEGER_TYPE_WRAPPER_TYPE = new TypeToken<TypeWrapper<Integer>>() {}.getType();
 
-    private final JsonRegistries registry = createRegistry(new IntegerConverter());
+    private final JsonRegistries registries = createRegistry(new IntegerConverter());
     {
-        registry.register(new ListConverter(registry));
+        registries.register(new ListConverter(registries));
     }
-    private final TypeWrapperConverter adapter = new TypeWrapperConverter(registry);
+    private final TypeWrapperConverter adapter = new TypeWrapperConverter(registries);
 
     @Test
     public void testSupportsType() {

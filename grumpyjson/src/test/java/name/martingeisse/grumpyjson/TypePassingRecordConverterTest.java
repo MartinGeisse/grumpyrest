@@ -32,11 +32,11 @@ public class TypePassingRecordConverterTest {
     private record Middle<T>(Inner<T> inner) {}
     private record Outer(Middle<String> middle) {}
 
-    private final JsonRegistries registry = createRegistry(new StringConverter());
+    private final JsonRegistries registries = createRegistry(new StringConverter());
     {
-        registry.register(new ListConverter(registry));
+        registries.register(new ListConverter(registries));
     }
-    private final JsonTypeAdapter<Outer> outerAdapter = registry.get(Outer.class);
+    private final JsonTypeAdapter<Outer> outerAdapter = registries.get(Outer.class);
 
     @Test
     public void testHappyCase() throws Exception {

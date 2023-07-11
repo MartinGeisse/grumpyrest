@@ -27,8 +27,8 @@ public class NullableFieldConverterTest {
     private static final Type NULLABLE_INTEGER_TYPE = new TypeToken<NullableField<Integer>>() {}.getType();
     private static final Type NULLABLE_STRING_TYPE = new TypeToken<NullableField<String>>() {}.getType();
 
-    private final JsonRegistries registry = createRegistry(new IntegerConverter(), new StringConverter());
-    private final NullableFieldConverter adapter = new NullableFieldConverter(registry);
+    private final JsonRegistries registries = createRegistry(new IntegerConverter(), new StringConverter());
+    private final NullableFieldConverter adapter = new NullableFieldConverter(registries);
 
     @Test
     public void testValidationHappyCase() throws Exception {

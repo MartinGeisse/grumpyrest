@@ -22,8 +22,8 @@ public class ListConverterTest {
     private static final Type INTEGER_LIST_TYPE = new TypeToken<List<Integer>>() {}.getType();
     private static final Type STRING_LIST_TYPE = new TypeToken<List<String>>() {}.getType();
 
-    private final JsonRegistries registry = createRegistry(new IntegerConverter(), new StringConverter());
-    private final ListConverter adapter = new ListConverter(registry);
+    private final JsonRegistries registries = createRegistry(new IntegerConverter(), new StringConverter());
+    private final ListConverter adapter = new ListConverter(registries);
 
     @Test
     public void testValidationHappyCase() throws Exception {

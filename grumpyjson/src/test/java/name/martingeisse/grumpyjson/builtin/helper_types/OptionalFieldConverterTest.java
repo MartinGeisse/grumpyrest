@@ -28,8 +28,8 @@ public class OptionalFieldConverterTest {
     private static final Type OPTIONAL_INTEGER_TYPE = new TypeToken<OptionalField<Integer>>() {}.getType();
     private static final Type OPTIONAL_STRING_TYPE = new TypeToken<OptionalField<String>>() {}.getType();
 
-    private final JsonRegistries registry = createRegistry(new IntegerConverter(), new StringConverter());
-    private final OptionalFieldConverter adapter = new OptionalFieldConverter(registry);
+    private final JsonRegistries registries = createRegistry(new IntegerConverter(), new StringConverter());
+    private final OptionalFieldConverter adapter = new OptionalFieldConverter(registries);
 
     @Test
     public void testValidationHappyCase() throws Exception {

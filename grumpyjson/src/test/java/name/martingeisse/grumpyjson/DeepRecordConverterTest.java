@@ -19,8 +19,8 @@ public class DeepRecordConverterTest {
     private record Inner(int myInt, String myString) {}
     private record Outer(Inner inner, int anotherInt) {}
 
-    private final JsonRegistries registry = createRegistry(new IntegerConverter(), new StringConverter());
-    private final JsonTypeAdapter<Outer> outerAdapter = registry.get(Outer.class);
+    private final JsonRegistries registries = createRegistry(new IntegerConverter(), new StringConverter());
+    private final JsonTypeAdapter<Outer> outerAdapter = registries.get(Outer.class);
 
     @Test
     public void testHappyCase() throws Exception {

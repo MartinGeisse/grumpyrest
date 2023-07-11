@@ -25,8 +25,8 @@ public class MultipleTypeParameterRecordConverterTest {
     private record Middle<P, Q>(Inner<Q, P> inner) {}
     private record Outer(Middle<Integer, String> middle) {}
 
-    private final JsonRegistries registry = createRegistry(new IntegerConverter(), new StringConverter());
-    private final JsonTypeAdapter<Outer> outerAdapter = registry.get(Outer.class);
+    private final JsonRegistries registries = createRegistry(new IntegerConverter(), new StringConverter());
+    private final JsonTypeAdapter<Outer> outerAdapter = registries.get(Outer.class);
 
     @Test
     public void testHappyCase() throws Exception {
