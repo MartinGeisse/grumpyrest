@@ -89,6 +89,7 @@ public final class ShopSystem {
         addBrowsingRoutes(api);
         addCartRoutes(api);
         addOrderRoutes(api);
+        api.seal();
         return api;
     }
 

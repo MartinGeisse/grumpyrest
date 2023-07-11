@@ -28,6 +28,8 @@ public class GreetingMain {
             }
         });
 
+        api.seal();
+
         GrumpyrestJettyLauncher launcher = new GrumpyrestJettyLauncher();
         launcher.launch(api);
     }

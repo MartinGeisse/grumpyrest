@@ -6,7 +6,6 @@
  */
 package name.martingeisse.grumpyrest_demo;
 
-import name.martingeisse.grumpyjson.builtin.helper_types.OptionalField;
 import name.martingeisse.grumpyjson.builtin.helper_types.TypeWrapper;
 import name.martingeisse.grumpyrest.RestApi;
 import name.martingeisse.grumpyrest.request.HttpMethod;
@@ -19,6 +18,7 @@ public class ToplevelListMain {
     public static void main(String[] args) throws Exception {
         RestApi api = new RestApi();
         api.addRoute(HttpMethod.GET, "/", request -> new TypeWrapper<>(List.of(1, 2, 3)) {});
+        api.seal();
 
         GrumpyrestJettyLauncher launcher = new GrumpyrestJettyLauncher();
         launcher.launch(api);

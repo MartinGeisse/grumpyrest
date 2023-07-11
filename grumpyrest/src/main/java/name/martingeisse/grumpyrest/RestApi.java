@@ -241,6 +241,12 @@ public final class RestApi {
         return jsonEngine;
     }
 
+    /**
+     * Seals this API, also sealing all registries used in it.
+     */
+    public void seal() {
+    }
+
     // endregion
 
     // region run-time
