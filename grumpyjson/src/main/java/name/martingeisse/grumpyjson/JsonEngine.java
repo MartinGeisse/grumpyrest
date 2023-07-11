@@ -24,7 +24,6 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -292,7 +291,7 @@ public class JsonEngine {
             // this happens if the source does not even contain malformed JSON, but just nothing (EOF)
             throw new JsonDeserializationException("no JSON to deserialize");
         }
-        return registries.get(type).deserialize(json, type);
+        return registries.deserialize(json, type);
     }
 
     // the message looks like this: "at line 1 column 20 path"
@@ -351,7 +350,7 @@ public class JsonEngine {
     public Object deserialize(JsonElement source, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(type, "type");
-        return registries.get(type).deserialize(source, type);
+        return registries.deserialize(source, type);
     }
 
     // -----------------------------------------------------------------------
@@ -367,7 +366,9 @@ public class JsonEngine {
      */
     public String serializeToString(Object value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
-        return stringDestination(writer -> writeTo(value, writer));
+        StringWriter writer = new StringWriter();
+        writeTo(value, writer);
+        return writer.toString();
     }
 
     /**
@@ -381,7 +382,15 @@ public class JsonEngine {
     public void writeTo(Object value, OutputStream destination) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(destination, "destination");
-        wrapDestination(destination, writer -> writeTo(value, writer));
+        OutputStreamWriter writer = new OutputStreamWriter(destination, StandardCharsets.UTF_8);
+        writeTo(value, writer);
+        try {
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            // Ignore. This can happen if the network connection closes unexpectedly. There is no use in logging this,
+            // and we cannot tell the client about it either.
+        }
     }
 
     /**
@@ -394,9 +403,7 @@ public class JsonEngine {
     public void writeTo(Object value, Writer destination) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(destination, "destination");
-        @SuppressWarnings("rawtypes") JsonTypeAdapter adapter = registries.get(value.getClass());
-        //noinspection unchecked
-        gson.toJson(adapter.serialize(value, value.getClass()), destination);
+        gson.toJson(registries.serialize(value), destination);
     }
 
     /**
@@ -408,9 +415,7 @@ public class JsonEngine {
      */
     public JsonElement toJsonElement(Object value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
-        @SuppressWarnings("rawtypes") JsonTypeAdapter adapter = registries.get(value.getClass());
-        //noinspection unchecked
-        return adapter.serialize(value, value.getClass());
+        return registries.serialize(value);
     }
 
     // -----------------------------------------------------------------------
@@ -423,24 +428,6 @@ public class JsonEngine {
 
     private static Reader wrapSource(InputStream source) {
         return new InputStreamReader(source, StandardCharsets.UTF_8);
-    }
-
-    private static String stringDestination(Consumer<Writer> consumer) {
-        StringWriter writer = new StringWriter();
-        consumer.accept(writer);
-        return writer.toString();
-    }
-
-    private static void wrapDestination(OutputStream destination, Consumer<Writer> consumer) {
-        OutputStreamWriter writer = new OutputStreamWriter(destination, StandardCharsets.UTF_8);
-        consumer.accept(writer);
-        try {
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            // Ignore. This can happen if the network connection closes unexpectedly. There is no use in logging this,
-            // and we cannot tell the client about it either.
-        }
     }
 
 }
