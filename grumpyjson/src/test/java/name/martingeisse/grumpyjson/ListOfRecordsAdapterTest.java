@@ -36,7 +36,7 @@ public class ListOfRecordsAdapterTest {
     private final JsonTypeAdapter<List<Record>> listOfRecordsAdapter = registries.get(listOfRecordsTypeToken);
 
     @Test
-    public void testGenerationHappyCase() throws Exception {
+    public void testSerializationHappyCase() throws Exception {
 
         JsonObject object1 = new JsonObject();
         object1.addProperty("myInt", 12);

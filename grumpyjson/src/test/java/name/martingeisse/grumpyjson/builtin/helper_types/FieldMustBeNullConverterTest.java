@@ -36,7 +36,7 @@ public class FieldMustBeNullConverterTest {
 
     @Test
     public void testGenerationWithNull() {
-        assertFailsGenerationWithNpe(adapter, null, FieldMustBeNull.class);
+        assertFailsSerializationWithNpe(adapter, null, FieldMustBeNull.class);
     }
 
 }

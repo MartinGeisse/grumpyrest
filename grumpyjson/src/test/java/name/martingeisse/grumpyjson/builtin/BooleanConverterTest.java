@@ -17,13 +17,13 @@ public class BooleanConverterTest {
     private final BooleanConverter adapter = new BooleanConverter();
 
     @Test
-    public void testValidationHappyCase() throws Exception {
+    public void testDeserializationHappyCase() throws Exception {
         Assertions.assertEquals(true, adapter.deserialize(new JsonPrimitive(true), Boolean.TYPE));
         Assertions.assertEquals(false, adapter.deserialize(new JsonPrimitive(false), Boolean.TYPE));
     }
 
     @Test
-    public void testValidationWrongType() {
+    public void testDeserializationWrongType() {
         forNonPrimitive(json -> assertFailsDeserialization(adapter, json, Boolean.TYPE));
         forNull(json -> assertFailsDeserialization(adapter, json, Boolean.TYPE));
         forNumbers(json -> assertFailsDeserialization(adapter, json, Boolean.TYPE));
@@ -31,14 +31,14 @@ public class BooleanConverterTest {
     }
 
     @Test
-    public void testGenerationHappyCase() {
+    public void testSerializationHappyCase() {
         Assertions.assertEquals(new JsonPrimitive(true), adapter.serialize(true, Boolean.TYPE));
         Assertions.assertEquals(new JsonPrimitive(false), adapter.serialize(false, Boolean.TYPE));
     }
 
     @Test
-    public void testGenerationWithNull() {
-        assertFailsGenerationWithNpe(adapter, null, Boolean.TYPE);
+    public void testSerializationWithNull() {
+        assertFailsSerializationWithNpe(adapter, null, Boolean.TYPE);
     }
 
 }

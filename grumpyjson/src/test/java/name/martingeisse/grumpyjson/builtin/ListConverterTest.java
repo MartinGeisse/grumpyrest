@@ -26,7 +26,7 @@ public class ListConverterTest {
     private final ListConverter adapter = new ListConverter(registries);
 
     @Test
-    public void testValidationHappyCase() throws Exception {
+    public void testDeserializationHappyCase() throws Exception {
         assertEquals(List.of(12, 34), adapter.deserialize(buildIntArray(12, 34), INTEGER_LIST_TYPE));
         assertEquals(List.of("foo", "bar"), adapter.deserialize(buildStringArray("foo", "bar"), STRING_LIST_TYPE));
     }
@@ -59,7 +59,7 @@ public class ListConverterTest {
     }
 
     @Test
-    public void testValidationWrongType() {
+    public void testDeserializationWrongType() {
         forNull(json -> assertFailsDeserialization(adapter, json, INTEGER_LIST_TYPE));
         forBooleans(json -> assertFailsDeserialization(adapter, json, INTEGER_LIST_TYPE));
         forNumbers(json -> assertFailsDeserialization(adapter, json, INTEGER_LIST_TYPE));
@@ -68,12 +68,12 @@ public class ListConverterTest {
     }
 
     @Test
-    public void testValidationWrongElementType() {
+    public void testDeserializationWrongElementType() {
         assertFailsDeserialization(adapter, buildIntArray(12, 34), STRING_LIST_TYPE);
     }
 
     @Test
-    public void testGenerationHappyCase() {
+    public void testSerializationHappyCase() {
         assertEquals(buildIntArray(), adapter.serialize(List.of(), INTEGER_LIST_TYPE));
         assertEquals(buildIntArray(12, 34), adapter.serialize(List.of(12, 34), INTEGER_LIST_TYPE));
         assertEquals(buildIntArray(), adapter.serialize(List.of(), STRING_LIST_TYPE));
@@ -81,12 +81,12 @@ public class ListConverterTest {
     }
 
     @Test
-    public void testGenerationWithNull() {
-        assertFailsGenerationWithNpe(adapter, null, INTEGER_LIST_TYPE);
+    public void testSerializationWithNull() {
+        assertFailsSerializationWithNpe(adapter, null, INTEGER_LIST_TYPE);
     }
 
     @Test
-    public void testGenerationWithWrongType() {
+    public void testSerializationWithWrongType() {
         assertFailsSerialization(adapter, List.of(12, 34), STRING_LIST_TYPE);
         assertFailsSerialization(adapter, List.of("foo", "bar"), INTEGER_LIST_TYPE);
     }

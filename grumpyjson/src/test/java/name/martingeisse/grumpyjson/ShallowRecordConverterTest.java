@@ -34,7 +34,7 @@ public class ShallowRecordConverterTest {
     }
 
     @Test
-    public void testValidationWrongType() {
+    public void testDeserializationWrongType() {
         forNull(json -> assertFailsDeserialization(adapter, json, Record.class));
         forNumbers(json -> assertFailsDeserialization(adapter, json, Record.class));
         forBooleans(json -> assertFailsDeserialization(adapter, json, Record.class));
@@ -89,8 +89,8 @@ public class ShallowRecordConverterTest {
     }
 
     @Test
-    public void testGenerationWithNull() {
-        assertFailsGenerationWithNpe(adapter, null, String.class);
+    public void testSerializationWithNull() {
+        assertFailsSerializationWithNpe(adapter, null, String.class);
     }
 
 }

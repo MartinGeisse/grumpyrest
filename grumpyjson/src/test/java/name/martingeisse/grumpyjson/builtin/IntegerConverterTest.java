@@ -17,14 +17,14 @@ public class IntegerConverterTest {
     private final IntegerConverter adapter = new IntegerConverter();
 
     @Test
-    public void testValidationHappyCase() throws Exception {
+    public void testDeserializationHappyCase() throws Exception {
         Assertions.assertEquals(0, adapter.deserialize(new JsonPrimitive(0), Integer.TYPE));
         Assertions.assertEquals(123, adapter.deserialize(new JsonPrimitive(123), Integer.TYPE));
         Assertions.assertEquals(-123, adapter.deserialize(new JsonPrimitive(-123), Integer.TYPE));
     }
 
     @Test
-    public void testValidationWrongType() {
+    public void testDeserializationWrongType() {
         forNonPrimitive(json -> assertFailsDeserialization(adapter, json, Integer.TYPE));
         forNull(json -> assertFailsDeserialization(adapter, json, Integer.TYPE));
         forBooleans(json -> assertFailsDeserialization(adapter, json, Integer.TYPE));
@@ -32,28 +32,28 @@ public class IntegerConverterTest {
     }
 
     @Test
-    public void testValidationFloat() {
+    public void testDeserializationFloat() {
         assertFailsDeserialization(adapter, new JsonPrimitive(12.34), Integer.TYPE);
     }
 
     @Test
-    public void testValidationSmallLong() throws Exception {
+    public void testDeserializationSmallLong() throws Exception {
         Assertions.assertEquals(12, adapter.deserialize(new JsonPrimitive(12L), Integer.TYPE));
     }
 
     @Test
-    public void testValidationTooLarge() {
+    public void testDeserializationTooLarge() {
         assertFailsDeserialization(adapter, new JsonPrimitive(0x80000000L), Integer.TYPE);
     }
 
     @Test
-    public void testGenerationHappyCase() {
+    public void testSerializationHappyCase() {
         Assertions.assertEquals(new JsonPrimitive(123), adapter.serialize(123, Integer.TYPE));
     }
 
     @Test
-    public void testGenerationWithNull() {
-        assertFailsGenerationWithNpe(adapter, null, Integer.TYPE);
+    public void testSerializationWithNull() {
+        assertFailsSerializationWithNpe(adapter, null, Integer.TYPE);
     }
 
 }

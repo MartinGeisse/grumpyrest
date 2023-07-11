@@ -193,7 +193,7 @@ public class JsonTestUtil {
     }
 
     @CanIgnoreReturnValue
-    public static NullPointerException assertFailsGenerationWithNpe(JsonTypeAdapter<?> adapter, Object value, Type type) {
+    public static NullPointerException assertFailsSerializationWithNpe(JsonTypeAdapter<?> adapter, Object value, Type type) {
         //noinspection unchecked,rawtypes
         return Assertions.assertThrows(NullPointerException.class, () -> ((JsonTypeAdapter)adapter).serialize(value, type));
     }

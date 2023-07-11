@@ -71,7 +71,7 @@ public class NullableFieldConverterTest {
 
     @Test
     public void testGenerationWithNull() {
-        assertFailsGenerationWithNpe(adapter, null, NULLABLE_INTEGER_TYPE);
+        assertFailsSerializationWithNpe(adapter, null, NULLABLE_INTEGER_TYPE);
     }
 
     @Test
