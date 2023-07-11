@@ -14,9 +14,9 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 
 /**
- * A {@link JsonTypeAdapter} for {@link JsonElement}.
+ * A converter for {@link JsonElement}.
  * <p>
- * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
+ * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistries#clearTypeAdapters()}.
  */
 public final class JsonElementConverter implements JsonTypeAdapter<JsonElement> {

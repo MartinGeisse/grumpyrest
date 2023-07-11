@@ -16,12 +16,12 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 
 /**
- * A {@link JsonTypeAdapter} for type {@link String}.
+ * A converter for type {@link String}.
  * <p>
  * This maps to and from JSON strings. No other mapping exists; in particular, JSON numbers are not converted to
- * strings by this adapter.
+ * strings by this converter.
  * <p>
- * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
+ * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistries#clearTypeAdapters()}.
  */
 public class StringConverter implements JsonTypeAdapter<String> {

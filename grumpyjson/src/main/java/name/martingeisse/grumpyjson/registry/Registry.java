@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * </ul>
  * <p>
  * The method to determine the supported keys for a registrable is located in the registry, not in the registrable,
- * because in the case of JSON de/serializers, the two methods to get supported keys for the serialization and
+ * because in the case of JSON converters, the two methods to get supported keys for the serialization and
  * deserialization case would collide if they were both located in the registrable.
  *
  * @param <K> the key type

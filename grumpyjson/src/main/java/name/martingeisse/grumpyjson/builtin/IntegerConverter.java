@@ -16,11 +16,11 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 
 /**
- * A {@link JsonTypeAdapter} for the primitive type int and its boxed type, {@link Integer}.
+ * A converter for the primitive type int and its boxed type, {@link Integer}.
  * <p>
  * This maps to and from integral JSON numbers in the 32-bit signed integer range.
  * <p>
- * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
+ * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistries#clearTypeAdapters()}.
  */
 public class IntegerConverter implements JsonTypeAdapter<Integer> {

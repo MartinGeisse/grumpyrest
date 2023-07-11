@@ -17,9 +17,9 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 
 /**
- * The {@link JsonTypeAdapter} for {@link FieldMustBeNull}.
+ * The converter for {@link FieldMustBeNull}.
  * <p>
- * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
+ * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistries#clearTypeAdapters()}.
  */
 public class FieldMustBeNullConverter implements JsonTypeAdapter<FieldMustBeNull> {

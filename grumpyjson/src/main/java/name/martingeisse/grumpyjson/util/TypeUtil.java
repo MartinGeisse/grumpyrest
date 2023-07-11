@@ -20,12 +20,12 @@ public class TypeUtil {
     }
 
     /**
-     * A common thing to check in type adapters is whether a requested type is a parameterized type with a specific
+     * A common thing to check in deserializers is whether a requested type is a parameterized type with a specific
      * raw type and a specific number of type parameters, but without further restricting the type arguments used
      * for these parameters -- instead, obtaining the type arguments to do something with them. This method implements
      * this pattern.
      * <p>
-     * For example, the List&lt;...&gt; type adapter wants to know if the requested type is
+     * For example, the List&lt;...&gt; deserializer wants to know if the requested type is
      * List&lt;...&gt;, that is, is a parameterized type with the raw class List and exactly one type
      * argument. (Note that a helper method with a simplified return type exists for the special case of one type
      * argument). It would then call this method, and in return get the type arguments which contain the element type
@@ -63,7 +63,7 @@ public class TypeUtil {
 
     /**
      * Like isParameterizedType(), but will fail with a RuntimeException if the type is not as expected, indicating
-     * an internal bug in the type adapter.
+     * an internal bug in the deserializer.
      *
      * @param type                          the type to check
      * @param expectedRawClass              the expected raw class which the type must use
@@ -80,7 +80,7 @@ public class TypeUtil {
 
     /**
      * Like isSingleParameterizedType(), but will fail with a RuntimeException if the type is not as expected,
-     * indicating an internal bug in the type adapter.
+     * indicating an internal bug in the deserializer.
      *
      * @param type             the type to check
      * @param expectedRawClass the expected raw class which the type must use
