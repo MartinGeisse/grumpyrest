@@ -10,7 +10,9 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
+import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import org.junit.jupiter.api.Assertions;
 
 import java.lang.reflect.Type;
@@ -171,31 +173,25 @@ public class JsonTestUtil {
     // ----------------------------------------------------------------------------------------------------------------
 
     @CanIgnoreReturnValue
-    public static JsonDeserializationException assertFailsDeserialization(JsonTypeAdapter<?> adapter, JsonElement json, TypeToken<?> typeToken) {
-        return assertFailsDeserialization(adapter, json, typeToken.getType());
+    public static JsonDeserializationException assertFailsDeserialization(JsonDeserializer deserializer, JsonElement json, TypeToken<?> typeToken) {
+        return assertFailsDeserialization(deserializer, json, typeToken.getType());
     }
 
     @CanIgnoreReturnValue
-    public static JsonDeserializationException assertFailsDeserialization(JsonTypeAdapter<?> adapter, JsonElement json, Type type) {
-        //noinspection rawtypes
-        return Assertions.assertThrows(JsonDeserializationException.class, () -> ((JsonTypeAdapter)adapter).deserialize(json, type));
+    public static JsonDeserializationException assertFailsDeserialization(JsonDeserializer deserializer, JsonElement json, Type type) {
+        return Assertions.assertThrows(JsonDeserializationException.class, () -> deserializer.deserialize(json, type));
     }
 
     @CanIgnoreReturnValue
-    public static JsonSerializationException assertFailsSerialization(JsonTypeAdapter<?> adapter, Object value, TypeToken<?> typeToken) {
-        return assertFailsSerialization(adapter, value, typeToken.getType());
-    }
-
-    @CanIgnoreReturnValue
-    public static JsonSerializationException assertFailsSerialization(JsonTypeAdapter<?> adapter, Object value, Type type) {
+    public static JsonSerializationException assertFailsSerialization(JsonSerializer<?> serializer, Object value) {
         //noinspection unchecked,rawtypes
-        return Assertions.assertThrows(JsonSerializationException.class, () -> ((JsonTypeAdapter)adapter).serialize(value, type));
+        return Assertions.assertThrows(JsonSerializationException.class, () -> ((JsonSerializer)serializer).serialize(value));
     }
 
     @CanIgnoreReturnValue
-    public static NullPointerException assertFailsSerializationWithNpe(JsonTypeAdapter<?> adapter, Object value, Type type) {
+    public static NullPointerException assertFailsSerializationWithNpe(JsonSerializer<?> serializer, Object value) {
         //noinspection unchecked,rawtypes
-        return Assertions.assertThrows(NullPointerException.class, () -> ((JsonTypeAdapter)adapter).serialize(value, type));
+        return Assertions.assertThrows(NullPointerException.class, () -> ((JsonSerializer)serializer).serialize(value));
     }
 
     public static void assertFieldErrors(
@@ -232,10 +228,15 @@ public class JsonTestUtil {
     // other
     // ----------------------------------------------------------------------------------------------------------------
 
-    public static JsonRegistries createRegistry(JsonTypeAdapter<?>... adapters) {
-        JsonRegistries registries = new JsonRegistries();
-        for (JsonTypeAdapter<?> adapter : adapters) {
-            registries.register(adapter);
+    public static JsonRegistries createRegistries(Object... converters) {
+        JsonRegistries registries = JsonRegistries.createDefault();
+        for (Object converter : converters) {
+            if (converter instanceof JsonSerializer<?> serializer) {
+                registries.registerSerializer(serializer);
+            }
+            if (converter instanceof JsonDeserializer deserializer) {
+                registries.registerDeserializer(deserializer);
+            }
         }
         return registries;
     }
