@@ -7,13 +7,11 @@
 package name.martingeisse.grumpyjson.serialize;
 
 import name.martingeisse.grumpyjson.FieldErrorNode;
-import name.martingeisse.grumpyjson.JsonTypeAdapter;
-import name.martingeisse.grumpyjson.RecordConverter;
 import name.martingeisse.grumpyjson.builtin.ListConverter;
 import name.martingeisse.grumpyjson.builtin.helper_types.NullableFieldConverter;
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalFieldConverter;
+import name.martingeisse.grumpyjson.RecordConverter;
 
-import java.lang.reflect.Type;
 import java.util.Objects;
 
 /**
@@ -34,8 +32,8 @@ public class JsonSerializationException extends RuntimeException {
     private final FieldErrorNode fieldErrorNode;
 
     /**
-     * Creates an exception for a single error message without a field path. This constructor is typically used in
-     * {@link JsonTypeAdapter#serialize(Object, Type)} at the specific place where an inconsistent or non-JSON-able value
+     * Creates an exception for a single-field error message without a field path. This constructor is typically used
+     * in {@link JsonSerializer#serialize(Object)} at the specific place where an inconsistent or non-JSON-able value
      * was found.
      *
      * @see FieldErrorNode#create(String)

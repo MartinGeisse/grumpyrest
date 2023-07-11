@@ -8,11 +8,10 @@ package name.martingeisse.grumpyjson.deserialize;
 
 import com.google.gson.JsonElement;
 import name.martingeisse.grumpyjson.FieldErrorNode;
-import name.martingeisse.grumpyjson.JsonTypeAdapter;
-import name.martingeisse.grumpyjson.RecordConverter;
 import name.martingeisse.grumpyjson.builtin.ListConverter;
 import name.martingeisse.grumpyjson.builtin.helper_types.NullableFieldConverter;
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalFieldConverter;
+import name.martingeisse.grumpyjson.RecordConverter;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -29,7 +28,7 @@ public class JsonDeserializationException extends Exception {
 
     /**
      * Creates an exception for a single error message without a field path. This constructor is typically used in
-     * {@link JsonTypeAdapter#deserialize(JsonElement, Type)} for a JSON primitive, such as a parser for a custom date
+     * {@link JsonDeserializer#deserialize(JsonElement, Type)} for a JSON primitive, such as a parser for a custom date
      * format that has encountered a string which does not match the expected pattern.
      * 
      * @see FieldErrorNode#create(String) 
