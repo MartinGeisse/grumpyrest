@@ -37,9 +37,7 @@ public final class OptionalFieldParser implements FromStringParser {
     @Override
     public Object parseFromString(String s, Type type) throws FromStringParserException {
         Type innerType = ((ParameterizedType) type).getActualTypeArguments()[0];
-        FromStringParser innerParser = registry.get(innerType);
-        Object innerValue = innerParser.parseFromString(s, innerType);
-        return OptionalField.ofValue(innerValue);
+        return OptionalField.ofValue(registry.parseFromString(s, innerType));
     }
 
     @Override
