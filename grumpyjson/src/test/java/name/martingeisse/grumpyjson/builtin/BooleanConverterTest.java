@@ -14,31 +14,31 @@ import static name.martingeisse.grumpyjson.JsonTestUtil.*;
 
 public class BooleanConverterTest {
 
-    private final BooleanConverter adapter = new BooleanConverter();
+    private final BooleanConverter converter = new BooleanConverter();
 
     @Test
     public void testDeserializationHappyCase() throws Exception {
-        Assertions.assertEquals(true, adapter.deserialize(new JsonPrimitive(true), Boolean.TYPE));
-        Assertions.assertEquals(false, adapter.deserialize(new JsonPrimitive(false), Boolean.TYPE));
+        Assertions.assertEquals(true, converter.deserialize(new JsonPrimitive(true), Boolean.TYPE));
+        Assertions.assertEquals(false, converter.deserialize(new JsonPrimitive(false), Boolean.TYPE));
     }
 
     @Test
     public void testDeserializationWrongType() {
-        forNonPrimitive(json -> assertFailsDeserialization(adapter, json, Boolean.TYPE));
-        forNull(json -> assertFailsDeserialization(adapter, json, Boolean.TYPE));
-        forNumbers(json -> assertFailsDeserialization(adapter, json, Boolean.TYPE));
-        forStrings(json -> assertFailsDeserialization(adapter, json, Boolean.TYPE));
+        forNonPrimitive(json -> assertFailsDeserialization(converter, json, Boolean.TYPE));
+        forNull(json -> assertFailsDeserialization(converter, json, Boolean.TYPE));
+        forNumbers(json -> assertFailsDeserialization(converter, json, Boolean.TYPE));
+        forStrings(json -> assertFailsDeserialization(converter, json, Boolean.TYPE));
     }
 
     @Test
     public void testSerializationHappyCase() {
-        Assertions.assertEquals(new JsonPrimitive(true), adapter.serialize(true, Boolean.TYPE));
-        Assertions.assertEquals(new JsonPrimitive(false), adapter.serialize(false, Boolean.TYPE));
+        Assertions.assertEquals(new JsonPrimitive(true), converter.serialize(true, Boolean.TYPE));
+        Assertions.assertEquals(new JsonPrimitive(false), converter.serialize(false, Boolean.TYPE));
     }
 
     @Test
     public void testSerializationWithNull() {
-        assertFailsSerializationWithNpe(adapter, null, Boolean.TYPE);
+        assertFailsSerializationWithNpe(converter, null, Boolean.TYPE);
     }
 
 }

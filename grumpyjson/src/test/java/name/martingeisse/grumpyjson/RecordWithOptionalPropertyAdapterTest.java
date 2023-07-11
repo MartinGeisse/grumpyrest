@@ -24,7 +24,7 @@ public class RecordWithOptionalPropertyAdapterTest {
     {
         registries.register(new OptionalFieldConverter(registries));
     }
-    private final JsonTypeAdapter<Record> adapter = registries.get(Record.class);
+    private final JsonTypeAdapter<Record> converter = registries.get(Record.class);
 
 
     @Test
@@ -33,8 +33,8 @@ public class RecordWithOptionalPropertyAdapterTest {
 
         Record recordWithoutValue = new Record(OptionalField.ofNothing());
 
-        Assertions.assertEquals(recordWithoutValue, adapter.deserialize(jsonObjectWithoutValue, Record.class));
-        Assertions.assertEquals(jsonObjectWithoutValue, adapter.serialize(recordWithoutValue, Record.class));
+        Assertions.assertEquals(recordWithoutValue, converter.deserialize(jsonObjectWithoutValue, Record.class));
+        Assertions.assertEquals(jsonObjectWithoutValue, converter.serialize(recordWithoutValue, Record.class));
     }
 
     @Test
@@ -44,8 +44,8 @@ public class RecordWithOptionalPropertyAdapterTest {
 
         Record recordWithValue = new Record(OptionalField.ofValue(123));
 
-        Assertions.assertEquals(recordWithValue, adapter.deserialize(jsonObjectWithValue, Record.class));
-        Assertions.assertEquals(jsonObjectWithValue, adapter.serialize(recordWithValue, Record.class));
+        Assertions.assertEquals(recordWithValue, converter.deserialize(jsonObjectWithValue, Record.class));
+        Assertions.assertEquals(jsonObjectWithValue, converter.serialize(recordWithValue, Record.class));
     }
 
 }

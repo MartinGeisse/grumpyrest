@@ -14,30 +14,30 @@ import static name.martingeisse.grumpyjson.JsonTestUtil.*;
 
 public class StringConverterTest {
 
-    private final StringConverter adapter = new StringConverter();
+    private final StringConverter converter = new StringConverter();
 
     @Test
     public void testDeserializationHappyCase() throws Exception {
-        Assertions.assertEquals("", adapter.deserialize(new JsonPrimitive(""), String.class));
-        Assertions.assertEquals("abc", adapter.deserialize(new JsonPrimitive("abc"), String.class));
+        Assertions.assertEquals("", converter.deserialize(new JsonPrimitive(""), String.class));
+        Assertions.assertEquals("abc", converter.deserialize(new JsonPrimitive("abc"), String.class));
     }
 
     @Test
     public void testDeserializationWrongType() {
-        forNonPrimitive(json -> assertFailsDeserialization(adapter, json, String.class));
-        forNull(json -> assertFailsDeserialization(adapter, json, String.class));
-        forBooleans(json -> assertFailsDeserialization(adapter, json, String.class));
-        forNumbers(json -> assertFailsDeserialization(adapter, json, String.class));
+        forNonPrimitive(json -> assertFailsDeserialization(converter, json, String.class));
+        forNull(json -> assertFailsDeserialization(converter, json, String.class));
+        forBooleans(json -> assertFailsDeserialization(converter, json, String.class));
+        forNumbers(json -> assertFailsDeserialization(converter, json, String.class));
     }
 
     @Test
     public void testSerializationHappyCase() {
-        Assertions.assertEquals(new JsonPrimitive("foo"), adapter.serialize("foo", String.class));
+        Assertions.assertEquals(new JsonPrimitive("foo"), converter.serialize("foo", String.class));
     }
 
     @Test
     public void testSerializationWithNull() {
-        assertFailsSerializationWithNpe(adapter, null, String.class);
+        assertFailsSerializationWithNpe(converter, null, String.class);
     }
 
 }

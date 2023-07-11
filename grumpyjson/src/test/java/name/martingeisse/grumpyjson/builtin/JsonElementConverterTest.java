@@ -15,14 +15,14 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 public class JsonElementConverterTest {
 
-    private final JsonElementConverter adapter = new JsonElementConverter();
+    private final JsonElementConverter converter = new JsonElementConverter();
 
     private void check(JsonElement element) {
-        assertEquals(element, adapter.deserialize(element, JsonElement.class));
+        assertEquals(element, converter.deserialize(element, JsonElement.class));
     }
 
     private void checkNotSame(JsonElement element) {
-        assertNotSame(element, adapter.deserialize(element, JsonElement.class));
+        assertNotSame(element, converter.deserialize(element, JsonElement.class));
     }
 
     @Test
