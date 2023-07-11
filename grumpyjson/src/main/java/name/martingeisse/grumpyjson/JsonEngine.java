@@ -15,8 +15,10 @@ import name.martingeisse.grumpyjson.builtin.helper_types.NullableFieldConverter;
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalFieldConverter;
 import name.martingeisse.grumpyjson.builtin.helper_types.TypeWrapperConverter;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializerRegistry;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
+import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import name.martingeisse.grumpyjson.serialize.JsonSerializerRegistry;
 
 import java.io.*;
@@ -30,26 +32,28 @@ import java.util.regex.Pattern;
 /**
  * This class is the main entry point into the JSON conversion system.
  * <p>
- * This class should be used in two phases, configuration phase and runtime phase. Simply put, first call configuration
- * methods only, then call runtime methods only. The behavior of this class is undefined if a configuration method
- * gets called after a runtime method has been called (and this may be prevented in the future). The reason for this
- * is that some supporting data gets generated lazily at runtime, and will be out-of-date (but not detected as
- * out-of-date) if the configuration gets changed afterwards.
+ * This class should be used in two phases, configuration phase and runtime phase. The transition between the two
+ * phases is called sealing the engine. Simply put, first call configuration methods only, then seal the engine, then
+ * call runtime methods only. The behavior of this class is undefined if this sequence is not adhered to, and this
+ * class is expected to throw an exception in such a case.
  * <p>
- * A new instance of this class has stanndard type adapters registered for convenience. More type adapters can be
- * added using {@link #registerDualConverter(JsonTypeAdapter)}. If the standard type adapters are not desired, you can call
- * {@link #getRegistries()} and then {@link JsonRegistries#clear()} to remove all currently registered type
- * adapters.
+ * A new instance of this class has standard converters for convenience. More converters can be
+ * added using {@link #registerDualConverter(name.martingeisse.grumpyjson.serialize.JsonSerializer)},
+ * {@link #registerSerializer(name.martingeisse.grumpyjson.serialize.JsonSerializer)} and
+ * {@link #registerDeserializer(name.martingeisse.grumpyjson.deserialize.JsonDeserializer)}. If the standard
+ * converters are not desired, you can call {@link #getSerializerRegistry()} and {@link #getDeserializerRegistry()}
+ * and then .clear() to remove all currently registered converters.
  */
 public class JsonEngine {
 
     private final Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-    private final JsonRegistries registries = new JsonRegistries();
+    private final JsonRegistries registries;
 
     /**
-     * Creates a new JSON engine with standard type adapters registered.
+     * Creates a new JSON engine with standard converters registered.
      */
     public JsonEngine() {
+        registries = JsonRegistries.createDefault();
 
         // Java types
         registerDualConverter(new BooleanConverter());
@@ -69,6 +73,24 @@ public class JsonEngine {
     }
 
     /**
+     * Registers the specified serializer.
+     *
+     * @param serializer the serializer to register
+     */
+    public void registerSerializer(name.martingeisse.grumpyjson.serialize.JsonSerializer<?> serializer) {
+        registries.registerSerializer(serializer);
+    }
+
+    /**
+     * Registers the specified deserializer.
+     *
+     * @param deserializer the deserializer to register
+     */
+    public void registerDeserializer(name.martingeisse.grumpyjson.deserialize.JsonDeserializer deserializer) {
+        registries.registerDeserializer(deserializer);
+    }
+
+    /**
      * Registers the specified dual converter.
      *
      * @param converter the dual converter to register
@@ -82,7 +104,7 @@ public class JsonEngine {
      *
      * @return the registries
      */
-    public JsonRegistries getRegistries() {
+    public final JsonRegistries getRegistries() {
         return registries;
     }
 
