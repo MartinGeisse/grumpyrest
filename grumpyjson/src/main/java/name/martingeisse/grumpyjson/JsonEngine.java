@@ -15,7 +15,9 @@ import name.martingeisse.grumpyjson.builtin.helper_types.NullableFieldConverter;
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalFieldConverter;
 import name.martingeisse.grumpyjson.builtin.helper_types.TypeWrapperConverter;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializerRegistry;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
+import name.martingeisse.grumpyjson.serialize.JsonSerializerRegistry;
 
 import java.io.*;
 import java.lang.reflect.Type;
