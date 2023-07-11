@@ -41,9 +41,9 @@ public class JsonDeserializationException extends Exception {
     }
 
     /**
-     * Creates an exception for a single-field error caused by an internal exception from the type adapter. Application
+     * Creates an exception for a single-field error caused by an internal exception from the deserializer. Application
      * code will rarely use this constructor directly because it can just throw the internal exception and have the
-     * framework wrap it. It is only needed when implementing type adapters for custom structured types or custom
+     * framework wrap it. It is only needed when implementing deserializers for custom structured types or custom
      * wrapper types, to implement the catch-and-wrap there.
      * <p>
      * For examples on how this method is useful, see {@link NullableFieldConverter} and {@link OptionalFieldConverter}.
@@ -58,7 +58,7 @@ public class JsonDeserializationException extends Exception {
 
     /**
      * Creates an exception for a {@link FieldErrorNode} that wraps one or more actual errors. Application code will
-     * usually not call this method directly. It is only needed when implementing type adapters for custom structured
+     * usually not call this method directly. It is only needed when implementing deserializers for custom structured
      * types, to re-throw after the individual field errors have been combined and field paths applied.
      * <p>
      * For an example on how this method is useful, see {@link RecordConverter} and {@link ListConverter}.
@@ -66,7 +66,7 @@ public class JsonDeserializationException extends Exception {
      * @param fieldErrorNode the node that contains one or more actual errors
      */
     public JsonDeserializationException(FieldErrorNode fieldErrorNode) {
-        super("exception during JSON validation");
+        super("exception during JSON deserialization");
         this.fieldErrorNode = Objects.requireNonNull(fieldErrorNode, "fieldErrorNode");
     }
 

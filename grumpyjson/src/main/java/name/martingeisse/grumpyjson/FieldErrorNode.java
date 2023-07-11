@@ -17,7 +17,7 @@ import java.util.List;
  * This class typically gets constructed by grumpyjson and consumed by grumpyrest, without any need for the application
  * code to deal with it. Application code can, however, <ul>
  *     <li>get instances after an error has occurred, to access the field path and message programmatically</li>
- *     <li>create instances inside custom type adapters to expose the field path for nestable custom types</li>
+ *     <li>create instances inside custom converters to expose the field path for nestable custom types</li>
  * </ul>
  * <p>
  * This class and its subclasses allow to quickly construct error information, then propagate it upwards while

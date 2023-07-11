@@ -23,7 +23,7 @@ import java.util.Objects;
  * <p>
  * This exception therefore always indicates a bug. If the object's class allows its state to become inconsistent,
  * then this should be prevented. On the other hand, if the object's state has no equivalent JSON representation,
- * then the cause that wants to turn it into JSON anyway is faulty. Because it is a bug, and is therefore unexpected,
+ * then the code that wants to turn it into JSON anyway is faulty. Because it is a bug, and is therefore unexpected,
  * this class extends {@link RuntimeException}, not {@link Exception}.
  */
 public class JsonSerializationException extends RuntimeException {
@@ -47,9 +47,9 @@ public class JsonSerializationException extends RuntimeException {
     }
 
     /**
-     * Creates an exception for a single-field error caused by an internal exception from the type adapter. Application
+     * Creates an exception for a single-field error caused by an internal exception from the serializer. Application
      * code will rarely use this constructor directly because it can just throw the internal exception and have the
-     * framework wrap it. It is only needed when implementing type adapters for custom structured types or custom
+     * framework wrap it. It is only needed when implementing serializers for custom structured types or custom
      * wrapper types, to implement the catch-and-wrap there.
      * <p>
      * For examples on how this method is useful, see {@link NullableFieldConverter} and {@link OptionalFieldConverter}.
@@ -64,7 +64,7 @@ public class JsonSerializationException extends RuntimeException {
 
     /**
      * Creates an exception for a {@link FieldErrorNode} that wraps one or more actual errors. Application code will
-     * usually not call this method directly. It is only needed when implementing type adapters for custom structured
+     * usually not call this method directly. It is only needed when implementing serializers for custom structured
      * types, to re-throw after the individual field errors have been combined and field paths applied.
      * <p>
      * For an example on how this method is useful, see {@link RecordConverter} and {@link ListConverter}.
@@ -72,7 +72,7 @@ public class JsonSerializationException extends RuntimeException {
      * @param fieldErrorNode the node that contains one or more actual errors
      */
     public JsonSerializationException(FieldErrorNode fieldErrorNode) {
-        super("exception during JSON generation");
+        super("exception during JSON serialization");
         this.fieldErrorNode = Objects.requireNonNull(fieldErrorNode, "fieldErrorNode");
     }
 
