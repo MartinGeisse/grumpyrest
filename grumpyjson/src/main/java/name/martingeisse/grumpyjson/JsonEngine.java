@@ -86,6 +86,12 @@ public class JsonEngine {
     }
 
     /**
+     * Seals this JSON engine, moving from the configuration phase to the run-time phase.
+     */
+    public final void seal() {
+    }
+
+    /**
      * Checks whether the specified type is supported by this engine
      *
      * @param type the type to check

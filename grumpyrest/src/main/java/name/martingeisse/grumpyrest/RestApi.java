@@ -245,6 +245,9 @@ public final class RestApi {
      * Seals this API, also sealing all registries used in it.
      */
     public void seal() {
+        jsonEngine.seal();
+        fromStringParserRegistry.seal();
+        querystringParserRegistry.seal();
     }
 
     // endregion
