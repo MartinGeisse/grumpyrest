@@ -39,7 +39,7 @@ public class ResponseFactoryRegistry {
      *
      * @param factory the response factory to add
      */
-    public void add(ResponseFactory factory) {
+    public void register(ResponseFactory factory) {
         factories.add(factory);
     }
 

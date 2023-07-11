@@ -162,7 +162,7 @@ public final class RestApi {
      * @param responseFactory the response factory to register
      */
     public void registerResponseFactory(ResponseFactory responseFactory) {
-        responseFactoryRegistry.add(responseFactory);
+        responseFactoryRegistry.register(responseFactory);
     }
 
     /**
