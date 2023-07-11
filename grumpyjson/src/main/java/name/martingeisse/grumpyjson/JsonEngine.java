@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
  * <p>
  * A new instance of this class has stanndard type adapters registered for convenience. More type adapters can be
  * added using {@link #registerDualConverter(JsonTypeAdapter)}. If the standard type adapters are not desired, you can call
- * {@link #getRegistry()} and then {@link JsonRegistries#clear()} to remove all currently registered type
+ * {@link #getRegistries()} and then {@link JsonRegistries#clear()} to remove all currently registered type
  * adapters.
  */
 public class JsonEngine {
@@ -67,21 +67,21 @@ public class JsonEngine {
     }
 
     /**
-     * Adds the specified type adapter.
+     * Registers the specified dual converter.
      *
-     * @param adapter the type adapter to add
+     * @param converter the dual converter to register
      */
-    public void registerDualConverter(JsonTypeAdapter<?> adapter) {
-        Objects.requireNonNull(adapter, "adapter");
-        registries.register(adapter);
+    public void registerDualConverter(JsonTypeAdapter<?> converter) {
+        Objects.requireNonNull(converter, "converter");
+        registries.register(converter);
     }
 
     /**
-     * Getter method for the registry for type adapters.
+     * Getter method for the registries for converters.
      *
-     * @return the registry
+     * @return the registries
      */
-    public JsonRegistries getRegistry() {
+    public JsonRegistries getRegistries() {
         return registries;
     }
 

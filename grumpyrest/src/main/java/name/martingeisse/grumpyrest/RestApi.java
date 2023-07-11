@@ -155,7 +155,7 @@ public final class RestApi {
      * <p>
      * Note that support for new JSON-able types should not be implemented as a response factory, but by
      * registering a {@link JsonTypeAdapter} with the {@link JsonRegistries} returned by {@link #getJsonEngine()} /
-     * {@link JsonEngine#getRegistry()}. A custom response factory, OTOH, would be appropriate to send a JSON response
+     * {@link JsonEngine#getRegistries()}. A custom response factory, OTOH, would be appropriate to send a JSON response
      * (using the {@link JsonEngine} implicitly by calling one of the {@link ResponseTransmitter#writeJson} methods)
      * together with a custom HTTP status code or custom HTTP headers.
      *
