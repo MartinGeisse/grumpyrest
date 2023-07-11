@@ -19,18 +19,18 @@ import java.util.Optional;
  * The {@link JsonTypeAdapter} for {@link OptionalField}.
  * <p>
  * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
- * calling {@link JsonRegistry#clearTypeAdapters()}.
+ * calling {@link JsonRegistries#clearTypeAdapters()}.
  */
 public class OptionalFieldConverter implements JsonTypeAdapter<OptionalField<?>> {
 
-    private final JsonRegistry registry;
+    private final JsonRegistries registry;
 
     /**
      * Constructor.
      *
      * @param registry the JSON registry -- needed to fetch the adapter for the contained type at run-time
      */
-    public OptionalFieldConverter(JsonRegistry registry) {
+    public OptionalFieldConverter(JsonRegistries registry) {
         this.registry = registry;
     }
 

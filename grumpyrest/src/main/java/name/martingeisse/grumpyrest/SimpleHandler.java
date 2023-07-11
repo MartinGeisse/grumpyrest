@@ -6,7 +6,7 @@
  */
 package name.martingeisse.grumpyrest;
 
-import name.martingeisse.grumpyjson.JsonRegistry;
+import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyrest.request.Request;
 import name.martingeisse.grumpyrest.response.FinishRequestException;
 import name.martingeisse.grumpyrest.response.Response;
@@ -30,7 +30,7 @@ public interface SimpleHandler {
      * <p>
      * The handler returns a response value. This can be any value for which a {@link ResponseFactory} has been
      * registered in the {@link ResponseFactoryRegistry} that turns the value into a {@link Response}. By default, this
-     * includes any JSON-compatible values (see {@link JsonRegistry}) as well as pre-built {@link Response} instances.
+     * includes any JSON-compatible values (see {@link JsonRegistries}) as well as pre-built {@link Response} instances.
      * <p>
      * A handler is expected to throw exceptions for invalid requests as well as internal errors. Thrown exceptions
      * will be formally treated like returned exceptions, which in turn are treated like other returned values, but

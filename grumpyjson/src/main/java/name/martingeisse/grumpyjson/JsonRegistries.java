@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * This registry keeps the {@link JsonTypeAdapter}s used by a {@link JsonEngine}.
  */
-public final class JsonRegistry {
+public final class JsonRegistries {
 
     // This list is not thread-safe, but adding type adapters after starting to serve requests would mess up
     // things anyway.
@@ -29,7 +29,7 @@ public final class JsonRegistry {
     /**
      * Constructor
      */
-    public JsonRegistry() {
+    public JsonRegistries() {
         // needed to silence Javadoc error because the implicit constructor doesn't have a doc comment
     }
 

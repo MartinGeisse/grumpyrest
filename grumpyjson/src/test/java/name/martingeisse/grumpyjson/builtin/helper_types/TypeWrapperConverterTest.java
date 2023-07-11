@@ -8,7 +8,7 @@ package name.martingeisse.grumpyjson.builtin.helper_types;
 
 import com.google.gson.JsonPrimitive;
 import com.google.gson.reflect.TypeToken;
-import name.martingeisse.grumpyjson.JsonRegistry;
+import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.JsonTestUtil;
 import name.martingeisse.grumpyjson.builtin.IntegerConverter;
 import name.martingeisse.grumpyjson.builtin.ListConverter;
@@ -24,7 +24,7 @@ public class TypeWrapperConverterTest {
 
     private static final Type INTEGER_TYPE_WRAPPER_TYPE = new TypeToken<TypeWrapper<Integer>>() {}.getType();
 
-    private final JsonRegistry registry = createRegistry(new IntegerConverter());
+    private final JsonRegistries registry = createRegistry(new IntegerConverter());
     {
         registry.addTypeAdapter(new ListConverter(registry));
     }

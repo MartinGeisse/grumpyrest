@@ -32,7 +32,7 @@ public class TypePassingRecordConverterTest {
     private record Middle<T>(Inner<T> inner) {}
     private record Outer(Middle<String> middle) {}
 
-    private final JsonRegistry registry = createRegistry(new StringConverter());
+    private final JsonRegistries registry = createRegistry(new StringConverter());
     {
         registry.addTypeAdapter(new ListConverter(registry));
     }

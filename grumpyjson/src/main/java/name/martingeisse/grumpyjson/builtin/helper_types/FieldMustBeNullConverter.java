@@ -9,7 +9,7 @@ package name.martingeisse.grumpyjson.builtin.helper_types;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
-import name.martingeisse.grumpyjson.JsonRegistry;
+import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.JsonTypeAdapter;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 
@@ -20,7 +20,7 @@ import java.util.Objects;
  * The {@link JsonTypeAdapter} for {@link FieldMustBeNull}.
  * <p>
  * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
- * calling {@link JsonRegistry#clearTypeAdapters()}.
+ * calling {@link JsonRegistries#clearTypeAdapters()}.
  */
 public class FieldMustBeNullConverter implements JsonTypeAdapter<FieldMustBeNull> {
 

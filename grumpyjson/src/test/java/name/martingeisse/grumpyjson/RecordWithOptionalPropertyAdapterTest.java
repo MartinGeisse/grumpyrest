@@ -20,7 +20,7 @@ public class RecordWithOptionalPropertyAdapterTest {
 
     private record Record(OptionalField<Integer> myInt) {}
 
-    private final JsonRegistry registry = createRegistry(new IntegerConverter(), new StringConverter());
+    private final JsonRegistries registry = createRegistry(new IntegerConverter(), new StringConverter());
     {
         registry.addTypeAdapter(new OptionalFieldConverter(registry));
     }

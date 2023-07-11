@@ -9,7 +9,7 @@ package name.martingeisse.grumpyjson.builtin.helper_types;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
-import name.martingeisse.grumpyjson.JsonRegistry;
+import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.builtin.IntegerConverter;
 import name.martingeisse.grumpyjson.builtin.StringConverter;
@@ -27,7 +27,7 @@ public class NullableFieldConverterTest {
     private static final Type NULLABLE_INTEGER_TYPE = new TypeToken<NullableField<Integer>>() {}.getType();
     private static final Type NULLABLE_STRING_TYPE = new TypeToken<NullableField<String>>() {}.getType();
 
-    private final JsonRegistry registry = createRegistry(new IntegerConverter(), new StringConverter());
+    private final JsonRegistries registry = createRegistry(new IntegerConverter(), new StringConverter());
     private final NullableFieldConverter adapter = new NullableFieldConverter(registry);
 
     @Test

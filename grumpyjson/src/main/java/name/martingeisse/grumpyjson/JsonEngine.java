@@ -36,13 +36,13 @@ import java.util.regex.Pattern;
  * <p>
  * A new instance of this class has stanndard type adapters registered for convenience. More type adapters can be
  * added using {@link #addTypeAdapter(JsonTypeAdapter)}. If the standard type adapters are not desired, you can call
- * {@link #getRegistry()} and then {@link JsonRegistry#clearTypeAdapters()} to remove all currently registered type
+ * {@link #getRegistry()} and then {@link JsonRegistries#clearTypeAdapters()} to remove all currently registered type
  * adapters.
  */
 public class JsonEngine {
 
     private final Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-    private final JsonRegistry registry = new JsonRegistry();
+    private final JsonRegistries registry = new JsonRegistries();
 
     /**
      * Creates a new JSON engine with standard type adapters registered.
@@ -81,7 +81,7 @@ public class JsonEngine {
      *
      * @return the registry
      */
-    public JsonRegistry getRegistry() {
+    public JsonRegistries getRegistry() {
         return registry;
     }
 

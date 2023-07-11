@@ -8,7 +8,7 @@ package name.martingeisse.grumpyjson.builtin;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import name.martingeisse.grumpyjson.JsonRegistry;
+import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.JsonTypeAdapter;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 
@@ -21,7 +21,7 @@ import java.util.Objects;
  * This maps to and from JSON boolean values.
  * <p>
  * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
- * calling {@link JsonRegistry#clearTypeAdapters()}.
+ * calling {@link JsonRegistries#clearTypeAdapters()}.
  */
 public class BooleanConverter implements JsonTypeAdapter<Boolean> {
 

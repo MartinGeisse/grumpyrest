@@ -19,7 +19,7 @@ public class DeepRecordConverterTest {
     private record Inner(int myInt, String myString) {}
     private record Outer(Inner inner, int anotherInt) {}
 
-    private final JsonRegistry registry = createRegistry(new IntegerConverter(), new StringConverter());
+    private final JsonRegistries registry = createRegistry(new IntegerConverter(), new StringConverter());
     private final JsonTypeAdapter<Outer> outerAdapter = registry.getTypeAdapter(Outer.class);
 
     @Test

@@ -7,7 +7,7 @@
 package name.martingeisse.grumpyrest;
 
 import name.martingeisse.grumpyjson.JsonEngine;
-import name.martingeisse.grumpyjson.JsonRegistry;
+import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.JsonTypeAdapter;
 import name.martingeisse.grumpyrest.request.HttpMethod;
 import name.martingeisse.grumpyrest.request.path.Path;
@@ -59,7 +59,7 @@ public final class RestApi {
      * <p>
      * From-string parsers, JSON Type adapters and response factories: After construction, this API object will have
      * default from-string parsers (for path / querystring parameters) and default response factories registered. It
-     * will also use a newly created {@link JsonRegistry} which has default type adapters registered. All of these
+     * will also use a newly created {@link JsonRegistries} which has default type adapters registered. All of these
      * defaults can be removed to support special cases that, for example, use different rules / formats or require a
      * more lenient parser. In normal cases, the defaults support standard types out of the box and support for
      * application types can be added without removing any of the standard implementations.
@@ -154,7 +154,7 @@ public final class RestApi {
      * which a specific response shall be generated (by default, exceptions just cause a standard 500 response).
      * <p>
      * Note that support for new JSON-able types should not be implemented as a response factory, but by
-     * registering a {@link JsonTypeAdapter} with the {@link JsonRegistry} returned by {@link #getJsonEngine()} /
+     * registering a {@link JsonTypeAdapter} with the {@link JsonRegistries} returned by {@link #getJsonEngine()} /
      * {@link JsonEngine#getRegistry()}. A custom response factory, OTOH, would be appropriate to send a JSON response
      * (using the {@link JsonEngine} implicitly by calling one of the {@link ResponseTransmitter#writeJson} methods)
      * together with a custom HTTP status code or custom HTTP headers.

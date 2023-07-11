@@ -6,7 +6,7 @@
  */
 package name.martingeisse.grumpyrest.request.stringparser;
 
-import name.martingeisse.grumpyjson.JsonRegistry;
+import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyrest.RestApi;
 
 import java.lang.reflect.Type;
@@ -61,7 +61,7 @@ public class FromStringParserRegistry implements ParseFromStringService {
     /**
      * Checks whether the specified type is supported by any parser in this registry.
      * <p>
-     * Unlike other registries such as the {@link JsonRegistry}, no auto-generation is supported for from-string
+     * Unlike other registries such as the {@link JsonRegistries}, no auto-generation is supported for from-string
      * parsers (there is no default format they could use), so this will simply check if any of the manually added
      * parsers supports the specified type.
      *

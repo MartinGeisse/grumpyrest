@@ -25,14 +25,14 @@ import java.util.Objects;
  */
 public class ListConverter implements JsonTypeAdapter<List<?>> {
 
-    private final JsonRegistry registry;
+    private final JsonRegistries registry;
 
     /**
      * Constructor.
      *
      * @param registry the JSON registry -- needed to fetch the adapter for the element type at run-time
      */
-    public ListConverter(JsonRegistry registry) {
+    public ListConverter(JsonRegistries registry) {
         this.registry = registry;
     }
 

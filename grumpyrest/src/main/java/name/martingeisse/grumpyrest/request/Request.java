@@ -2,7 +2,7 @@ package name.martingeisse.grumpyrest.request;
 
 import com.google.gson.reflect.TypeToken;
 import name.martingeisse.grumpyjson.JsonEngine;
-import name.martingeisse.grumpyjson.JsonRegistry;
+import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyrest.RequestCycle;
 import name.martingeisse.grumpyrest.SimpleHandler;
 import name.martingeisse.grumpyrest.request.querystring.QuerystringParserRegistry;
@@ -98,7 +98,7 @@ public interface Request {
 
     /**
      * Parses the request body using the JSON parsing mechanism defined by {@link JsonEngine} and the JSON-able types
-     * defined in the engine's {@link JsonRegistry}. Refer to these classes for details.
+     * defined in the engine's {@link JsonRegistries}. Refer to these classes for details.
      *
      * @param clazz the class to parse as
      * @return the parsed object
@@ -108,7 +108,7 @@ public interface Request {
 
     /**
      * Parses the request body using the JSON parsing mechanism defined by {@link JsonEngine} and the JSON-able types
-     * defined in the engine's {@link JsonRegistry}. Refer to these classes for details.
+     * defined in the engine's {@link JsonRegistries}. Refer to these classes for details.
      *
      * @param typeToken a type token for the type to parse as
      * @return the parsed object
@@ -118,7 +118,7 @@ public interface Request {
 
     /**
      * Parses the request body using the JSON parsing mechanism defined by {@link JsonEngine} and the JSON-able types
-     * defined in the engine's {@link JsonRegistry}. Refer to these classes for details.
+     * defined in the engine's {@link JsonRegistries}. Refer to these classes for details.
      *
      * @param type the type to parse as
      * @return the parsed object

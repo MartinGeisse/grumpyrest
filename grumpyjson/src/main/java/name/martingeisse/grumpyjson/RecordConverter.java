@@ -41,9 +41,9 @@ import java.util.*;
 public final class RecordConverter<T> implements JsonTypeAdapter<T> {
 
     private final RecordInfo recordInfo;
-    private final JsonRegistry registry;
+    private final JsonRegistries registry;
 
-    RecordConverter(Class<T> clazz, JsonRegistry registry) {
+    RecordConverter(Class<T> clazz, JsonRegistries registry) {
         Objects.requireNonNull(clazz, "clazz");
         Objects.requireNonNull(registry, "registry");
         this.recordInfo = new RecordInfo(clazz);

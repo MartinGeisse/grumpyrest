@@ -25,7 +25,7 @@ public class MultipleTypeParameterRecordConverterTest {
     private record Middle<P, Q>(Inner<Q, P> inner) {}
     private record Outer(Middle<Integer, String> middle) {}
 
-    private final JsonRegistry registry = createRegistry(new IntegerConverter(), new StringConverter());
+    private final JsonRegistries registry = createRegistry(new IntegerConverter(), new StringConverter());
     private final JsonTypeAdapter<Outer> outerAdapter = registry.getTypeAdapter(Outer.class);
 
     @Test

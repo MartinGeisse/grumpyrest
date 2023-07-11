@@ -7,7 +7,7 @@
 package name.martingeisse.grumpyjson.builtin;
 
 import com.google.gson.reflect.TypeToken;
-import name.martingeisse.grumpyjson.JsonRegistry;
+import name.martingeisse.grumpyjson.JsonRegistries;
 import org.junit.jupiter.api.Test;
 
 import java.io.OutputStream;
@@ -22,7 +22,7 @@ public class ListConverterTest {
     private static final Type INTEGER_LIST_TYPE = new TypeToken<List<Integer>>() {}.getType();
     private static final Type STRING_LIST_TYPE = new TypeToken<List<String>>() {}.getType();
 
-    private final JsonRegistry registry = createRegistry(new IntegerConverter(), new StringConverter());
+    private final JsonRegistries registry = createRegistry(new IntegerConverter(), new StringConverter());
     private final ListConverter adapter = new ListConverter(registry);
 
     @Test

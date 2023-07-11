@@ -8,7 +8,7 @@ package name.martingeisse.grumpyjson.builtin.helper_types;
 
 import com.google.gson.JsonElement;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
-import name.martingeisse.grumpyjson.JsonRegistry;
+import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.JsonTypeAdapter;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 
@@ -22,13 +22,13 @@ import java.lang.reflect.Type;
  * do not provide any benefit when parsing JSON. You should only use type wrappers as the top-level value.
  * <p>
  * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
- * calling {@link JsonRegistry#clearTypeAdapters()}.
+ * calling {@link JsonRegistries#clearTypeAdapters()}.
  */
 public class TypeWrapperConverter implements JsonTypeAdapter<TypeWrapper<?>> {
 
-    private final JsonRegistry registry;
+    private final JsonRegistries registry;
 
-    public TypeWrapperConverter(JsonRegistry registry) {
+    public TypeWrapperConverter(JsonRegistries registry) {
         this.registry = registry;
     }
 

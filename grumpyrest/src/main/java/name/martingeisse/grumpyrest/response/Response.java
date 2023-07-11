@@ -7,7 +7,7 @@
 package name.martingeisse.grumpyrest.response;
 
 import jakarta.servlet.http.HttpServletResponse;
-import name.martingeisse.grumpyjson.JsonRegistry;
+import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.JsonTypeAdapter;
 import name.martingeisse.grumpyrest.RequestCycle;
 
@@ -19,7 +19,7 @@ import java.io.IOException;
  * <p>
  * Most application-level objects do not implement this interface because they are defined on a higher level than
  * HTTP. These objects do not even know how to express themselves as JSON, but they <i>do</i> have a
- * {@link JsonTypeAdapter} registered in the {@link JsonRegistry}, so at least that can be used to generate JSON.
+ * {@link JsonTypeAdapter} registered in the {@link JsonRegistries}, so at least that can be used to generate JSON.
  * However, this is not by itself sufficient to express via HTTP.
  * <p>
  * Instead, on a lower level, a {@link ResponseFactory} is selected that further converts the JSON to a

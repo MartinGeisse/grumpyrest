@@ -19,18 +19,18 @@ import java.lang.reflect.Type;
  * The {@link JsonTypeAdapter} for {@link NullableField}.
  * <p>
  * This adapter is registered by default, and only needs to be manually registered if it gets removed, such as by
- * calling {@link JsonRegistry#clearTypeAdapters()}.
+ * calling {@link JsonRegistries#clearTypeAdapters()}.
  */
 public class NullableFieldConverter implements JsonTypeAdapter<NullableField<?>> {
 
-    private final JsonRegistry registry;
+    private final JsonRegistries registry;
 
     /**
      * Constructor.
      *
      * @param registry the JSON registry -- needed to fetch the adapter for the contained type at run-time
      */
-    public NullableFieldConverter(JsonRegistry registry) {
+    public NullableFieldConverter(JsonRegistries registry) {
         this.registry = registry;
     }
 

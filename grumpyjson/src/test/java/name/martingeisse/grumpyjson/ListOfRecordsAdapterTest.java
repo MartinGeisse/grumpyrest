@@ -27,7 +27,7 @@ public class ListOfRecordsAdapterTest {
     private final TypeToken<List<Record>> listOfRecordsTypeToken = new TypeToken<>() {};
     private final Type listOfRecordsType = listOfRecordsTypeToken.getType();
 
-    private final JsonRegistry registry = createRegistry(new IntegerConverter(), new StringConverter());
+    private final JsonRegistries registry = createRegistry(new IntegerConverter(), new StringConverter());
 
     {
         registry.addTypeAdapter(new ListConverter(registry));
