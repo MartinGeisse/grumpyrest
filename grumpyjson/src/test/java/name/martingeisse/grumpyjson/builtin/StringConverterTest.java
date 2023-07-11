@@ -32,12 +32,12 @@ public class StringConverterTest {
 
     @Test
     public void testSerializationHappyCase() {
-        Assertions.assertEquals(new JsonPrimitive("foo"), converter.serialize("foo", String.class));
+        Assertions.assertEquals(new JsonPrimitive("foo"), converter.serialize("foo"));
     }
 
     @Test
     public void testSerializationWithNull() {
-        assertFailsSerializationWithNpe(converter, null, String.class);
+        assertFailsSerializationWithNpe(converter, null);
     }
 
 }

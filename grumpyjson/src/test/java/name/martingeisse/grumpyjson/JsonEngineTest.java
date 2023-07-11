@@ -17,4 +17,5 @@ public class JsonEngineTest {
     public void testNullToJson() {
         Assertions.assertThrows(NullPointerException.class, () -> engine.serializeToString(null));
     }
+
 }
