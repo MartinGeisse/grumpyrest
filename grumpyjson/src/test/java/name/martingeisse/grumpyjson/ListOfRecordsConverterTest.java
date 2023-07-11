@@ -20,7 +20,7 @@ import static name.martingeisse.grumpyjson.JsonTestUtil.buildArray;
 import static name.martingeisse.grumpyjson.JsonTestUtil.createRegistry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ListOfRecordsAdapterTest {
+public class ListOfRecordsConverterTest {
 
     private record Record(int myInt, String myString) {}
 
