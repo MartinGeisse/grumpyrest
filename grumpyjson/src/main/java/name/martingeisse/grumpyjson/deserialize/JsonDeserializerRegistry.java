@@ -46,7 +46,7 @@ public final class JsonDeserializerRegistry extends Registry<Type, JsonDeseriali
         if (!rawClass.isRecord()) {
             return null;
         }
-        return recordConverterFactory.getDeserializer(type); // TODO why not rawClass?
+        return recordConverterFactory.getDeserializer(rawClass);
     }
 
     @Override

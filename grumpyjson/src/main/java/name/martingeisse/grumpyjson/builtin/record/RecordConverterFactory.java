@@ -10,8 +10,6 @@ import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -40,27 +38,20 @@ public final class RecordConverterFactory {
      */
     public <T> JsonSerializer<T> getSerializer(Class<T> clazz) {
         //noinspection unchecked
-        return (JsonSerializer<T>)getSerializerAndDeserializer(clazz);
+        return (JsonSerializer<T>) getConverter(clazz);
     }
 
     /**
      * NOT PUBLIC API
      */
-    public JsonDeserializer getDeserializer(Type type) {
-        if (type instanceof Class<?> c) {
-            return getSerializerAndDeserializer(c);
-        } else if (type instanceof ParameterizedType p) {
-            return getSerializerAndDeserializer((Class<?>)p.getRawType());
-        } else {
-            throw new IllegalArgumentException("cannot obtain class from type " + type);
-        }
+    public JsonDeserializer getDeserializer(Class<?> rawClass) {
+        return getConverter(rawClass);
     }
 
     /**
      * NOT PUBLIC API
-     * TODO rename to getConverter
      */
-    public RecordConverter<?> getSerializerAndDeserializer(Class<?> clazz) {
+    public RecordConverter<?> getConverter(Class<?> clazz) {
         return map.computeIfAbsent(clazz, ignored -> new RecordConverter<>(clazz, registries));
     }
 
