@@ -23,8 +23,8 @@ public class OptionalFieldParserTest {
     public void test() throws Exception {
 
         FromStringParserRegistry registry = new FromStringParserRegistry();
-        registry.addParser(new StringFromStringParser());
-        registry.addParser(new IntegerFromStringParser());
+        registry.registerParser(new StringFromStringParser());
+        registry.registerParser(new IntegerFromStringParser());
         OptionalFieldParser parser = new OptionalFieldParser(registry);
 
         Type optionalIntegerType = new TypeToken<OptionalField<Integer>>() {}.getType();

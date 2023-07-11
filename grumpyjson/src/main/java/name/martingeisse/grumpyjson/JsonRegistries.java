@@ -51,7 +51,7 @@ public final class JsonRegistries {
      *
      * @param adapter the adapter to add
      */
-    public void addTypeAdapter(JsonTypeAdapter<?> adapter) {
+    public void registerTypeAdapter(JsonTypeAdapter<?> adapter) {
         adapterList.add(Objects.requireNonNull(adapter, "adapter"));
     }
 

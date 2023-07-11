@@ -67,13 +67,13 @@ public final class RestApi {
     public RestApi() {
 
         // HTTP response factories
-        addResponseFactory(new IdentityResponseFactory());
-        addResponseFactory(new JsonResponseFactory());
-        addResponseFactory(new NullResponseFactory());
+        registerResponseFactory(new IdentityResponseFactory());
+        registerResponseFactory(new JsonResponseFactory());
+        registerResponseFactory(new NullResponseFactory());
 
         // from-string parsers
-        addFromStringParser(new StringFromStringParser());
-        addFromStringParser(new IntegerFromStringParser());
+        registerFromStringParser(new StringFromStringParser());
+        registerFromStringParser(new IntegerFromStringParser());
 
     }
 
@@ -161,12 +161,12 @@ public final class RestApi {
      *
      * @param responseFactory the response factory to register
      */
-    public void addResponseFactory(ResponseFactory responseFactory) {
+    public void registerResponseFactory(ResponseFactory responseFactory) {
         responseFactoryRegistry.add(responseFactory);
     }
 
     /**
-     * Getter method for the registry for custom response factories. See {@link #addResponseFactory(ResponseFactory)}
+     * Getter method for the registry for custom response factories. See {@link #registerResponseFactory(ResponseFactory)}
      * for some information on when such a factory helps. Getting the registry itself is necessary when you want to
      * remove the default response factories present after construction.
      *
@@ -189,12 +189,12 @@ public final class RestApi {
      *
      * @param parser the parser to add
      */
-    public void addFromStringParser(FromStringParser parser) {
-        fromStringParserRegistry.addParser(parser);
+    public void registerFromStringParser(FromStringParser parser) {
+        fromStringParserRegistry.registerParser(parser);
     }
 
     /**
-     * Getter method for the registry for from-string parsers. See {@link #addFromStringParser(FromStringParser)} for
+     * Getter method for the registry for from-string parsers. See {@link #registerFromStringParser(FromStringParser)} for
      * some information on when such a parser helps. Getting the registry itself is necessary when you want to
      * remove the default parsers after construction.
      *
@@ -207,7 +207,7 @@ public final class RestApi {
     /**
      * Getter method for the registry for whole-querystring parsers. <b>Dealing with this registry is rarely needed
      * because it relates to how the whole querystring gets parsed, not how individual fields are parsed!</b> If you
-     * want to support custom types for querystring parameters, see {@link #addFromStringParser(FromStringParser)}
+     * want to support custom types for querystring parameters, see {@link #registerFromStringParser(FromStringParser)}
      * (and possibly {@link #getFromStringParserRegistry()}) instead.
      * <p>
      * The registry returned here is relevant for redefining how the whole querystring is interpreted as individual

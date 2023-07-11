@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  * out-of-date) if the configuration gets changed afterwards.
  * <p>
  * A new instance of this class has stanndard type adapters registered for convenience. More type adapters can be
- * added using {@link #addTypeAdapter(JsonTypeAdapter)}. If the standard type adapters are not desired, you can call
+ * added using {@link #registerTypeAdapter(JsonTypeAdapter)}. If the standard type adapters are not desired, you can call
  * {@link #getRegistry()} and then {@link JsonRegistries#clearTypeAdapters()} to remove all currently registered type
  * adapters.
  */
@@ -50,19 +50,19 @@ public class JsonEngine {
     public JsonEngine() {
 
         // Java types
-        addTypeAdapter(new BooleanConverter());
-        addTypeAdapter(new IntegerConverter());
-        addTypeAdapter(new StringConverter());
+        registerTypeAdapter(new BooleanConverter());
+        registerTypeAdapter(new IntegerConverter());
+        registerTypeAdapter(new StringConverter());
 
         // collection types
-        addTypeAdapter(new ListConverter(registry));
+        registerTypeAdapter(new ListConverter(registry));
 
         // helper types
-        addTypeAdapter(new FieldMustBeNullConverter());
-        addTypeAdapter(new NullableFieldConverter(registry));
-        addTypeAdapter(new OptionalFieldConverter(registry));
-        addTypeAdapter(new JsonElementConverter());
-        addTypeAdapter(new TypeWrapperConverter(registry));
+        registerTypeAdapter(new FieldMustBeNullConverter());
+        registerTypeAdapter(new NullableFieldConverter(registry));
+        registerTypeAdapter(new OptionalFieldConverter(registry));
+        registerTypeAdapter(new JsonElementConverter());
+        registerTypeAdapter(new TypeWrapperConverter(registry));
 
     }
 
@@ -71,9 +71,9 @@ public class JsonEngine {
      *
      * @param adapter the type adapter to add
      */
-    public void addTypeAdapter(JsonTypeAdapter<?> adapter) {
+    public void registerTypeAdapter(JsonTypeAdapter<?> adapter) {
         Objects.requireNonNull(adapter, "adapter");
-        registry.addTypeAdapter(adapter);
+        registry.registerTypeAdapter(adapter);
     }
 
     /**

@@ -50,7 +50,7 @@ public class FromStringParserRegistry implements ParseFromStringService {
      *
      * @param parser the parser to add
      */
-    public void addParser(FromStringParser parser) {
+    public void registerParser(FromStringParser parser) {
         parserList.add(Objects.requireNonNull(parser, "parser"));
     }
 

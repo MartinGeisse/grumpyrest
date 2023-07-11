@@ -30,7 +30,7 @@ public class ListOfRecordsAdapterTest {
     private final JsonRegistries registry = createRegistry(new IntegerConverter(), new StringConverter());
 
     {
-        registry.addTypeAdapter(new ListConverter(registry));
+        registry.registerTypeAdapter(new ListConverter(registry));
     }
 
     private final JsonTypeAdapter<List<Record>> listOfRecordsAdapter = registry.getTypeAdapter(listOfRecordsTypeToken);

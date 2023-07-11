@@ -20,9 +20,9 @@ public class QuerystringParserRegistryTest {
 
     private static final FromStringParserRegistry fromStringParserRegistry = new FromStringParserRegistry();
     static {
-        fromStringParserRegistry.addParser(new StringFromStringParser());
-        fromStringParserRegistry.addParser(new IntegerFromStringParser());
-        fromStringParserRegistry.addParser(new OptionalFieldParser(fromStringParserRegistry));
+        fromStringParserRegistry.registerParser(new StringFromStringParser());
+        fromStringParserRegistry.registerParser(new IntegerFromStringParser());
+        fromStringParserRegistry.registerParser(new OptionalFieldParser(fromStringParserRegistry));
     }
 
     @Test

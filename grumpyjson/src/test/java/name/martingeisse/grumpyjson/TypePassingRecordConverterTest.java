@@ -34,7 +34,7 @@ public class TypePassingRecordConverterTest {
 
     private final JsonRegistries registry = createRegistry(new StringConverter());
     {
-        registry.addTypeAdapter(new ListConverter(registry));
+        registry.registerTypeAdapter(new ListConverter(registry));
     }
     private final JsonTypeAdapter<Outer> outerAdapter = registry.getTypeAdapter(Outer.class);
 
