@@ -10,7 +10,7 @@ import name.martingeisse.grumpyjson.FieldErrorNode;
 import name.martingeisse.grumpyjson.builtin.ListConverter;
 import name.martingeisse.grumpyjson.builtin.helper_types.NullableFieldConverter;
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalFieldConverter;
-import name.martingeisse.grumpyjson.RecordConverter;
+import name.martingeisse.grumpyjson.builtin.record.RecordConverter;
 
 import java.util.Objects;
 
