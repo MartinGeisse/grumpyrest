@@ -22,7 +22,7 @@ import java.util.Objects;
  * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistries#clear()}.
  */
-public class FieldMustBeNullConverter implements JsonTypeAdapter<FieldMustBeNull> {
+public class FieldMustBeNullConverter implements JsonSerializer<FieldMustBeNull>, JsonDeserializer {
 
     /**
      * Constructor
@@ -32,7 +32,7 @@ public class FieldMustBeNullConverter implements JsonTypeAdapter<FieldMustBeNull
     }
 
     @Override
-    public boolean supportsType(Type type) {
+    public boolean supportsTypeForDeserialization(Type type) {
         return type.equals(FieldMustBeNull.class);
     }
 
@@ -47,9 +47,13 @@ public class FieldMustBeNullConverter implements JsonTypeAdapter<FieldMustBeNull
     }
 
     @Override
-    public JsonElement serialize(FieldMustBeNull value, Type type) throws JsonSerializationException {
+    public boolean supportsClassForSerialization(Class<?> clazz) {
+        return clazz.equals(FieldMustBeNull.class);
+    }
+
+    @Override
+    public JsonElement serialize(FieldMustBeNull value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
-        Objects.requireNonNull(type, "type");
         return JsonNull.INSTANCE;
     }
 

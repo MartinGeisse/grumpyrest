@@ -24,18 +24,18 @@ import java.util.*;
  * A RecordConverter is built for the raw type (class) of a record, so a single instance handles all
  * parameterized types for that raw type.
  * <p>
- * At run time (potential optimization: at adapter selection time) the adapter is used for a concrete parameterized
- * type. This type must be concrete in the sense that it cannot contain type variables anymore (nor wildcards -- we
- * do not support those anyway). If the field that uses the record type *did* use type variables, then these must have
- * been replaced by concrete types before passing on to this adapter. So at this point the record type has an
- * ordered list of named type parameters, and the concrete type passed to use binds them to an ordered list of concrete
- * type arguments.
+ * Serialization is based on the run-time classes of all values and so is straightforward.
  * <p>
- * This adapter then goes through the record fields. Each field potentially uses type variables, and all these must have
- * been declared as type parameters by the record -- type variables (as opposed to the types they are bound to) do not
- * cross the boundaries of a single record definition, and fields cannot define their own type variables. There is
- * actually a single exception (maybe) to this rule, and that is non-static inner classes, so we just don't support
- * those yet.
+ * For deserialization, at run time (potential optimization: at selection time) the deserializer is used for a concrete
+ * parameterized type. This type must be concrete in the sense that it cannot contain type variables anymore (nor
+ * wildcards -- we do not support those anyway). If the field that uses the record type *did* use type variables, then
+ * these must have been replaced by concrete types before passing on to this deserializer. So at this point the record
+ * type has an ordered list of named type parameters, and the concrete type passed to use binds them to an ordered list
+ * of concrete type arguments.
+ * <p>
+ * This deserializer then goes through the record fields. Each field potentially uses type variables, and all these
+ * must have been declared as type parameters by the record -- type variables (as opposed to the types they are bound
+ * to) do not cross the boundaries of a single record definition, and fields cannot define their own type variables.
  * <p>
  * For each record field, the field type is "concretized" -- replaced by a like-structured type in which type variables
  * have been replaced by the types they are bound to. A single type variable is looked up in the record's type

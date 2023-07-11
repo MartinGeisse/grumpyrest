@@ -35,7 +35,7 @@ public class NullableFieldConverter implements JsonTypeAdapter<NullableField<?>>
     }
 
     @Override
-    public boolean supportsType(Type type) {
+    public boolean supportsTypeForDeserialization(Type type) {
         return TypeUtil.isSingleParameterizedType(type, NullableField.class) != null;
     }
 
@@ -56,8 +56,12 @@ public class NullableFieldConverter implements JsonTypeAdapter<NullableField<?>>
     }
 
     @Override
-    public JsonElement serialize(NullableField<?> value, Type type) throws JsonSerializationException {
-        Type innerType = TypeUtil.expectSingleParameterizedType(type, NullableField.class);
+    public boolean supportsClassForSerialization(Class<?> clazz) {
+        return clazz.equals(NullableField.class);
+    }
+
+    @Override
+    public JsonElement serialize(NullableField<?> value) throws JsonSerializationException {
         if (value.isNull()) {
             return JsonNull.INSTANCE;
         }
