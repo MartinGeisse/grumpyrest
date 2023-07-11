@@ -23,10 +23,10 @@ public class FieldMustBeNullConverterTest {
 
     @Test
     public void testValidationWrongType() {
-        forNonPrimitive(json -> assertFailsValidation(adapter, json, Integer.TYPE));
-        forBooleans(json -> assertFailsValidation(adapter, json, Integer.TYPE));
-        forNumbers(json -> assertFailsValidation(adapter, json, Integer.TYPE));
-        forStrings(json -> assertFailsValidation(adapter, json, Integer.TYPE));
+        forNonPrimitive(json -> assertFailsDeserialization(adapter, json, Integer.TYPE));
+        forBooleans(json -> assertFailsDeserialization(adapter, json, Integer.TYPE));
+        forNumbers(json -> assertFailsDeserialization(adapter, json, Integer.TYPE));
+        forStrings(json -> assertFailsDeserialization(adapter, json, Integer.TYPE));
     }
 
     @Test

@@ -171,23 +171,23 @@ public class JsonTestUtil {
     // ----------------------------------------------------------------------------------------------------------------
 
     @CanIgnoreReturnValue
-    public static JsonDeserializationException assertFailsValidation(JsonTypeAdapter<?> adapter, JsonElement json, TypeToken<?> typeToken) {
-        return assertFailsValidation(adapter, json, typeToken.getType());
+    public static JsonDeserializationException assertFailsDeserialization(JsonTypeAdapter<?> adapter, JsonElement json, TypeToken<?> typeToken) {
+        return assertFailsDeserialization(adapter, json, typeToken.getType());
     }
 
     @CanIgnoreReturnValue
-    public static JsonDeserializationException assertFailsValidation(JsonTypeAdapter<?> adapter, JsonElement json, Type type) {
+    public static JsonDeserializationException assertFailsDeserialization(JsonTypeAdapter<?> adapter, JsonElement json, Type type) {
         //noinspection rawtypes
         return Assertions.assertThrows(JsonDeserializationException.class, () -> ((JsonTypeAdapter)adapter).deserialize(json, type));
     }
 
     @CanIgnoreReturnValue
-    public static JsonSerializationException assertFailsGeneration(JsonTypeAdapter<?> adapter, Object value, TypeToken<?> typeToken) {
-        return assertFailsGeneration(adapter, value, typeToken.getType());
+    public static JsonSerializationException assertFailsSerialization(JsonTypeAdapter<?> adapter, Object value, TypeToken<?> typeToken) {
+        return assertFailsSerialization(adapter, value, typeToken.getType());
     }
 
     @CanIgnoreReturnValue
-    public static JsonSerializationException assertFailsGeneration(JsonTypeAdapter<?> adapter, Object value, Type type) {
+    public static JsonSerializationException assertFailsSerialization(JsonTypeAdapter<?> adapter, Object value, Type type) {
         //noinspection unchecked,rawtypes
         return Assertions.assertThrows(JsonSerializationException.class, () -> ((JsonTypeAdapter)adapter).serialize(value, type));
     }

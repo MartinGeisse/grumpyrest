@@ -24,10 +24,10 @@ public class BooleanConverterTest {
 
     @Test
     public void testValidationWrongType() {
-        forNonPrimitive(json -> assertFailsValidation(adapter, json, Boolean.TYPE));
-        forNull(json -> assertFailsValidation(adapter, json, Boolean.TYPE));
-        forNumbers(json -> assertFailsValidation(adapter, json, Boolean.TYPE));
-        forStrings(json -> assertFailsValidation(adapter, json, Boolean.TYPE));
+        forNonPrimitive(json -> assertFailsDeserialization(adapter, json, Boolean.TYPE));
+        forNull(json -> assertFailsDeserialization(adapter, json, Boolean.TYPE));
+        forNumbers(json -> assertFailsDeserialization(adapter, json, Boolean.TYPE));
+        forStrings(json -> assertFailsDeserialization(adapter, json, Boolean.TYPE));
     }
 
     @Test

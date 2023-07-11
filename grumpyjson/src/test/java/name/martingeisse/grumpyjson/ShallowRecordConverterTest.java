@@ -35,11 +35,11 @@ public class ShallowRecordConverterTest {
 
     @Test
     public void testValidationWrongType() {
-        forNull(json -> assertFailsValidation(adapter, json, Record.class));
-        forNumbers(json -> assertFailsValidation(adapter, json, Record.class));
-        forBooleans(json -> assertFailsValidation(adapter, json, Record.class));
-        forStrings(json -> assertFailsValidation(adapter, json, Record.class));
-        forArrays(json -> assertFailsValidation(adapter, json, Record.class));
+        forNull(json -> assertFailsDeserialization(adapter, json, Record.class));
+        forNumbers(json -> assertFailsDeserialization(adapter, json, Record.class));
+        forBooleans(json -> assertFailsDeserialization(adapter, json, Record.class));
+        forStrings(json -> assertFailsDeserialization(adapter, json, Record.class));
+        forArrays(json -> assertFailsDeserialization(adapter, json, Record.class));
     }
 
     @Test
@@ -47,7 +47,7 @@ public class ShallowRecordConverterTest {
         JsonObject json = new JsonObject();
         json.addProperty("myInt", 123);
         JsonTestUtil.assertFieldErrors(
-                assertFailsValidation(adapter, json, Record.class),
+                assertFailsDeserialization(adapter, json, Record.class),
                 new FieldErrorNode.FlattenedError(ExceptionMessages.MISSING_PROPERTY, "myString")
         );
     }
@@ -58,7 +58,7 @@ public class ShallowRecordConverterTest {
         json.addProperty("myInt", "foo");
         json.addProperty("myString", "foo");
         JsonTestUtil.assertFieldErrors(
-                assertFailsValidation(adapter, json, Record.class),
+                assertFailsDeserialization(adapter, json, Record.class),
                 new FieldErrorNode.FlattenedError("expected integer, found: \"foo\"", "myInt")
         );
     }
@@ -70,7 +70,7 @@ public class ShallowRecordConverterTest {
         json.addProperty("thisDoesNotBelongHere", 456);
         json.addProperty("myString", "foo");
         JsonTestUtil.assertFieldErrors(
-                assertFailsValidation(adapter, json, Record.class),
+                assertFailsDeserialization(adapter, json, Record.class),
                 new FieldErrorNode.FlattenedError(ExceptionMessages.UNEXPECTED_PROPERTY, "thisDoesNotBelongHere")
         );
     }
@@ -81,7 +81,7 @@ public class ShallowRecordConverterTest {
         json.addProperty("myInt", "foo");
         json.addProperty("thisDoesNotBelongHere", 456);
         JsonTestUtil.assertFieldErrors(
-                assertFailsValidation(adapter, json, Record.class),
+                assertFailsDeserialization(adapter, json, Record.class),
                 new FieldErrorNode.FlattenedError(ExceptionMessages.UNEXPECTED_PROPERTY, "thisDoesNotBelongHere"),
                 new FieldErrorNode.FlattenedError("expected integer, found: \"foo\"", "myInt"),
                 new FieldErrorNode.FlattenedError(ExceptionMessages.MISSING_PROPERTY, "myString")

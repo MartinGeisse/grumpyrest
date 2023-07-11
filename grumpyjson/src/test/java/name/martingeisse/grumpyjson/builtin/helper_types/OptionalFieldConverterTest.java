@@ -52,10 +52,10 @@ public class OptionalFieldConverterTest {
 
     @Test
     public void testValidationWrongType() {
-        forNull(json -> assertFailsValidation(adapter, json, OPTIONAL_INTEGER_TYPE));
-        forBooleans(json -> assertFailsValidation(adapter, json, OPTIONAL_INTEGER_TYPE));
-        forStrings(json -> assertFailsValidation(adapter, json, OPTIONAL_INTEGER_TYPE));
-        forObjects(json -> assertFailsValidation(adapter, json, OPTIONAL_INTEGER_TYPE));
+        forNull(json -> assertFailsDeserialization(adapter, json, OPTIONAL_INTEGER_TYPE));
+        forBooleans(json -> assertFailsDeserialization(adapter, json, OPTIONAL_INTEGER_TYPE));
+        forStrings(json -> assertFailsDeserialization(adapter, json, OPTIONAL_INTEGER_TYPE));
+        forObjects(json -> assertFailsDeserialization(adapter, json, OPTIONAL_INTEGER_TYPE));
     }
 
     @Test

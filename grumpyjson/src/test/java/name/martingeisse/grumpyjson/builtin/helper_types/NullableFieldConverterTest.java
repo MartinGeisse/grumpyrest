@@ -55,9 +55,9 @@ public class NullableFieldConverterTest {
 
     @Test
     public void testValidationWrongType() {
-        forBooleans(json -> assertFailsValidation(adapter, json, NULLABLE_INTEGER_TYPE));
-        forStrings(json -> assertFailsValidation(adapter, json, NULLABLE_INTEGER_TYPE));
-        forObjects(json -> assertFailsValidation(adapter, json, NULLABLE_INTEGER_TYPE));
+        forBooleans(json -> assertFailsDeserialization(adapter, json, NULLABLE_INTEGER_TYPE));
+        forStrings(json -> assertFailsDeserialization(adapter, json, NULLABLE_INTEGER_TYPE));
+        forObjects(json -> assertFailsDeserialization(adapter, json, NULLABLE_INTEGER_TYPE));
     }
 
     @Test
@@ -76,8 +76,8 @@ public class NullableFieldConverterTest {
 
     @Test
     public void testGenerationWithWrongType() {
-        assertFailsGeneration(adapter, NullableField.ofValue(12), NULLABLE_STRING_TYPE);
-        assertFailsGeneration(adapter, NullableField.ofValue("foo"), NULLABLE_INTEGER_TYPE);
+        assertFailsSerialization(adapter, NullableField.ofValue(12), NULLABLE_STRING_TYPE);
+        assertFailsSerialization(adapter, NullableField.ofValue("foo"), NULLABLE_INTEGER_TYPE);
     }
 
     @Test

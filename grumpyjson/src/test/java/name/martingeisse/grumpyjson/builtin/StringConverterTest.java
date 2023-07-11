@@ -24,10 +24,10 @@ public class StringConverterTest {
 
     @Test
     public void testValidationWrongType() {
-        forNonPrimitive(json -> assertFailsValidation(adapter, json, String.class));
-        forNull(json -> assertFailsValidation(adapter, json, String.class));
-        forBooleans(json -> assertFailsValidation(adapter, json, String.class));
-        forNumbers(json -> assertFailsValidation(adapter, json, String.class));
+        forNonPrimitive(json -> assertFailsDeserialization(adapter, json, String.class));
+        forNull(json -> assertFailsDeserialization(adapter, json, String.class));
+        forBooleans(json -> assertFailsDeserialization(adapter, json, String.class));
+        forNumbers(json -> assertFailsDeserialization(adapter, json, String.class));
     }
 
     @Test

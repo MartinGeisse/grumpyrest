@@ -60,16 +60,16 @@ public class ListConverterTest {
 
     @Test
     public void testValidationWrongType() {
-        forNull(json -> assertFailsValidation(adapter, json, INTEGER_LIST_TYPE));
-        forBooleans(json -> assertFailsValidation(adapter, json, INTEGER_LIST_TYPE));
-        forNumbers(json -> assertFailsValidation(adapter, json, INTEGER_LIST_TYPE));
-        forStrings(json -> assertFailsValidation(adapter, json, INTEGER_LIST_TYPE));
-        forObjects(json -> assertFailsValidation(adapter, json, INTEGER_LIST_TYPE));
+        forNull(json -> assertFailsDeserialization(adapter, json, INTEGER_LIST_TYPE));
+        forBooleans(json -> assertFailsDeserialization(adapter, json, INTEGER_LIST_TYPE));
+        forNumbers(json -> assertFailsDeserialization(adapter, json, INTEGER_LIST_TYPE));
+        forStrings(json -> assertFailsDeserialization(adapter, json, INTEGER_LIST_TYPE));
+        forObjects(json -> assertFailsDeserialization(adapter, json, INTEGER_LIST_TYPE));
     }
 
     @Test
     public void testValidationWrongElementType() {
-        assertFailsValidation(adapter, buildIntArray(12, 34), STRING_LIST_TYPE);
+        assertFailsDeserialization(adapter, buildIntArray(12, 34), STRING_LIST_TYPE);
     }
 
     @Test
@@ -87,8 +87,8 @@ public class ListConverterTest {
 
     @Test
     public void testGenerationWithWrongType() {
-        assertFailsGeneration(adapter, List.of(12, 34), STRING_LIST_TYPE);
-        assertFailsGeneration(adapter, List.of("foo", "bar"), INTEGER_LIST_TYPE);
+        assertFailsSerialization(adapter, List.of(12, 34), STRING_LIST_TYPE);
+        assertFailsSerialization(adapter, List.of("foo", "bar"), INTEGER_LIST_TYPE);
     }
 
 }

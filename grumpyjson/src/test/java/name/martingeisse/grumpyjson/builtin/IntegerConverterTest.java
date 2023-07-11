@@ -25,15 +25,15 @@ public class IntegerConverterTest {
 
     @Test
     public void testValidationWrongType() {
-        forNonPrimitive(json -> assertFailsValidation(adapter, json, Integer.TYPE));
-        forNull(json -> assertFailsValidation(adapter, json, Integer.TYPE));
-        forBooleans(json -> assertFailsValidation(adapter, json, Integer.TYPE));
-        forStrings(json -> assertFailsValidation(adapter, json, Integer.TYPE));
+        forNonPrimitive(json -> assertFailsDeserialization(adapter, json, Integer.TYPE));
+        forNull(json -> assertFailsDeserialization(adapter, json, Integer.TYPE));
+        forBooleans(json -> assertFailsDeserialization(adapter, json, Integer.TYPE));
+        forStrings(json -> assertFailsDeserialization(adapter, json, Integer.TYPE));
     }
 
     @Test
     public void testValidationFloat() {
-        assertFailsValidation(adapter, new JsonPrimitive(12.34), Integer.TYPE);
+        assertFailsDeserialization(adapter, new JsonPrimitive(12.34), Integer.TYPE);
     }
 
     @Test
@@ -43,7 +43,7 @@ public class IntegerConverterTest {
 
     @Test
     public void testValidationTooLarge() {
-        assertFailsValidation(adapter, new JsonPrimitive(0x80000000L), Integer.TYPE);
+        assertFailsDeserialization(adapter, new JsonPrimitive(0x80000000L), Integer.TYPE);
     }
 
     @Test

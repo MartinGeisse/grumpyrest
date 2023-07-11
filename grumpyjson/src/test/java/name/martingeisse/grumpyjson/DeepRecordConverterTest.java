@@ -47,7 +47,7 @@ public class DeepRecordConverterTest {
         outerJson.addProperty("anotherInt", 456);
 
         JsonTestUtil.assertFieldErrors(
-                assertFailsValidation(outerAdapter, outerJson, Outer.class),
+                assertFailsDeserialization(outerAdapter, outerJson, Outer.class),
                 new FieldErrorNode.FlattenedError(ExceptionMessages.MISSING_PROPERTY, "inner", "myString")
         );
     }
@@ -58,7 +58,7 @@ public class DeepRecordConverterTest {
         outerJson.addProperty("anotherInt", 456);
 
         JsonTestUtil.assertFieldErrors(
-                assertFailsValidation(outerAdapter, outerJson, Outer.class),
+                assertFailsDeserialization(outerAdapter, outerJson, Outer.class),
                 new FieldErrorNode.FlattenedError(ExceptionMessages.MISSING_PROPERTY, "inner")
         );
     }
@@ -72,7 +72,7 @@ public class DeepRecordConverterTest {
         outerJson.add("inner", innerJson);
 
         JsonTestUtil.assertFieldErrors(
-                assertFailsValidation(outerAdapter, outerJson, Outer.class),
+                assertFailsDeserialization(outerAdapter, outerJson, Outer.class),
                 new FieldErrorNode.FlattenedError(ExceptionMessages.MISSING_PROPERTY, "anotherInt")
         );
     }
@@ -84,7 +84,7 @@ public class DeepRecordConverterTest {
         outerJson.addProperty("anotherInt", 456);
 
         JsonTestUtil.assertFieldErrors(
-                assertFailsValidation(outerAdapter, outerJson, Outer.class),
+                assertFailsDeserialization(outerAdapter, outerJson, Outer.class),
                 new FieldErrorNode.FlattenedError("expected object, found: \"foo\"", "inner")
         );
     }
