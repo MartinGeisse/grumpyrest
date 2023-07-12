@@ -8,6 +8,7 @@ package name.martingeisse.grumpyrest;
 
 import org.junit.jupiter.api.Test;
 
+// TODO remove
 public class DummyTest {
 
     @Test
