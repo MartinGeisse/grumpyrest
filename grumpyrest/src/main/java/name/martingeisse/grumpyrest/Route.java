@@ -6,7 +6,6 @@
  */
 package name.martingeisse.grumpyrest;
 
-import name.martingeisse.grumpyrest.request.HttpMethod;
 import name.martingeisse.grumpyrest.request.PathArgument;
 import name.martingeisse.grumpyrest.request.path.Path;
 import name.martingeisse.grumpyrest.request.stringparser.ParseFromStringService;

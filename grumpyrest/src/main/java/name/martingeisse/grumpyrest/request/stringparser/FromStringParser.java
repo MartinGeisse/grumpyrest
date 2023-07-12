@@ -7,7 +7,6 @@
 package name.martingeisse.grumpyrest.request.stringparser;
 
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalField;
-import name.martingeisse.grumpyrest.ExceptionMessages;
 
 import java.lang.reflect.Type;
 
