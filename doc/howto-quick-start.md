@@ -35,7 +35,7 @@ You can then refer to it like this:
 ## Using the pre-built Jetty Launcher
 
 The `name.martingeisse:grumpyrest-jetty-launcher:...` package contains a helper class to get an API server up and
-running with minimal code. This package gets build and locally published together with the main grumpyrest package when
+running with minimal code. This package gets built and locally published together with the main grumpyrest package when
 using the above commands. You'll have to add it as a separate dependency in Maven or Gradle. It can be used like this:
 
 ```
@@ -63,7 +63,7 @@ public class GreetingMain {
 }
 ```
 
-This will launch an embedded Jetty at port 8080 and server the API just defined.
+This will launch an embedded Jetty at port 8080 and serve the API just defined.
 
 ## Using a Servlet Container
 

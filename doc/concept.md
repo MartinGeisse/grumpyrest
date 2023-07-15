@@ -39,7 +39,7 @@ This means:
   in modern Java which, for example, virtual threads cannot handle.
 * None of this affects application code, unless you choose to use it in application code (because the performance
   problem lies there instead of inside grumpyrest).
-* Any such features can be turned of to exclude them as a potential source of bugs, as well as to single-step debug
+* Any such features can be turned off to exclude them as a potential source of bugs, as well as to single-step debug
   into grumpyrest to understand what happens inside (e.g. to track down a specific bug). We all know what single-step
   debugging into highly asynchronous / reactive or generated code is like.
 
@@ -84,14 +84,15 @@ Object properties are neither nullable nor optional by default. That is, a missi
 and so does a property that is null in JSON. The Java record can use the type NullableField to allow null in JSON,
 but on the Java side, it is still not null but a NullableField without a value. This works similar to java.util.Optional
 but IDEs complain if you actually use java.util.Optional except in a few specific places, and besides that nullable
-properties and optional properties are different things, So I defined my own types.
+properties and optional properties are different things, so I defined my own types.
 
 Similar to nullable fields, the type OptionalField defines a property which may be absent from its record. Again, I
-didn't use java.util.Optional because that type doesn't seem to be meant for using it that way. This type can only be
-used in records since a top-level value cannot be just absent, and for JSON array elements, an "optional" property can
-never be parsed as absent and acts as a poor man's filter during serialization. So there is no added value in allowing
-this in JSON arrays. Like NullableField, a missing optional property corresponds to an OptionalField object without a
-value on the Java side, not to a field that is directly null in the containing record.
+didn't use java.util.Optional because that type doesn't seem to be meant for using it that way. The OptionalField type
+can only be used in records since that is the only place where a field can vanish: A top-level value cannot be just
+absent, and for JSON array elements, an "optional" property can never be parsed as absent and acts as a poor man's
+filter during serialization. So there is no added value in allowing this in JSON arrays. Like NullableField, a missing
+optional property corresponds to an OptionalField object without a value on the Java side, not to a field that is
+directly null in the containing record.
 
 As you may have guessed by now, Java's null reference never appears in JSON mapping: The parser won't produce it and
 the serializer will throw an exception if you give it a record with a field that is null. Java's null references are
@@ -100,7 +101,7 @@ nullable or optional. It may even be both: An OptionalField<NullableField<T>> on
 that may be absent, or null, or have a value.
 
 Unknown properties in records cause an error too. A converter which collects extra properties in a Map<> may be
-defined in the  future.
+defined in the future.
 
 ### Validation
 
@@ -114,7 +115,7 @@ data in a parsed but unvalidated state, which is then passed to validation. This
   validation of their state until later, but they might even rely on external validation rules to do so, i.e. they do
   not have an independent notion of what it means for their state to be "valid".
 * or the classes used for JSON mapping are built outright as a set of dumb data containers, with the sole purpose of
-  making the JSON data accessible from Java code, and getting away from those classes agin as fast as possible. This
+  making the JSON data accessible from Java code, and getting away from those classes again as fast as possible. This
   adds unnecessary complexity (there is a whole extra layer in your code without any real purpose) and validation is
   actually harder now, because you have to define rules for your JSON but express them as rules in Java. This is
   one of the reasons we have OptionalField and NullableField as two separate classes, because good luck if you have a
@@ -131,8 +132,8 @@ data in a parsed but unvalidated state, which is then passed to validation. This
 The bottom line is that we don't have any validation after parsing. Rather, validation is part of parsing. If signing
 up to your service requires users to be at least 18 years old, validate (age >= 18) in the constructor of your
 SignUpRequestBody. If the username cannot be empty, check that too in the same constructor. Alternatively, if usernames
-must be specific in many places and must be validated to be nonempty (and possibly at least 5 characters, and not
+must be specified in many places and must be validated to be nonempty (and possibly at least 5 characters, and not
 contain ASCII control characters nor offensive words), define a UserName type that checks these things in its
-constructor. If you have an existing typpe chose constructor cannot be changed, wrap it in a type that defines
+constructor. If you have an existing type whose constructor cannot be changed, wrap it in a type that defines
 its validity rules. Or, as the last resort, you can define a custom converter and register it in the JsonRegistries
 that defines how a type gets parsed and serialized. But there is no validation after parsing, period.
