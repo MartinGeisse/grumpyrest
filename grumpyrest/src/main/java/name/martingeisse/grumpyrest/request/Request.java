@@ -3,6 +3,7 @@ package name.martingeisse.grumpyrest.request;
 import com.google.gson.reflect.TypeToken;
 import name.martingeisse.grumpyjson.JsonEngine;
 import name.martingeisse.grumpyjson.JsonRegistries;
+import name.martingeisse.grumpyrest.ComplexHandler;
 import name.martingeisse.grumpyrest.RequestCycle;
 import name.martingeisse.grumpyrest.SimpleHandler;
 import name.martingeisse.grumpyrest.request.querystring.QuerystringParserRegistry;
@@ -13,17 +14,12 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 /**
- * This interface provides access to all properties of an HTTP request that are relevant for the REST API. It serves
- * two purposes:
- * <ul>
- *     <li>it allows {@link SimpleHandler} to depend only on {@link Request}, decoupling it from {@link RequestCycle},
- *       and therefore simplifies testing and mocking</li>
- *     <li>it removes the need for getter methods for request properties in {@link RequestCycle} and so helps to
- *       keep it more tidy</li>
- * </ul>
+ * This interface provides access to all properties of an HTTP request that are relevant for the REST API.
  * <p>
- * This interface currently provides acces to path arguments, querystring arguments and the request body. In the
- * future, it will be extended to access request headers.
+ * A {@link SimpleHandler} only gets this interface and returns a response value from that. For most bases, this is
+ * sufficient. Complex cases implement {@link ComplexHandler} instead to get access to the whole {@link RequestCycle}.
+ * However, even then, the handler accesses request properties using this interface, by calling
+ * {@link RequestCycle#getHighlevelRequest()}.
  */
 public interface Request {
 
@@ -33,12 +29,13 @@ public interface Request {
      * The returned list contains one element per path parameter. That is, literal path segments do not appear in
      * the returned list.
      * <p>
-     * The path arguments keep the value of the corresponding segments of the request path in their textual form. No
+     * The path arguments keep the values of the corresponding segments of the request path in their textual form. No
      * parsing or mapping to application types has been performed at this point. Instead, parsing as an application
      * type is done by calling methods on the returned {@link PathArgument} objects.
      * <p>
-     * This method may only be called after a route has been matched and the match result applied to the request --
-     * binding path arguments -- but once a handler gets called, this is the case.
+     * Both {@link SimpleHandler} and {@link ComplexHandler} can always call this method. During request processing,
+     * and <i>before</i> the handler gets called, however, there is a point where this method is not allowed to be
+     * called. This is before a route has been matched and the match result applied to the request.
      *
      * @return the path arguments
      */
