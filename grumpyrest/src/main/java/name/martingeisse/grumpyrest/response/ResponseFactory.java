@@ -14,7 +14,10 @@ import name.martingeisse.grumpyrest.RequestCycle;
 public interface ResponseFactory {
 
     /**
-     * Returns null on failure, causing the next factory to be tried.
+     * Creates a {@link Response} from the specified response value.
+     * <p>
+     * Each factory only supports a specific set of response values. This method returns null if the response value
+     * is not supported, causing the next factory to be tried.
      *
      * @param requestCycle the request cycle to create a response for. This is passed in case the response factory
      *                     wants to do special stuff like look into request properties.
