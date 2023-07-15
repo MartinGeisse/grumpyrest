@@ -16,9 +16,8 @@ import java.lang.reflect.Type;
  * A registry for {@link QuerystringParser} objects. Usually all parsers in this registry are auto-generated, so the
  * registry only serves as a cache to avoid duplicate work.
  * <p>
- * This registry keep a reference to the {@link FromStringParserRegistry} to parse individual fields. Once starting to
- * request whole-querystring from this registry, the {@link FromStringParserRegistry} should not be modified anymore
- * because its parsers will be partially baked-into the generated whole-querystring parsers.
+ * This registry keep a reference to the {@link FromStringParserRegistry} to parse individual fields (applies to
+ * auto-generated parsers only).
  */
 public final class QuerystringParserRegistry extends Registry<Type, QuerystringParser> {
 
@@ -28,12 +27,8 @@ public final class QuerystringParserRegistry extends Registry<Type, QuerystringP
      * Constructor. The new instance initially contains no parsers.
      *
      * @param fromStringParserRegistry the from-string parser registry that is used to refer to parsers for the
-     *                                 individual fields. This is only used by this class when auto-generating
-     *                                 parsers because manually registered parsers also contain their own logic to handle
-     *                                 "fields" (if they have a concept of fields at all), though they might choose to
-     *                                 use the same from-string parser registry for that. Note: Sealing this
-     *                                 {@link QuerystringParserRegistry} does not automatically seal the
-     *                                 {@link FromStringParserRegistry}.
+     *                                 individual fields. Note: Sealing this {@link QuerystringParserRegistry} does not
+     *                                 automatically seal the {@link FromStringParserRegistry}.
      */
     public QuerystringParserRegistry(FromStringParserRegistry fromStringParserRegistry) {
         this.fromStringParserRegistry = fromStringParserRegistry;
