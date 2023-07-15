@@ -8,8 +8,6 @@ package name.martingeisse.grumpyrest.response.standard;
 
 import name.martingeisse.grumpyjson.JsonEngine;
 import name.martingeisse.grumpyrest.RequestCycle;
-import name.martingeisse.grumpyrest.response.Response;
-import name.martingeisse.grumpyrest.response.ResponseFactory;
 
 /**
  * Converts any JSON-able value into a {@link Response} by invoking the {@link JsonEngine}, then sending the result

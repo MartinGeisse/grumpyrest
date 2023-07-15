@@ -6,9 +6,6 @@
  */
 package name.martingeisse.grumpyrest;
 
-import name.martingeisse.grumpyrest.request.path.Path;
-import name.martingeisse.grumpyrest.request.stringparser.ParseFromStringService;
-
 import java.util.List;
 
 /**

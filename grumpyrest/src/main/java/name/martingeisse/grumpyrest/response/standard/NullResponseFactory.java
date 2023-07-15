@@ -7,8 +7,6 @@
 package name.martingeisse.grumpyrest.response.standard;
 
 import name.martingeisse.grumpyrest.RequestCycle;
-import name.martingeisse.grumpyrest.response.Response;
-import name.martingeisse.grumpyrest.response.ResponseFactory;
 
 /**
  * Produces an empty 200 response when null is returned as a response value.

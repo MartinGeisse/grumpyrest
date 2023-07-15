@@ -6,8 +6,6 @@
  */
 package name.martingeisse.grumpyrest.request.stringparser.standard;
 
-import name.martingeisse.grumpyrest.request.stringparser.FromStringParser;
-
 import java.lang.reflect.Type;
 
 /**
