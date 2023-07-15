@@ -16,19 +16,20 @@ import java.util.Objects;
 /**
  * A path -- actually a path <i>pattern</i> -- that determines whether the actual path provided by a request matches
  * a route. An instance of this class may define path parameters using {@link VariablePathSegment}.
+ * <p>
+ * It is currently not possible to create an instance that allows an incoming request path to have arbitrary extra
+ * segments.
  *
- * It is currently not possible to create an instance that allows an incoming request path to have extra segments.
- *
- * @param segments the segments of this path. These segments of the actual path from a request are lined up one-by-one
- *                 with these segments and matched using {@link PathSegment#matches(String)}.
+ * @param segments the segments of this path (pattern). The segments of the actual path from a request are lined up
+ *                 one-by-one with these segments and matched using {@link PathSegment#matches(String)}.
  */
 public record Path(List<PathSegment> segments) {
 
     /**
      * Compact constructor.
      *
-     * @param segments the segments of this path. These segments of the actual path from a request are lined up one-by-one
-     *                 with these segments and matched using {@link PathSegment#matches(String)}.
+     * @param segments the segments of this path (pattern). The segments of the actual path from a request are lined up
+     *                 one-by-one with these segments and matched using {@link PathSegment#matches(String)}.
      */
     public Path {
         segments = List.copyOf(segments);
@@ -64,6 +65,7 @@ public record Path(List<PathSegment> segments) {
      */
     public List<PathArgument> match(List<String> requestSegments, ParseFromStringService parseFromStringService) {
         Objects.requireNonNull(requestSegments);
+        Objects.requireNonNull(parseFromStringService, "parseFromStringService");
         if (requestSegments.size() != segments.size()) {
             return null;
         }
