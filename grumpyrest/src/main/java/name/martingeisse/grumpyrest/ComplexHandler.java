@@ -17,7 +17,7 @@ import name.martingeisse.grumpyrest.response.ResponseTransmitter;
  * Note that implementing ComplexHandler is not more complex than how a {@link SimpleHandler} works, but rather is
  * needed for more complex cases. The main downside with a complex handler is that a request cycle is much harder to
  * mock in tests than just a {@link Request}. You should therefore implement {@link SimpleHandler} whenever possible
- * to reduce scaffolding for your tests,
+ * to reduce scaffolding for your tests.
  */
 public interface ComplexHandler {
 
