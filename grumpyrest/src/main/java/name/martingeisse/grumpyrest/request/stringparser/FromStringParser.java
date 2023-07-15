@@ -34,7 +34,7 @@ import java.lang.reflect.Type;
  * <p>
  * Conceptually, the same mechanism could be applied to HTTP headers. This is not really that useful though because
  * HTTP is pretty close to using a custom, incompatible format for each and every header. The set of
- * {@link FromStringParser} used by an application, on the other hand, is intended to be consistent, and defined by
+ * {@link FromStringParser}s used by an application, on the other hand, is intended to be consistent, and defined by
  * that application. So we currently don't use these parsers for HTTP headers. (We might reconsider this. A custom
  * format per header is not per se in contradiction with from-string parsers. We would just have to define a custom
  * type and custom parser for each header. But it's unclear if this is really useful.)
@@ -60,12 +60,12 @@ public interface FromStringParser {
     Object parseFromString(String s, Type type) throws FromStringParserException;
 
     /**
-     * Parses a value from an absent string. This can be used to return a default for optional parameters.
+     * "Parses" a value from an absent string. This can be used to return a default for optional parameters.
      * <p>
      * The standard implementation of this method is that missing values are not tolerated, and throws an exception.
      *
      * @param type the type to parse as
-     * @return the parsed value
+     * @return the default value
      * @throws FromStringParserException if absent values are not tolerated (this is the default implementation)
      */
     default Object parseFromAbsentString(Type type) throws FromStringParserException {
