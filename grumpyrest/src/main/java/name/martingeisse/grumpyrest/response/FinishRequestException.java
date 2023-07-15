@@ -16,10 +16,9 @@ package name.martingeisse.grumpyrest.response;
  * if it were returned from a handler.
  * <p>
  * The latter causes the framework to select an appropriate {@link ResponseFactory} for that wrapped value. This uses
- * the normal mechanism to handle response values, but will usually be one of two cases. Either the response value is
+ * the normal mechanism to handle response values, but will usually be one of two cases: Either the response value is
  * JSON-able (normal response, as well as standard error response) or is a {@link Response} itself (redirect,
- * request for HTTP authentication, or similar). However, you are not limited to these cases, and might want to use
- * the full flexibility of the {@link ResponseFactoryRegistry}.
+ * request for HTTP authentication, or similar).
  */
 public class FinishRequestException extends RuntimeException implements ResponseValueWrapper {
 
