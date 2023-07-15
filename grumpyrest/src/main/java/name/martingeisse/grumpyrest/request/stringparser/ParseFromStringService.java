@@ -4,8 +4,13 @@ import java.lang.reflect.Type;
 
 /**
  * This interface exposes only the {@link FromStringParserRegistry#parseFromString(String, Type)} method.
+ * <p>
+ * This interface gets implemented by the registry, not by individual parsers. Use {@link FromStringParser} for
+ * individual parsers.
  */
 public interface ParseFromStringService {
+
+    // TODO use this interface in querystring parsing? But would need parseFromAbsentString for that
 
     /**
      * Parses a string to obtain a value of the specified type.
