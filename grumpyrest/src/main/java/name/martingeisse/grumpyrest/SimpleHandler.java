@@ -15,6 +15,9 @@ import name.martingeisse.grumpyrest.response.ResponseFactoryRegistry;
 import name.martingeisse.grumpyrest.response.ResponseValueWrapper;
 
 /**
+ * Interface for a handler in the most common, "simple", case. This handler takes a {@link Request} and returns a
+ * response value.
+ * <p>
  * Implementing this handler interface should be preferred over {@link ComplexHandler} whenever it is sufficient.
  * A simple handler will be passed only a {@link Request}, not the whole {@link RequestCycle}. This reduces coupling
  * and makes it much easier to mock the argument in tests.
@@ -35,7 +38,7 @@ public interface SimpleHandler {
      * A handler is expected to throw exceptions for invalid requests as well as internal errors. Thrown exceptions
      * will be formally treated like returned exceptions, which in turn are treated like other returned values, but
      * only few exception types have a corresponding {@link ResponseFactory}. Most exception types will instead not
-     * have an appropriate factory and will threfore result in an opaque 500 response. This is exactly what is expected
+     * have an appropriate factory and will therefore result in an opaque 500 response. This is exactly what is expected
      * for internal errors, to avoid leaking internal data to the client.
      * <p>
      * There is one special case to the above rule: Handler code and the methods it calls can throw a
