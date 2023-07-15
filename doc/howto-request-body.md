@@ -30,10 +30,10 @@ Parameterized types such as `OptionalField`, `NullableField` and `List` must use
 `List`, `List<?>` or something like that cannot be parsed because the parser then lacks the information about the
 type of the elements -- the JSON itself won't tell the parser which Java class to parse as.
 
-Speaking of lists, a subtype like `ArrayList` won't work either because there is no general-purpose way to create
-instances of such classes -- a list subclass may expect a no-arg constructor followed by setter calls, or a constructor
-that takes a list of elements, or a constructor that takes an array of elements, or a static factory method with any of
-these styles. Just use `List<SomeConcreteType>` and you will get exactly that.
+Speaking of lists, a subtype like `ArrayList` won't be deserialized either because there is no general-purpose way to
+create instances of such classes -- a list subclass may expect a no-arg constructor followed by setter calls, or a
+constructor that takes a list of elements, or a constructor that takes an array of elements, or a static factory method
+with any of these styles. Just use `List<SomeConcreteType>` and you will get exactly that.
 
 ## TODO: Maps / objects with arbitrary keys (not yet supported)
 
@@ -41,18 +41,18 @@ these styles. Just use `List<SomeConcreteType>` and you will get exactly that.
 
 ## Custom Types
 
-You can extend grumpyrest with custom types, both for request body parsing and response body generation. For that
-you'll have to write a class that implements `JsonSerializer` and/or `JsonDeserializer` and gets registered in the
-`JsonRegistries` (actually the `JsonSerializerRegistry` and/or `JsonDeserializerRegistry`) of the `JsonEngine` like
-this:
+You can extend grumpyrest with custom types for request body parsing. For that you'll have to write a class that
+implements `JsonDeserializer` and gets registered in the `JsonRegistries` (actually the `JsonDeserializerRegistry`) of
+the `JsonEngine` like this:
 
 ```
-restApi.getJsonEngine().addTypeAdapter(new MyTypeAdapter());
+restApi.getJsonEngine().registerDeserializer(new MyDeserializer());
 ```
 
+TODO:
 This interface must provide three methods:
 * `boolean supportsType(Type type)`: to ask the type adapter which types it supports. This cannot currently distinguish
-  between parsing and serialization, so if you want to support both for a specific type, then they must be implemented
+  between deserial and serialization, so if you want to support both for a specific type, then they must be implemented
   by the same type adapter. This method can be as easy as `type.equals(MyCustomType.class)` if that type isn't an
   interface, is not part of a class hierarchy and is not generic. For more complex cases, refer to the JDK documentation
   about `Type`.
@@ -63,6 +63,10 @@ This interface must provide three methods:
   the same and you can safely ignore it.
 * `JsonElement toJson(T value, Type type)`: Generates JSON. Again this only produces a `JsonElement` because the
   low-level syntax will be handled by the framework.
+
+If your custom type is used for serialization too, the deserializer may also implement `JsonSerializer` and get
+registered in the `JsonSerializerRegistry`, using either `registerSerializer` in addition to `registerDeserializer`,
+or `registerDualConverter` to register both in a single call.
 
 ## Special Tools
 
