@@ -7,7 +7,6 @@
 package name.martingeisse.grumpyrest.request.querystring;
 
 import name.martingeisse.grumpyjson.registry.Registry;
-import name.martingeisse.grumpyrest.request.stringparser.FromStringParserRegistry;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

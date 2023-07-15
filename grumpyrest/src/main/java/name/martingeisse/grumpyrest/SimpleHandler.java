@@ -12,7 +12,6 @@ import name.martingeisse.grumpyrest.response.FinishRequestException;
 import name.martingeisse.grumpyrest.response.Response;
 import name.martingeisse.grumpyrest.response.ResponseFactory;
 import name.martingeisse.grumpyrest.response.ResponseFactoryRegistry;
-import name.martingeisse.grumpyrest.response.ResponseValueWrapper;
 
 /**
  * Implementing this handler interface should be preferred over {@link ComplexHandler} whenever it is sufficient.

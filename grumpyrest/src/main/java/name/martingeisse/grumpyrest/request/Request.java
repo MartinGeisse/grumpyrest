@@ -6,7 +6,6 @@ import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyrest.RequestCycle;
 import name.martingeisse.grumpyrest.SimpleHandler;
 import name.martingeisse.grumpyrest.request.querystring.QuerystringParserRegistry;
-import name.martingeisse.grumpyrest.request.stringparser.FromStringParserRegistry;
 
 import java.lang.reflect.Type;
 import java.util.List;
