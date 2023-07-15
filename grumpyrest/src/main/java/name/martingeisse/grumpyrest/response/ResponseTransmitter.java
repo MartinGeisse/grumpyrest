@@ -1,12 +1,14 @@
 package name.martingeisse.grumpyrest.response;
 
+import jakarta.servlet.http.HttpServletResponse;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * This interface is used by the {@link Response} to transmit itself to the client.
+ * This interface is used by the {@link Response} to transmit itself to the client. It is an abstraction of the
+ * {@link HttpServletResponse}.
  * <p>
  * The methods in this interface are grouped into "header" methods and "body" methods. This is a consequence of two
  * aspects of HTTP: In HTTP, too, all headers must come before the body, and the body is usually so large that it is
