@@ -2,8 +2,8 @@ package name.martingeisse.grumpyrest.response;
 
 /**
  * This exception type gets thrown if no response factory can be found for a specific response value. The most common
- * case for this is that the response value is itself an unexpected exception. The response value will be hidden from
- * the client so we don't leak any secrets, but we want to log it, *especially* if it's an exception.
+ * case for this is that the response value is itself an unexpected exception. That response value will be hidden from
+ * the client so we don't leak any secrets, but it will be logged.
  */
 public final class NoResponseFactoryException extends RuntimeException {
 
