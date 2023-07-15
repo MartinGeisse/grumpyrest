@@ -49,20 +49,22 @@ the `JsonEngine` like this:
 restApi.getJsonEngine().registerDeserializer(new MyDeserializer());
 ```
 
-TODO:
-This interface must provide three methods:
-* `boolean supportsType(Type type)`: to ask the type adapter which types it supports. This cannot currently distinguish
-  between deserial and serialization, so if you want to support both for a specific type, then they must be implemented
-  by the same type adapter. This method can be as easy as `type.equals(MyCustomType.class)` if that type isn't an
-  interface, is not part of a class hierarchy and is not generic. For more complex cases, refer to the JDK documentation
-  about `Type`.
-* `T fromJson(JsonElement json, Type type)`: Parses JSON. Actually it converts a `JsonElement` to your
-  application type because the actual low-level parsing of the JSON syntax is performed by the framework. The `Type`
-  is important if your adapter supports more than one type: This method only gets called if `supportsType` has
-  already returned `true` for that type, so if your adapter only supports a single type, this argument will always be
-  the same and you can safely ignore it.
-* `JsonElement toJson(T value, Type type)`: Generates JSON. Again this only produces a `JsonElement` because the
-  low-level syntax will be handled by the framework.
+This implementation must provide two methods:
+* `boolean supportsTypeForDeserialization(Type type)`: to ask the deserializer which types it supports. This method can
+  be as easy as `type.equals(MyCustomType.class)` if that type isn't an interface, is not part of a class hierarchy and
+  is not generic. For more complex cases, refer to the JDK documentation about `Type`.
+* `Object deserialize(JsonElement json, Type type)`: Deserializes JSON. Actually it converts a `JsonElement` to your
+  application type because the actual low-level parsing of the JSON syntax is performed by the framework.
+  * The `Type` is important if your adapter supports more than one type. This method only gets called if `supportsType`
+    has already returned `true` for that type, so if your adapter only supports a single type, this argument will always
+    be the same and you can safely ignore it.
+  * A sub-case of the above rule is when the type to deserialize is a generic class. In this case, the `Type` is a
+    parameterized version of that class and your implementation will need the concrete type arguments to deserialize
+    the fields of your generic class.
+
+In addition to that, your implementation may implement `Object deserializeAbsent(Type type)` to allow a property using
+the supported type to be absent from a JSON object. Your implementation will have to generate a default value in that
+case. The default implementation throws an exception because all properties are mandatory by default.
 
 If your custom type is used for serialization too, the deserializer may also implement `JsonSerializer` and get
 registered in the `JsonSerializerRegistry`, using either `registerSerializer` in addition to `registerDeserializer`,
