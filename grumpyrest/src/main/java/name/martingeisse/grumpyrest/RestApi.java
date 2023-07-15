@@ -12,7 +12,6 @@ import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import name.martingeisse.grumpyjson.serialize.JsonSerializerRegistry;
 import name.martingeisse.grumpyrest.request.path.Path;
-import name.martingeisse.grumpyrest.request.querystring.QuerystringParser;
 import name.martingeisse.grumpyrest.request.querystring.QuerystringParserRegistry;
 import name.martingeisse.grumpyrest.request.stringparser.FromStringParser;
 import name.martingeisse.grumpyrest.request.stringparser.FromStringParserRegistry;

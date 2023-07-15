@@ -14,8 +14,6 @@ import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.registry.NotRegisteredException;
 import name.martingeisse.grumpyrest.request.PathArgument;
 import name.martingeisse.grumpyrest.request.Request;
-import name.martingeisse.grumpyrest.request.path.PathUtil;
-import name.martingeisse.grumpyrest.request.querystring.QuerystringParsingException;
 import name.martingeisse.grumpyrest.response.FinishRequestException;
 import name.martingeisse.grumpyrest.response.Response;
 import name.martingeisse.grumpyrest.response.ResponseTransmitter;
