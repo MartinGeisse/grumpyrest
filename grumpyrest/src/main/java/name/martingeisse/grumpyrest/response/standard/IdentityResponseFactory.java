@@ -11,7 +11,8 @@ import name.martingeisse.grumpyrest.response.Response;
 import name.martingeisse.grumpyrest.response.ResponseFactory;
 
 /**
- * This simply accepts response values that implement {@link Response} themselves.
+ * This simply accepts response values that implement {@link Response} themselves and returns them unchanged. Without
+ * this factory, a handler could not return such a response object.
  */
 public final class IdentityResponseFactory implements ResponseFactory {
 
