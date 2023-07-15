@@ -15,7 +15,8 @@ public class FromStringParserException extends Exception {
     /**
      * Constructor
      *
-     * @param message the exception message
+     * @param message the exception message TODO define whether this message will be user-visible. Should also be done
+     *                for JSON / whole-querystring!
      */
     public FromStringParserException(String message) {
         super(message);
