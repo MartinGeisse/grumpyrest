@@ -81,7 +81,7 @@ public record Route(HttpMethod method, Path path, ComplexHandler handler) {
      * Tries to match the specified request cycle against this route.
      *
      * @param requestCycle the request cycle that contains the request for matching
-     * @return if matched, a request result that contains this route. Otherwise null.
+     * @return if matched, a match result that contains this route. Otherwise null.
      */
     public RouteMatchResult match(RequestCycle requestCycle) {
         if (!method.matches(requestCycle.getServletRequest().getMethod())) {
