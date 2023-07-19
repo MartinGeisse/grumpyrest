@@ -26,20 +26,6 @@ public class ListConverter implements JsonSerializer<List<?>>, JsonDeserializer 
 
     private final JsonRegistries registries;
 
-    /**
-     * Constructor.
-     *
-     * @param registries the JSON registries -- needed to fetch the converter for the element type at run-time
-     */
-    public ListConverter(JsonRegistries registries) {
-        this.registries = registries;
-    }
-
-    @Override
-    public boolean supportsTypeForDeserialization(Type type) {
-        return TypeUtil.isSingleParameterizedType(type, List.class) != null;
-    }
-
     @Override
     public List<?> deserialize(JsonElement json, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(json, "json");
@@ -69,11 +55,6 @@ public class ListConverter implements JsonSerializer<List<?>>, JsonDeserializer 
             return List.copyOf(result);
         }
         throw new JsonDeserializationException("expected list, found: " + json);
-    }
-
-    @Override
-    public boolean supportsClassForSerialization(Class<?> clazz) {
-        return List.class.isAssignableFrom(clazz);
     }
 
     @Override
