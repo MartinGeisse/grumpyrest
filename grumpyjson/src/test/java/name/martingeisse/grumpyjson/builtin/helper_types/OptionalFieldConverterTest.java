@@ -82,7 +82,7 @@ public class OptionalFieldConverterTest {
     }
 
     @Test
-    public void testDoesNotSupportNull() {
+    public void testDeserializationWithJsonNull() {
         assertThrows(JsonDeserializationException.class, () -> converter.deserialize(JsonNull.INSTANCE, OPTIONAL_INTEGER_TYPE));
     }
 

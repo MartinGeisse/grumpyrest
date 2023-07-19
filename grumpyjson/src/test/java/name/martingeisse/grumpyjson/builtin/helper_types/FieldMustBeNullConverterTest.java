@@ -23,10 +23,10 @@ public class FieldMustBeNullConverterTest {
 
     @Test
     public void testDeserializationWrongType() {
-        forNonPrimitive(json -> assertFailsDeserialization(converter, json, Integer.TYPE));
-        forBooleans(json -> assertFailsDeserialization(converter, json, Integer.TYPE));
-        forNumbers(json -> assertFailsDeserialization(converter, json, Integer.TYPE));
-        forStrings(json -> assertFailsDeserialization(converter, json, Integer.TYPE));
+        forNonPrimitive(json -> assertFailsDeserialization(converter, json, FieldMustBeNull.class));
+        forBooleans(json -> assertFailsDeserialization(converter, json, FieldMustBeNull.class));
+        forNumbers(json -> assertFailsDeserialization(converter, json, FieldMustBeNull.class));
+        forStrings(json -> assertFailsDeserialization(converter, json, FieldMustBeNull.class));
     }
 
     @Test
