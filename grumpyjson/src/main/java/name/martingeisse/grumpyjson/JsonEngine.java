@@ -9,8 +9,6 @@ package name.martingeisse.grumpyjson;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
-import name.martingeisse.grumpyjson.builtin.*;
-import name.martingeisse.grumpyjson.builtin.helper_types.NullableFieldConverter;
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalFieldConverter;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
