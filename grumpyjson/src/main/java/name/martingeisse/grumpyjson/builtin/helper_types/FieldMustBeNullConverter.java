@@ -17,12 +17,6 @@ import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
-/**
- * The converter for {@link FieldMustBeNull}.
- * <p>
- * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
- * calling {@link JsonRegistries#clear()}.
- */
 public class FieldMustBeNullConverter implements JsonSerializer<FieldMustBeNull>, JsonDeserializer {
 
     /**

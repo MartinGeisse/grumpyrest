@@ -17,12 +17,6 @@ import name.martingeisse.grumpyjson.util.TypeUtil;
 import java.lang.reflect.Type;
 import java.util.Optional;
 
-/**
- * The converter for {@link OptionalField}.
- * <p>
- * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
- * calling {@link JsonRegistries#clear()}.
- */
 public class OptionalFieldConverter implements JsonSerializer<OptionalField<?>>, JsonDeserializer {
 
     private final JsonRegistries registries;

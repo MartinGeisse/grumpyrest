@@ -17,14 +17,6 @@ import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
-/**
- * A converter for the primitive type int and its boxed type, {@link Integer}.
- * <p>
- * This maps to and from integral JSON numbers in the 32-bit signed integer range.
- * <p>
- * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
- * calling {@link JsonRegistries#clear()}.
- */
 public class IntegerConverter implements JsonSerializer<Integer>, JsonDeserializer {
 
     /**

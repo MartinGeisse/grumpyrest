@@ -17,12 +17,6 @@ import name.martingeisse.grumpyjson.util.TypeUtil;
 
 import java.lang.reflect.Type;
 
-/**
- * The converter for {@link NullableField}.
- * <p>
- * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
- * calling {@link JsonRegistries#clear()}.
- */
 public class NullableFieldConverter implements JsonSerializer<NullableField<?>>, JsonDeserializer {
 
     private final JsonRegistries registries;

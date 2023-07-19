@@ -16,12 +16,6 @@ import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
-/**
- * A converter for {@link JsonElement}.
- * <p>
- * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
- * calling {@link JsonRegistries#clear()}.
- */
 public final class JsonElementConverter implements JsonSerializer<JsonElement>, JsonDeserializer {
 
     /**

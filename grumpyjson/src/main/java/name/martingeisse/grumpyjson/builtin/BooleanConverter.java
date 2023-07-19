@@ -17,14 +17,6 @@ import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
-/**
- * A converter for the primitive type boolean and its boxed type, {@link Boolean}.
- * <p>
- * This maps to and from JSON boolean values.
- * <p>
- * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
- * calling {@link JsonRegistries#clear()}.
- */
 public class BooleanConverter implements JsonSerializer<Boolean>, JsonDeserializer {
 
     /**
