@@ -7,11 +7,11 @@
 package name.martingeisse.grumpyjson.builtin.helper_types;
 
 /**
- * This can be used to implement a property that must be null during deserialziation, and always serializes as null.
- * Such a property obviously does not add any information to the data structure, but might be useful to maintain
- * compatibility with a field that was used in previous versions.
+ * This can be used to implement a property that must be JSON-null during deserialziation, and always serializes as
+ * JSON-null. Such a property obviously does not add any information to the data structure, but might be useful to
+ * maintain compatibility with a field that was used in previous versions.
  * <p>
- * This can be wrapped in {@link OptionalField} to allow the field to be absent or null, as well as control whether the
+ * This class can be wrapped in {@link OptionalField} to allow the field to be absent or null, as well as control whether the
  * field gets serialized as absent or null.
  * <p>
  * A shared instance is provided to reduce memory usage, but creating new instances is fine as well.

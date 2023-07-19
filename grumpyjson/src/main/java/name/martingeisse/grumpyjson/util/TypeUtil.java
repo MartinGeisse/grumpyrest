@@ -63,7 +63,8 @@ public class TypeUtil {
 
     /**
      * Like isParameterizedType(), but will fail with a RuntimeException if the type is not as expected, indicating
-     * an internal bug in the deserializer.
+     * an internal bug in the deserializer because that deserializer should not have been selected for the wrong type
+     * in the first place.
      *
      * @param type                          the type to check
      * @param expectedRawClass              the expected raw class which the type must use
@@ -80,7 +81,8 @@ public class TypeUtil {
 
     /**
      * Like isSingleParameterizedType(), but will fail with a RuntimeException if the type is not as expected,
-     * indicating an internal bug in the deserializer.
+     * indicating an internal bug in the deserializer because that deserializer should not have been selected for the
+     * wrong type in the first place.
      *
      * @param type             the type to check
      * @param expectedRawClass the expected raw class which the type must use
@@ -104,7 +106,10 @@ public class TypeUtil {
      * will be part of the result. However, this method is not expected to be used that way, reflecting how type
      * parameters get bound: For a generic type <code>MyType&lt;A,B&gt;</code>, you cannot build a parameterized
      * version of that type like <code>MyType&lt;String,List&lt;A&gt;&gt;</code> -- that is, the binding for type
-     * parameter B cannot use the type variable A to define its bound type.
+     * parameter B cannot use the type variable A to define its bound type. This is a bit confusing to explain because
+     * such a binding can absolutely use a type variable <code>A</code> which is bound in its outer context, but that
+     * is a different <code>A</code> than the type variable to replace. Also, the way we bind type variables, such outer
+     * type variables should have been replaced already before calling this function.
      * <p>
      * This method can only handle three kinds of types, raw class objects, {@link ParameterizedType} and, of course,
      * type variables. Any other type will cause an exception. The reason is that these cases are not needed by
