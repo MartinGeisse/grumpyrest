@@ -72,7 +72,7 @@ public record StandardErrorResponse(int status, String message, List<Field> fiel
      * This is an error response for failed request body validation. The error lists the fields that failed
      * validation and their error messages.
      *
-     * @param e the exceptionfrom the failed validation
+     * @param e the exception from the failed validation
      * @return the instance of this class
      */
     public static StandardErrorResponse requestBodyValidationFailed(JsonDeserializationException e) {

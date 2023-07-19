@@ -26,3 +26,7 @@
 * Possibly: Request filters / interceptors. May instead result in documentation on how to achieve this with the current code.
 * objects that allow arbitrary extra keys
 * HOWTO: add response JSON types (existing HOWTO covers request body deserialization)
+* add actual tests to JsonEngineTest
+
+
+

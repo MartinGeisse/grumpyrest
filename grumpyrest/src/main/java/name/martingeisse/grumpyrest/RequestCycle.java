@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Hold the run-time state of processing a single request. Application code will normally not have to deal with a
+ * Holds the run-time state of processing a single request. Application code will normally not have to deal with a
  * request cycle directly, but rather implement a {@link SimpleHandler} that takes a {@link Request} and returns either
  * a {@link Response}, or a value that gets converted to such a response. Only if this scheme is not flexible enough
  * will the application implement a {@link ComplexHandler} and deal with the request cycle directly.

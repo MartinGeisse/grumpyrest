@@ -15,8 +15,9 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
- * Wraps another parser to make a field optional, returning an {@link OptionalField} whih wraps the pared value (or
- * nothing of the argument to parse is absent).
+ * Parses an optional field, returning an {@link OptionalField} which wraps the parsed value (or nothing if the
+ * field to parse is absent). The type argument fo the <code>OptionalField</code> is used to select the actual parser
+ * if the field is present.
  */
 public final class OptionalFieldParser implements FromStringParser {
 

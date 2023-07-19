@@ -185,9 +185,8 @@ public final class RestApi {
      * to one of the built-in types such as {@link LocalDate}.
      * <p>
      * Each from-string parser will only see a single path argument or a single querystring argument. If you have to
-     * support whole-path logic, you will have to do so in the handler. If you have to support a whole-querystring
-     * parser that uses a different format than key/value pairs separated by &amp; and = characters, see
-     * {@link #getQuerystringParserRegistry()}.
+     * support whole-path logic, you will have to do so in the handler. If you have to support a custom
+     * whole-querystring parser, see {@link #getQuerystringParserRegistry()}.
      *
      * @param parser the parser to register
      */
@@ -229,6 +228,33 @@ public final class RestApi {
      */
     public QuerystringParserRegistry getQuerystringParserRegistry() {
         return querystringParserRegistry;
+    }
+
+    /**
+     * Registers the specified serializer with the {@link JsonEngine}.
+     *
+     * @param serializer the serializer to register
+     */
+    public void registerSerializer(name.martingeisse.grumpyjson.serialize.JsonSerializer<?> serializer) {
+        jsonEngine.registerSerializer(serializer);
+    }
+
+    /**
+     * Registers the specified deserializer with the {@link JsonEngine}.
+     *
+     * @param deserializer the deserializer to register
+     */
+    public void registerDeserializer(name.martingeisse.grumpyjson.deserialize.JsonDeserializer deserializer) {
+        jsonEngine.registerDeserializer(deserializer);
+    }
+
+    /**
+     * Registers the specified dual converter with the {@link JsonEngine}.
+     *
+     * @param converter the dual converter to register
+     */
+    public <T extends JsonSerializer<?> & JsonDeserializer> void registerDualConverter(T converter) {
+        jsonEngine.registerDualConverter(converter);
     }
 
     /**
@@ -278,7 +304,7 @@ public final class RestApi {
     /**
      * Handles a request cycle. This first matches the request cycle against all routes to find the route that will
      * handle it, then apply information gathered from matching (i.e. the path arguments) to the request cycle. It
-     * will then  invoke the handler from the matched route to perform application logic and obtain a response value.
+     * will then invoke the handler from the matched route to perform application logic and obtain a response value.
      * This response value gets mapped to a response using an appropriate factory. Finally, the response will be
      * transmitted to the client.
      *
