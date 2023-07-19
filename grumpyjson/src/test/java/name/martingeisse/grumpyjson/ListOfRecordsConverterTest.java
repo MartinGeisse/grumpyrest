@@ -42,7 +42,7 @@ public class ListOfRecordsConverterTest {
     }
 
     @Test
-    public void testSerializationHappyCase() throws Exception {
+    public void testHappyCase() throws Exception {
 
         JsonObject object1 = new JsonObject();
         object1.addProperty("myInt", 12);
