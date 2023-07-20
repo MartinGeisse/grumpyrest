@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Abstracts the run-time methods from the {@link JsonDeserializerRegistry} so that serializers which have to
+ * Abstracts the run-time methods from the {@link JsonSerializerRegistry} so that serializers which have to
  * look up dependencies don't depend on the full registry.
  */
 public interface JsonSerializerProvider {

@@ -73,7 +73,8 @@ public interface JsonSerializer<T> {
      *
      * @param value the value to convert to JSON
      * @return the generated JSON, or nothing in case the value vanishes in JSON
-     * @throws JsonSerializationException if the value is in an inconsistent state, or in a state that cannot be converted to JSON
+     * @throws JsonSerializationException if the value is in an inconsistent state, or in a state that cannot be
+     * converted to JSON
      */
     default Optional<JsonElement> serializeOptional(T value) throws JsonSerializationException {
         return Optional.of(serialize(value));

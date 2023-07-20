@@ -21,6 +21,8 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 /**
+ * Maps a record class to and from a JSON object.
+ * <p>
  * A RecordConverter is built for the raw type (class) of a record, so a single instance handles all
  * parameterized types for that raw type.
  * <p>
@@ -30,8 +32,8 @@ import java.util.*;
  * parameterized type. This type must be concrete in the sense that it cannot contain type variables anymore (nor
  * wildcards -- we do not support those anyway). If the field that uses the record type *did* use type variables, then
  * these must have been replaced by concrete types before passing on to this deserializer. So at this point the record
- * type has an ordered list of named type parameters, and the concrete type passed to use binds them to an ordered list
- * of concrete type arguments.
+ * type has an ordered list of named type parameters, and the concrete type binds them to an ordered list of concrete
+ * type arguments.
  * <p>
  * This deserializer then goes through the record fields. Each field potentially uses type variables, and all these
  * must have been declared as type parameters by the record -- type variables (as opposed to the types they are bound
@@ -40,6 +42,8 @@ import java.util.*;
  * For each record field, the field type is "concretized" -- replaced by a like-structured type in which type variables
  * have been replaced by the types they are bound to. A single type variable is looked up in the record's type
  * parameters by name, then the type argument at the same index is bound to the variable.
+ * <p>
+ * Finally, the fields get deserialized from the JSON fields using the deserializers for the resulting concrete types.
  *
  * @param <T> the record type
  */
@@ -73,7 +77,7 @@ public final class RecordConverter<T> implements JsonSerializer<T>, JsonDeserial
         Objects.requireNonNull(recordType, "recordType");
         if (json instanceof JsonObject jsonObject) {
             List<RecordInfo.ComponentInfo> componentInfos = recordInfo.getComponentInfos();
-            int numberOfPresentProperties = 0;
+            int numberOfPresentKnownProperties = 0;
             Object[] fieldValues = new Object[componentInfos.size()];
             FieldErrorNode errorNode = null;
 
@@ -82,7 +86,7 @@ public final class RecordConverter<T> implements JsonSerializer<T>, JsonDeserial
                 String name = componentInfo.getName();
                 JsonElement propertyJson = jsonObject.get(name);
                 if (propertyJson != null) {
-                    numberOfPresentProperties++;
+                    numberOfPresentKnownProperties++;
                 }
                 try {
                     Type concreteFieldType = componentInfo.getConcreteType(recordType);
@@ -99,7 +103,9 @@ public final class RecordConverter<T> implements JsonSerializer<T>, JsonDeserial
                 }
             }
 
-            if (numberOfPresentProperties != jsonObject.size()) {
+            // jsonObject.size() counts the present properties; numberOfPresentKnownProperties counts the present
+            // *known* properties. So they differ iff there is at least one present unknown property.
+            if (numberOfPresentKnownProperties != jsonObject.size()) {
                 // this is more expensive, so only do this if there is really an error
                 Set<String> propertyNames = new HashSet<>(jsonObject.keySet());
                 for (RecordInfo.ComponentInfo componentInfo : componentInfos) {

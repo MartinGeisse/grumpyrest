@@ -40,8 +40,8 @@ public class JsonDeserializationException extends Exception {
     }
 
     /**
-     * Creates an exception for a single-field error caused by an internal exception from the deserializer. Application
-     * code will rarely use this constructor directly because it can just throw the internal exception and have the
+     * Creates an exception for a single-field error caused by an exception from the deserializer. Application
+     * code will rarely use this constructor directly because it can just throw that exception and have the
      * framework wrap it. It is only needed when implementing deserializers for custom structured types or custom
      * wrapper types, to implement the catch-and-wrap there.
      * <p>
@@ -49,7 +49,7 @@ public class JsonDeserializationException extends Exception {
      *
      * @see FieldErrorNode#create(Exception)
      *
-     * @param cause the internal exception
+     * @param cause the exception to wrap
      */
     public JsonDeserializationException(Exception cause) {
         this(FieldErrorNode.create(cause));

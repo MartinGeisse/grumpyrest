@@ -45,8 +45,8 @@ public class JsonSerializationException extends RuntimeException {
     }
 
     /**
-     * Creates an exception for a single-field error caused by an internal exception from the serializer. Application
-     * code will rarely use this constructor directly because it can just throw the internal exception and have the
+     * Creates an exception for a single-field error caused by an exception from the serializer. Application
+     * code will rarely use this constructor directly because it can just throw that exception and have the
      * framework wrap it. It is only needed when implementing serializers for custom structured types or custom
      * wrapper types, to implement the catch-and-wrap there.
      * <p>
@@ -54,7 +54,7 @@ public class JsonSerializationException extends RuntimeException {
      *
      * @see FieldErrorNode#create(Exception)
      *
-     * @param cause the internal exception
+     * @param cause the exception to wrap
      */
     public JsonSerializationException(Exception cause) {
         this(FieldErrorNode.create(cause));
