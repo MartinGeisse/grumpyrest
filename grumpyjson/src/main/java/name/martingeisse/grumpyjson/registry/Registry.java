@@ -162,14 +162,14 @@ public abstract class Registry<K, V> {
 
     /**
      * Auto-generates a registrable in a subclass-specific way. This method does not have to check the key for null,
-     * nor whether this registry is in the configuration phase.
+     * nor whether this registry is in the run-time phase.
      * <p>
      * The returned registrable will only be used for the specified key, not for other keys that it might support as
      * well. To re-use a single auto-generated registrable that supports multiple keys for all the keys it supports,
      * the auto-generation itself must return the same registrable for all those keys.
      * <p>
      * This method must not cause calls to the registry while in progress. In particular, generating a registrable
-     * must not query the registry for other registrables too use as dependencies. There are two reasons for this:
+     * must not query the registry for other registrables to use as dependencies. There are two reasons for this:
      * First, doing so may corrupt the state of this registry or cause deadlock -- the registry is not built to handle
      * that case, simply because it is not needed by any known registrable. Second, doing so may easily cause infinite
      * recursion when requesting the registrable that is already being built.
