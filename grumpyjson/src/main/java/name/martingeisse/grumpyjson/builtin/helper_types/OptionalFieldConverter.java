@@ -23,7 +23,7 @@ import java.util.Optional;
  * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistries#clear()}.
  */
-public class OptionalFieldConverter implements JsonSerializer<OptionalField<?>>, JsonDeserializer {
+public final class OptionalFieldConverter implements JsonSerializer<OptionalField<?>>, JsonDeserializer {
 
     private final JsonRegistries registries;
 

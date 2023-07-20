@@ -13,7 +13,7 @@ import name.martingeisse.grumpyrest.response.Response;
  * Does not respond at all. This is meant to handle cases where the handler has already sent a response manually.
  * If it didn't, then the default behavior from the servlet container will take place.
  */
-public class NopResponse implements Response {
+public final class NopResponse implements Response {
 
     /**
      * A shared instance of this class that can be used to reduce memory usage.

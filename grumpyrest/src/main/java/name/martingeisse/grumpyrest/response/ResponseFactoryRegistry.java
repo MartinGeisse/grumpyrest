@@ -20,7 +20,7 @@ import java.util.List;
  * This class does not extend {@link Registry} because it does not work with keys reported by its registrables (i.e.
  * response factories), but directly calls all factories and uses the first non-null result.
  */
-public class ResponseFactoryRegistry {
+public final class ResponseFactoryRegistry {
 
     private final List<ResponseFactory> factories = new ArrayList<>();
 

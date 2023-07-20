@@ -42,7 +42,7 @@ import java.util.regex.Pattern;
  * converters are not desired, you can call {@link #getRegistries()} / {@link #getSerializerRegistry()} /
  * {@link #getDeserializerRegistry()} and then .clear() to remove all currently registered converters.
  */
-public class JsonEngine {
+public final class JsonEngine {
 
     private final Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
     private final JsonRegistries registries;

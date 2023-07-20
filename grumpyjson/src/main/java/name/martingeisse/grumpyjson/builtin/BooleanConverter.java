@@ -25,7 +25,7 @@ import java.util.Objects;
  * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistries#clear()}.
  */
-public class BooleanConverter implements JsonSerializer<Boolean>, JsonDeserializer {
+public final class BooleanConverter implements JsonSerializer<Boolean>, JsonDeserializer {
 
     /**
      * Constructor

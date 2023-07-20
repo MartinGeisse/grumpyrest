@@ -25,7 +25,7 @@ import java.util.Objects;
  * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistries#clear()}.
  */
-public class IntegerConverter implements JsonSerializer<Integer>, JsonDeserializer {
+public final class IntegerConverter implements JsonSerializer<Integer>, JsonDeserializer {
 
     /**
      * Constructor

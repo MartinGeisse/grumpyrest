@@ -26,7 +26,7 @@ import java.util.Objects;
  * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistries#clear()}.
  */
-public class StringConverter implements JsonSerializer<String>, JsonDeserializer {
+public final class StringConverter implements JsonSerializer<String>, JsonDeserializer {
 
     /**
      * Constructor

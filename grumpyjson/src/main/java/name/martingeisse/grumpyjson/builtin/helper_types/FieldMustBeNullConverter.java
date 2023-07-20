@@ -23,7 +23,7 @@ import java.util.Objects;
  * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistries#clear()}.
  */
-public class FieldMustBeNullConverter implements JsonSerializer<FieldMustBeNull>, JsonDeserializer {
+public final class FieldMustBeNullConverter implements JsonSerializer<FieldMustBeNull>, JsonDeserializer {
 
     /**
      * Constructor

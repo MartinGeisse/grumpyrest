@@ -29,7 +29,7 @@ import java.util.Objects;
  * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistries#clear()}.
  */
-public class ListConverter implements JsonSerializer<List<?>>, JsonDeserializer {
+public final class ListConverter implements JsonSerializer<List<?>>, JsonDeserializer {
 
     private final JsonRegistries registries;
 
