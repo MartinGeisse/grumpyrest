@@ -70,33 +70,25 @@ public final class MapConverter implements JsonSerializer<Map<?, ?>>, JsonDeseri
             for (Map.Entry<String, JsonElement> entry : map.entrySet()) {
                 String keyText = entry.getKey();
                 boolean isAtKey = true;
-
-
-
                 try {
+
+
+
                     Object key = keyTypeAdapter.fromJson(new JsonPrimitive(keyText), keyType);
                     isAtKey = false;
                     Object value = valueTypeAdapter.fromJson(entry.getValue(), valueType);
                     result.put(key, value);
-                } catch (JsonValidationException e) {
+
+
+                    result.add(elementDeserializer.deserialize(array.get(i), elementType));
+
+
+
+                } catch (JsonDeserializationException e) {
                     errorNode = e.getFieldErrorNode().in(buildFromJsonFieldName(isAtKey, keyText)).and(errorNode);
                 } catch (Exception e) {
                     errorNode = FieldErrorNode.create(e).in(buildFromJsonFieldName(isAtKey, keyText)).and(errorNode);
                 }
-
-
-
-
-                try {
-                    result.add(elementDeserializer.deserialize(array.get(i), elementType));
-                } catch (JsonDeserializationException e) {
-                    errorNode = e.getFieldErrorNode().in(Integer.toString(i)).and(errorNode);
-                } catch (Exception e) {
-                    errorNode = FieldErrorNode.create(e).in(Integer.toString(i)).and(errorNode);
-                }
-
-
-
             }
             if (errorNode != null) {
                 throw new JsonDeserializationException(errorNode);
