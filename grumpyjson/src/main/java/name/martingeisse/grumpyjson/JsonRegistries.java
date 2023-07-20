@@ -45,9 +45,9 @@ public record JsonRegistries(
     }
 
     /**
-     * Registers the specified converter.
+     * Registers the specified dual converter.
      *
-     * @param converter the converter to register
+     * @param converter the dual converter to register
      */
     public <T extends JsonSerializer<?> & JsonDeserializer> void registerDualConverter(T converter) {
         registerSerializer(converter);
