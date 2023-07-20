@@ -7,8 +7,8 @@
 package name.martingeisse.grumpyjson;
 
 /**
- * This class is mostly useful for unit tests, so we don't have to check for exceptions while working around
- * unknown error messages -- this way we just know these messages.
+ * This class is mostly useful for unit tests: If we hardcoded the error messages at the point these errors occur, then
+ * we would have to duplicate them in the tests.
  */
 public class ExceptionMessages {
 
