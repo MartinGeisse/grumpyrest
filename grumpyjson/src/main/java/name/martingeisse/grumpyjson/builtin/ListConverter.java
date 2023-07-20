@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * This converter handles type List&lt;...&gt; for deserialization, and classes List and its subclasses for
- * serialization.
+ * This converter handles type List&lt;...&gt; for deserialization, and the List interface and its implementing
+ * classes for serialization.
  * <p>
  * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistries#clear()}.

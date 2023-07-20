@@ -60,6 +60,7 @@ public final class JsonEngine {
 
         // collection types
         registerDualConverter(new ListConverter(registries));
+        registerDualConverter(new MapConverter(registries));
 
         // helper types
         registerDualConverter(new FieldMustBeNullConverter());
