@@ -39,8 +39,8 @@ import java.util.regex.Pattern;
  * added using {@link #registerDualConverter(name.martingeisse.grumpyjson.serialize.JsonSerializer)},
  * {@link #registerSerializer(name.martingeisse.grumpyjson.serialize.JsonSerializer)} and
  * {@link #registerDeserializer(name.martingeisse.grumpyjson.deserialize.JsonDeserializer)}. If the standard
- * converters are not desired, you can call {@link #getSerializerRegistry()} and {@link #getDeserializerRegistry()}
- * and then .clear() to remove all currently registered converters.
+ * converters are not desired, you can call {@link #getRegistries()} / {@link #getSerializerRegistry()} /
+ * {@link #getDeserializerRegistry()} and then .clear() to remove all currently registered converters.
  */
 public class JsonEngine {
 
@@ -105,10 +105,20 @@ public class JsonEngine {
         return registries;
     }
 
+    /**
+     * Getter method for the registry for serializers.
+     *
+     * @return the registry for serializers
+     */
     public final JsonSerializerRegistry getSerializerRegistry() {
         return registries.serializerRegistry();
     }
 
+    /**
+     * Getter method for the registry for deserializers.
+     *
+     * @return the registry for deserializers
+     */
     public final JsonDeserializerRegistry getDeserializerRegistry() {
         return registries.deserializerRegistry();
     }
