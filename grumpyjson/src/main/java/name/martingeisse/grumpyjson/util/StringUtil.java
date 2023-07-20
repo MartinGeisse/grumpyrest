@@ -25,8 +25,11 @@ public class StringUtil {
      */
     public static String join(final List<?> list, String separator) {
         StringBuilder builder = new StringBuilder();
+        boolean first = true;
         for (Object element : list) {
-            if (builder.length() > 0) {
+            if (first) {
+                first = false;
+            } else {
                 builder.append(separator);
             }
             builder.append(element);
