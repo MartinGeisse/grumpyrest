@@ -1,5 +1,5 @@
 
-## Version 0.5
+## Version 0.5 (WIP)
 
 * More javadoc
 * split type adapters in serializers and deserializers
