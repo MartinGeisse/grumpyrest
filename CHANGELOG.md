@@ -1,4 +1,8 @@
 
+## Version 0.6 (WIP)
+
+...
+
 ## Version 0.5
 
 * More javadoc
