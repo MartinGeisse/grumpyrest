@@ -6,6 +6,8 @@
  */
 package name.martingeisse.grumpyjson.registry;
 
+import name.martingeisse.grumpyjson.util.ListUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +70,10 @@ public abstract class Registry<K, V> extends Sealable {
         manuallyAddedRegistrables.add(registrable);
     }
 
+    @Override
+    protected void onSeal() {
+        ListUtil.reverseInPlace(manuallyAddedRegistrables);
+    }
 
     // ----------------------------------------------------------------------------------------------------------------
     // run-time methods
@@ -94,7 +100,7 @@ public abstract class Registry<K, V> extends Sealable {
      * Returns a registered object for the specified key, auto-generating it if necessary and possible. This method will
      * throw an exception if no registrable was registered manually that supports the key and no registrable can be
      * auto-generated. If multiple registrables have been registered that can handle the specified key, the one
-     * registered earlier will take precedence.
+     * registered later will take precedence.
      *
      * @param key the key to return a registrable for
      * @return the registered object, possibly auto-generated

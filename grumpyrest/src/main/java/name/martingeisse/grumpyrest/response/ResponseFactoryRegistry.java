@@ -53,7 +53,7 @@ public final class ResponseFactoryRegistry extends Sealable {
 
     /**
      * Converts a response value to a {@link Response} using an appropriate response factory from this registry.
-     * If multiple response factories support conversion of that value, then the one registered earlier takes precedence.
+     * If multiple response factories support conversion of that value, then the one registered later takes precedence.
      *
      * @param requestCycle the request cycle to create a response for. This is passed in case the response factory
      *                     wants to do special stuff like look into request properties.

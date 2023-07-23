@@ -30,7 +30,7 @@ public interface JsonDeserializerProvider {
      * Returns a registered deserializer for the specified type, auto-generating it if necessary and possible. This
      * method will throw an exception if no deserializer was registered manually that supports the type and no
      * deserializer can be auto-generated. If multiple deserializers have been registered that can handle the
-     * specified type, the one registered earlier will take precedence.
+     * specified type, the one registered later will take precedence.
      *
      * @param type the type to return a deserializer for
      * @return the registered deserializer, possibly auto-generated

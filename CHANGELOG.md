@@ -1,6 +1,16 @@
 
 ## Version 0.6 (WIP)
 
+* The order in which the lists of manually added JSON converters, parameter parsers etc. are scanned is now REVERSED!
+  * converters/parsers added later now take precedence over ones added earlier. For a given type, of all converters
+    that could handle that type, the one added last will be selected. 
+  * this allows to provide standard converters in the framework and the application code can override them just by
+    adding its own converters.
+  * Previously, application code had to clear the registries, then re-add all standard converters it wanted to keep.
+    To override a single type (for example, change the `LocalDate` converter to be more lenient and make leading
+    zeroes optional), the list of all other standard converters would have to be cloned from the framework into
+    application code and have to be updated every time the framework adds new standard converters.
+
 ...
 
 ## Version 0.5

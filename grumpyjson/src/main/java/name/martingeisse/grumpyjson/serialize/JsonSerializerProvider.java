@@ -31,7 +31,7 @@ public interface JsonSerializerProvider {
      * Returns a registered serializer for the specified class, auto-generating it if necessary and possible. This
      * method will throw an exception if no serializer was registered manually that supports the class and no
      * serializer can be auto-generated. If multiple serializers have been registered that can handle the
-     * specified class, the one registered earlier will take precedence.
+     * specified class, the one registered later will take precedence.
      *
      * @param clazz the class to return a serializer for
      * @return the registered serializer, possibly auto-generated

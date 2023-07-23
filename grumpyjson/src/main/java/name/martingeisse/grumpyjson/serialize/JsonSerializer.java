@@ -23,7 +23,7 @@ import java.util.Optional;
  * <p>
  * There is currently no precedence rule for serializers based on specificity: If one serializer supports superclass A,
  * and a second one supports subclass B extends A, then for an instance of B, the second one does NOT take precedence
- * just because it is more specific. Instead, the registry will select the serializer that was registered earlier.
+ * just because it is more specific. Instead, the registry will select the serializer that was registered later.
  *
  * @param <T> the type to convert
  */

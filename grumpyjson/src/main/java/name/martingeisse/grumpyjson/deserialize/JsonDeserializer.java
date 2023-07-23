@@ -24,9 +24,9 @@ import java.util.List;
  * the deserializer will fail for the list elements because the element type is unknown. Therefore the deserializer
  * gets passed the whole type, such as List&lt;Integer&gt;, so it knows to deserialize the elements as {@link Integer}.
  * <p>
- * There is currently no precedence rule for deserializers based on specificity: If one deserializer supports supertype
+ * There is no precedence rule for deserializers based on specificity: If one deserializer supports supertype
  * A, and a second one supports subtype B of A, then for an instance of B, the second one does NOT take precedence
- * just because it is more specific. Instead, the registry will select the deserializer that was registered earlier.
+ * just because it is more specific. Instead, the registry will select the deserializer that was registered later.
  */
 public interface JsonDeserializer {
 
