@@ -103,7 +103,7 @@ public final class JsonEngine {
      *
      * @return the registries
      */
-    public final JsonRegistries getRegistries() {
+    public JsonRegistries getRegistries() {
         return registries;
     }
 
@@ -112,7 +112,7 @@ public final class JsonEngine {
      *
      * @return the registry for serializers
      */
-    public final JsonSerializerRegistry getSerializerRegistry() {
+    public JsonSerializerRegistry getSerializerRegistry() {
         return registries.serializerRegistry();
     }
 
@@ -121,7 +121,7 @@ public final class JsonEngine {
      *
      * @return the registry for deserializers
      */
-    public final JsonDeserializerRegistry getDeserializerRegistry() {
+    public JsonDeserializerRegistry getDeserializerRegistry() {
         return registries.deserializerRegistry();
     }
 
