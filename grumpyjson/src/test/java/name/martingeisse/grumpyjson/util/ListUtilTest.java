@@ -32,7 +32,7 @@ public class ListUtilTest {
     public void testThree() {
         List<Integer> list = new ArrayList<>(List.of(1, 2, 3));
         ListUtil.reverseInPlace(list);
-        Assertions.assertEquals(List.of(1, 2, 3), list); // TODO
+        Assertions.assertEquals(List.of(3, 2, 1), list);
     }
 
 }
