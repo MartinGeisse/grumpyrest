@@ -127,7 +127,7 @@ public final class JsonEngine {
     /**
      * Seals this JSON engine, moving from the configuration phase to the run-time phase.
      */
-    public final void seal() {
+    public void seal() {
         registries.seal();
     }
 

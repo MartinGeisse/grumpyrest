@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Base class for a registry which acts somewhat like a {@link Map}, but with the following differences:
@@ -40,24 +39,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @param <K> the key type
  * @param <V> the type of registrable stored in this registry
  */
-public abstract class Registry<K, V> {
+public abstract class Registry<K, V> extends Sealable {
 
     private final List<V> manuallyAddedRegistrables = new ArrayList<>();
-    private final AtomicBoolean sealedFlag = new AtomicBoolean(false);
     private final ConcurrentMap<K, V> map = new ConcurrentHashMap<>();
 
     // ----------------------------------------------------------------------------------------------------------------
     // configuration-time methods
     // ----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Throws an {@link IllegalStateException} if this registry has been sealed already.
-     */
-    protected final void ensureConfigurationPhase() {
-        if (sealedFlag.get()) {
-            throw new IllegalStateException("this registry has been sealed already");
-        }
-    }
 
     /**
      * Removes all registered objects from this registry. This is useful because the registries used by grumpyjson
@@ -79,27 +68,10 @@ public abstract class Registry<K, V> {
         manuallyAddedRegistrables.add(registrable);
     }
 
-    /**
-     * Seals this registry, moving from the configuration phase to the run-time phase.
-     */
-    public final void seal() {
-        ensureConfigurationPhase();
-        sealedFlag.set(true);
-    }
-
 
     // ----------------------------------------------------------------------------------------------------------------
     // run-time methods
     // ----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Throws an {@link IllegalStateException} if this registry has not yet been sealed.
-     */
-    protected final void ensureRunTimePhase() {
-        if (!sealedFlag.get()) {
-            throw new IllegalStateException("this registry has not yet been sealed");
-        }
-    }
 
     /**
      * Checks whether the specified key is supported by any registrable that is registered with this registry or can be

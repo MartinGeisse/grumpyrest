@@ -7,6 +7,7 @@
 package name.martingeisse.grumpyrest.response;
 
 import name.martingeisse.grumpyjson.registry.Registry;
+import name.martingeisse.grumpyjson.registry.Sealable;
 import name.martingeisse.grumpyrest.RequestCycle;
 import name.martingeisse.grumpyrest.RestApi;
 
@@ -20,7 +21,7 @@ import java.util.List;
  * This class does not extend {@link Registry} because it does not work with keys reported by its registrables (i.e.
  * response factories), but directly calls all factories and uses the first non-null result.
  */
-public final class ResponseFactoryRegistry {
+public final class ResponseFactoryRegistry extends Sealable {
 
     private final List<ResponseFactory> factories = new ArrayList<>();
 
@@ -36,6 +37,7 @@ public final class ResponseFactoryRegistry {
      * created {@link RestApi} contains default response factories, and the code using it might not want to use them.
      */
     public void clear() {
+        ensureConfigurationPhase();
         factories.clear();
     }
 
@@ -45,6 +47,7 @@ public final class ResponseFactoryRegistry {
      * @param factory the response factory to register
      */
     public void register(ResponseFactory factory) {
+        ensureConfigurationPhase();
         factories.add(factory);
     }
 
@@ -58,6 +61,7 @@ public final class ResponseFactoryRegistry {
      * @return the response
      */
     public Response createResponse(RequestCycle requestCycle, Object value) {
+        ensureRunTimePhase();
         while (value instanceof ResponseValueWrapper wrapper) {
             value = wrapper.getWrappedResponseValue();
         }

@@ -276,6 +276,7 @@ public final class RestApi {
         jsonEngine.seal();
         fromStringParserRegistry.seal();
         querystringParserRegistry.seal();
+        responseFactoryRegistry.seal();
     }
 
     // endregion
