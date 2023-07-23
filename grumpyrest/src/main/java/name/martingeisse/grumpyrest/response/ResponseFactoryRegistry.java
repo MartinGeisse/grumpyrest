@@ -8,6 +8,7 @@ package name.martingeisse.grumpyrest.response;
 
 import name.martingeisse.grumpyjson.registry.Registry;
 import name.martingeisse.grumpyjson.registry.Sealable;
+import name.martingeisse.grumpyjson.util.ListUtil;
 import name.martingeisse.grumpyrest.RequestCycle;
 import name.martingeisse.grumpyrest.RestApi;
 
@@ -49,6 +50,11 @@ public final class ResponseFactoryRegistry extends Sealable {
     public void register(ResponseFactory factory) {
         ensureConfigurationPhase();
         factories.add(factory);
+    }
+
+    @Override
+    protected void onSeal() {
+        ListUtil.reverseInPlace(factories);
     }
 
     /**

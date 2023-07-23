@@ -69,9 +69,9 @@ public final class RestApi {
     public RestApi() {
 
         // HTTP response factories
-        registerResponseFactory(new IdentityResponseFactory());
-        registerResponseFactory(new JsonResponseFactory());
         registerResponseFactory(new NullResponseFactory());
+        registerResponseFactory(new JsonResponseFactory());
+        registerResponseFactory(new IdentityResponseFactory());
 
         // from-string parsers
         registerFromStringParser(new StringFromStringParser());
