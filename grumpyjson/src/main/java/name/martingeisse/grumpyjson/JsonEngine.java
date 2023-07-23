@@ -40,7 +40,8 @@ import java.util.regex.Pattern;
  * {@link #registerSerializer(name.martingeisse.grumpyjson.serialize.JsonSerializer)} and
  * {@link #registerDeserializer(name.martingeisse.grumpyjson.deserialize.JsonDeserializer)}. If the standard
  * converters are not desired, you can call {@link #getRegistries()} / {@link #getSerializerRegistry()} /
- * {@link #getDeserializerRegistry()} and then .clear() to remove all currently registered converters.
+ * {@link #getDeserializerRegistry()} and then .clear() to remove all currently registered converters. Note that you
+ * can override standard converters just by adding your own ones, since later-added converters will take precedence.
  */
 public final class JsonEngine {
 
