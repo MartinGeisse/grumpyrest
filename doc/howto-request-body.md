@@ -35,7 +35,9 @@ create instances of such classes -- a list subclass may expect a no-arg construc
 constructor that takes a list of elements, or a constructor that takes an array of elements, or a static factory method
 with any of these styles. Just use `List<SomeConcreteType>` and you will get exactly that.
 
-## TODO: Maps / objects with arbitrary keys (not yet supported)
+Maps work in a similar way: Any `Map<?,?>` will be serialized to a JSON object (if the key and value types are
+supported), but for deserialization only `Map` itself (no subtypes) will work, and only with concrete type parameters
+so the deserializers for keys and values can be selected.
 
 ## TODO: objects that allow arbitrary extra keys (not yet supported)
 
