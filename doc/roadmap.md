@@ -11,7 +11,6 @@
 * HOWTO: add response JSON types (existing HOWTO covers request body deserialization)
 * add actual tests to JsonEngineTest
 * More JSON types
-  * record with ignored extra keys
   * record with extra keys as Map<>
   * discriminated union
   * Instant (seconds / milli)

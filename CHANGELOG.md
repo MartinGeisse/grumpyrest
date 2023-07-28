@@ -12,6 +12,7 @@
     application code and have to be updated every time the framework adds new standard converters.
 * added LocalDate / LocalDateTime / LocalTime JSON converters and parsers
 * added enum converters and parsers
+* added option to record converter to ignore unknown properties
 
 ...
 

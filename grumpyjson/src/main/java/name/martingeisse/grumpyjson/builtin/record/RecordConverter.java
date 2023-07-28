@@ -49,14 +49,44 @@ import java.util.*;
  */
 public final class RecordConverter<T> implements JsonSerializer<T>, JsonDeserializer {
 
+    /**
+     * Controls the behavior of a {@link RecordConverter}.
+     *
+     * @param ignoreUnknownProperties to ignore unknown properties during deserialization instead of throwing an exception
+     */
+    public record Options(boolean ignoreUnknownProperties) {
+    }
+
     private final RecordInfo recordInfo;
     private final JsonRegistries registries;
+    private final Options options;
 
-    RecordConverter(Class<T> clazz, JsonRegistries registries) {
+    /**
+     * Application code usually does not have to call this constructor because instances of this class will be
+     * auto-generated for unknown records, and this constructor does not add any features on top of that.
+     *
+     * @param clazz      the record class
+     * @param registries the JSON registries -- needed to fetch the converters for field types at run-time
+     */
+    public RecordConverter(Class<T> clazz, JsonRegistries registries) {
+        this(clazz, registries, new Options(false));
+    }
+
+    /**
+     * This constructor adds extra options. Application code can create custom record converters manually using this
+     * constructor in cases where the auto-generated ones are not sufficient.
+     *
+     * @param clazz      the record class
+     * @param registries the JSON registries -- needed to fetch the converters for field types at run-time
+     * @param options    options that control the conversion from and to JSON
+     */
+    public RecordConverter(Class<T> clazz, JsonRegistries registries, Options options) {
         Objects.requireNonNull(clazz, "clazz");
         Objects.requireNonNull(registries, "registries");
+        Objects.requireNonNull(options, "options");
         this.recordInfo = new RecordInfo(clazz);
         this.registries = registries;
+        this.options = options;
     }
 
     @Override
@@ -105,7 +135,7 @@ public final class RecordConverter<T> implements JsonSerializer<T>, JsonDeserial
 
             // jsonObject.size() counts the present properties; numberOfPresentKnownProperties counts the present
             // *known* properties. So they differ iff there is at least one present unknown property.
-            if (numberOfPresentKnownProperties != jsonObject.size()) {
+            if (!options.ignoreUnknownProperties() && numberOfPresentKnownProperties != jsonObject.size()) {
                 // this is more expensive, so only do this if there is really an error
                 Set<String> propertyNames = new HashSet<>(jsonObject.keySet());
                 for (RecordInfo.ComponentInfo componentInfo : componentInfos) {
