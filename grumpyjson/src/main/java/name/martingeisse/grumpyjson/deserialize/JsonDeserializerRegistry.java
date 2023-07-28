@@ -7,6 +7,7 @@
 package name.martingeisse.grumpyjson.deserialize;
 
 import name.martingeisse.grumpyjson.JsonEngine;
+import name.martingeisse.grumpyjson.builtin.EnumConverter;
 import name.martingeisse.grumpyjson.builtin.record.RecordConverterFactory;
 import name.martingeisse.grumpyjson.registry.NotRegisteredException;
 import name.martingeisse.grumpyjson.registry.Registry;
@@ -45,10 +46,14 @@ public final class JsonDeserializerRegistry extends Registry<Type, JsonDeseriali
         } else {
             return null;
         }
-        if (!rawClass.isRecord()) {
-            return null;
+        if (rawClass.isRecord()) {
+            return recordConverterFactory.getDeserializer(rawClass);
         }
-        return recordConverterFactory.getDeserializer(rawClass);
+        if (rawClass.isEnum()) {
+            //noinspection unchecked,rawtypes
+            return new EnumConverter(rawClass);
+        }
+        return null;
     }
 
     @Override

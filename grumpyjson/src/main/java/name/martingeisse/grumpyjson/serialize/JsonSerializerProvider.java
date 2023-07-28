@@ -1,7 +1,6 @@
 package name.martingeisse.grumpyjson.serialize;
 
 import com.google.gson.JsonElement;
-import name.martingeisse.grumpyjson.deserialize.JsonDeserializerRegistry;
 import name.martingeisse.grumpyjson.registry.NotRegisteredException;
 
 import java.util.Objects;

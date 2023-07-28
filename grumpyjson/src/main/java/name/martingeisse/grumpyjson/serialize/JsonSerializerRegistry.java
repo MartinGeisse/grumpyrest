@@ -7,6 +7,7 @@
 package name.martingeisse.grumpyjson.serialize;
 
 import name.martingeisse.grumpyjson.JsonEngine;
+import name.martingeisse.grumpyjson.builtin.EnumConverter;
 import name.martingeisse.grumpyjson.builtin.record.RecordConverterFactory;
 import name.martingeisse.grumpyjson.registry.NotRegisteredException;
 import name.martingeisse.grumpyjson.registry.Registry;
@@ -34,7 +35,14 @@ public final class JsonSerializerRegistry extends Registry<Class<?>, JsonSeriali
 
     @Override
     protected JsonSerializer<?> generateRegistrable(Class<?> clazz) {
-        return clazz.isRecord() ? recordConverterFactory.getSerializer(clazz) : null;
+        if (clazz.isRecord()) {
+            return recordConverterFactory.getSerializer(clazz);
+        }
+        if (clazz.isEnum()) {
+            //noinspection unchecked,rawtypes
+            return new EnumConverter(clazz);
+        }
+        return null;
     }
 
     @Override

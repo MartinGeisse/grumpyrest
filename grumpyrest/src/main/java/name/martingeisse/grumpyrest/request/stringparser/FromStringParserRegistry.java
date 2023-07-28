@@ -9,6 +9,7 @@ package name.martingeisse.grumpyrest.request.stringparser;
 import name.martingeisse.grumpyjson.registry.NotRegisteredException;
 import name.martingeisse.grumpyjson.registry.Registry;
 import name.martingeisse.grumpyrest.RestApi;
+import name.martingeisse.grumpyrest.request.stringparser.standard.EnumParser;
 
 import java.lang.reflect.Type;
 
@@ -25,7 +26,12 @@ public final class FromStringParserRegistry extends Registry<Type, FromStringPar
     }
 
     @Override
-    protected FromStringParser generateRegistrable(Type key) {
+    protected FromStringParser generateRegistrable(Type type) {
+        //noinspection rawtypes
+        if (type instanceof Class clazz && clazz.isEnum()) {
+            //noinspection unchecked,rawtypes
+            return new EnumParser(clazz);
+        }
         return null;
     }
 
