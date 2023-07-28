@@ -1,5 +1,5 @@
 
-## Version 0.6 (WIP)
+## Version 0.6
 
 * The order in which the lists of manually added JSON converters, parameter parsers etc. are scanned is now REVERSED!
   * converters/parsers added later now take precedence over ones added earlier. For a given type, of all converters
@@ -13,8 +13,6 @@
 * added LocalDate / LocalDateTime / LocalTime JSON converters and parsers
 * added enum converters and parsers
 * added option to record converter to ignore unknown properties
-
-...
 
 ## Version 0.5
 
