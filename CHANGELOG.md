@@ -10,6 +10,8 @@
     To override a single type (for example, change the `LocalDate` converter to be more lenient and make leading
     zeroes optional), the list of all other standard converters would have to be cloned from the framework into
     application code and have to be updated every time the framework adds new standard converters.
+* added LocalDate / LocalDateTime / LocalTime JSON converters and parsers
+* added enum converters and parsers
 
 ...
 
