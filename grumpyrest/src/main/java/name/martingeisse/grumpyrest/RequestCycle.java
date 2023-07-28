@@ -6,12 +6,13 @@
  */
 package name.martingeisse.grumpyrest;
 
+import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.registry.NotRegisteredException;
+import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyrest.request.PathArgument;
 import name.martingeisse.grumpyrest.request.Request;
 import name.martingeisse.grumpyrest.request.path.PathUtil;
@@ -23,7 +24,6 @@ import name.martingeisse.grumpyrest.response.standard.StandardErrorResponse;
 import name.martingeisse.grumpyrest.servlet.RequestPathSourcingStrategy;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -195,6 +195,8 @@ public final class RequestCycle {
 
     private final class MyRequest implements Request {
 
+        private JsonElement preParsedBody;
+
         @Override
         public String getMethod() {
             return servletRequest.getMethod();
@@ -271,16 +273,21 @@ public final class RequestCycle {
             }
         }
 
-        private InputStream prepareParse() {
-            String contentType = servletRequest.getContentType();
-            if (contentType == null || !contentType.equals("application/json")) {
-                throw new FinishRequestException(StandardErrorResponse.JSON_EXPECTED);
+        private JsonElement prepareParse() {
+            if (preParsedBody == null) {
+                String contentType = servletRequest.getContentType();
+                if (contentType == null || !contentType.equals("application/json")) {
+                    throw new FinishRequestException(StandardErrorResponse.JSON_EXPECTED);
+                }
+                try {
+                    preParsedBody = api.getJsonEngine().deserialize(servletRequest.getInputStream(), JsonElement.class);
+                } catch (JsonDeserializationException e) {
+                    throw new FinishRequestException(StandardErrorResponse.requestBodyValidationFailed(e));
+                } catch (IOException e) {
+                    throw new FinishRequestException(StandardErrorResponse.IO_ERROR);
+                }
             }
-            try {
-                return servletRequest.getInputStream();
-            } catch (IOException e) {
-                throw new FinishRequestException(StandardErrorResponse.IO_ERROR);
-            }
+            return preParsedBody;
         }
 
 
