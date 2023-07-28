@@ -55,7 +55,7 @@ public class OptionalFieldConverterTest {
     }
 
     @Test
-    public void testDeserializationWrongType() {
+    public void testDeserializationWrongType() throws Exception {
         forNull(json -> assertFailsDeserialization(converter, json, OPTIONAL_INTEGER_TYPE));
         forBooleans(json -> assertFailsDeserialization(converter, json, OPTIONAL_INTEGER_TYPE));
         forStrings(json -> assertFailsDeserialization(converter, json, OPTIONAL_INTEGER_TYPE));

@@ -23,7 +23,7 @@ public class BooleanConverterTest {
     }
 
     @Test
-    public void testDeserializationWrongType() {
+    public void testDeserializationWrongType() throws Exception {
         forNonPrimitive(json -> assertFailsDeserialization(converter, json, Boolean.TYPE));
         forNull(json -> assertFailsDeserialization(converter, json, Boolean.TYPE));
         forNumbers(json -> assertFailsDeserialization(converter, json, Boolean.TYPE));

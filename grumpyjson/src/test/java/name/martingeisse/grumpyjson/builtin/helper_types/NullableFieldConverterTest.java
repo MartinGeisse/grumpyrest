@@ -54,7 +54,7 @@ public class NullableFieldConverterTest {
     }
 
     @Test
-    public void testDeserializationWrongType() {
+    public void testDeserializationWrongType() throws Exception {
         forBooleans(json -> assertFailsDeserialization(converter, json, NULLABLE_INTEGER_TYPE));
         forStrings(json -> assertFailsDeserialization(converter, json, NULLABLE_INTEGER_TYPE));
         forObjects(json -> assertFailsDeserialization(converter, json, NULLABLE_INTEGER_TYPE));

@@ -63,7 +63,7 @@ public class ListConverterTest {
     }
 
     @Test
-    public void testDeserializationWrongType() {
+    public void testDeserializationWrongType() throws Exception {
         forNull(json -> assertFailsDeserialization(converter, json, INTEGER_LIST_TYPE));
         forBooleans(json -> assertFailsDeserialization(converter, json, INTEGER_LIST_TYPE));
         forNumbers(json -> assertFailsDeserialization(converter, json, INTEGER_LIST_TYPE));

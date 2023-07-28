@@ -24,7 +24,7 @@ public class IntegerConverterTest {
     }
 
     @Test
-    public void testDeserializationWrongType() {
+    public void testDeserializationWrongType() throws Exception {
         forNonPrimitive(json -> assertFailsDeserialization(converter, json, Integer.TYPE));
         forNull(json -> assertFailsDeserialization(converter, json, Integer.TYPE));
         forBooleans(json -> assertFailsDeserialization(converter, json, Integer.TYPE));

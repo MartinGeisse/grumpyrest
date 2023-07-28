@@ -43,7 +43,7 @@ public class ShallowRecordConverterTest {
     }
 
     @Test
-    public void testDeserializationWrongType() {
+    public void testDeserializationWrongType() throws Exception {
         forNull(json -> assertFailsDeserialization(deserializer, json, Record.class));
         forNumbers(json -> assertFailsDeserialization(deserializer, json, Record.class));
         forBooleans(json -> assertFailsDeserialization(deserializer, json, Record.class));

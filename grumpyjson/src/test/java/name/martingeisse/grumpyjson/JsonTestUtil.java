@@ -18,15 +18,18 @@ import org.junit.jupiter.api.Assertions;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 
 public class JsonTestUtil {
+
+    public interface ConsumerWithException<T> {
+        void accept(T t) throws Exception;
+    }
 
     // ----------------------------------------------------------------------------------------------------------------
     // null (for completeness -- makes test code a bit more readable even though it does not reduce code)
     // ----------------------------------------------------------------------------------------------------------------
 
-    public static void forNull(Consumer<? super JsonNull> consumer) {
+    public static void forNull(ConsumerWithException<? super JsonNull> consumer) throws Exception {
         consumer.accept(JsonNull.INSTANCE);
     }
 
@@ -34,7 +37,7 @@ public class JsonTestUtil {
     // booleans
     // ----------------------------------------------------------------------------------------------------------------
 
-    public static void forBooleans(Consumer<? super JsonPrimitive> consumer) {
+    public static void forBooleans(ConsumerWithException<? super JsonPrimitive> consumer) throws Exception {
         consumer.accept(new JsonPrimitive(false));
         consumer.accept(new JsonPrimitive(true));
     }
@@ -43,7 +46,7 @@ public class JsonTestUtil {
     // numbers
     // ----------------------------------------------------------------------------------------------------------------
 
-    public static void forNumbers(Consumer<? super JsonPrimitive> consumer) {
+    public static void forNumbers(ConsumerWithException<? super JsonPrimitive> consumer) throws Exception {
         consumer.accept(new JsonPrimitive(0));
         consumer.accept(new JsonPrimitive(1));
         consumer.accept(new JsonPrimitive(2));
@@ -55,7 +58,7 @@ public class JsonTestUtil {
     // strings
     // ----------------------------------------------------------------------------------------------------------------
 
-    public static void forStrings(Consumer<? super JsonPrimitive> consumer) {
+    public static void forStrings(ConsumerWithException<? super JsonPrimitive> consumer) throws Exception {
         consumer.accept(new JsonPrimitive(""));
         consumer.accept(new JsonPrimitive("foo"));
         consumer.accept(new JsonPrimitive("{}"));
@@ -100,7 +103,7 @@ public class JsonTestUtil {
         return array;
     }
 
-    public static void forArrays(Consumer<? super JsonElement> consumer) {
+    public static void forArrays(ConsumerWithException<? super JsonElement> consumer) throws Exception {
         consumer.accept(EMPTY_ARRAY);
         consumer.accept(SINGLE_INT_ARRAY);
         consumer.accept(INT_ARRAY);
@@ -135,7 +138,7 @@ public class JsonTestUtil {
         return object;
     }
 
-    public static void forObjects(Consumer<? super JsonObject> consumer) {
+    public static void forObjects(ConsumerWithException<? super JsonObject> consumer) throws Exception {
         consumer.accept(EMPTY_OBJECT);
         consumer.accept(OBJECT_WITH_SINGLE_KEY_AND_INT_VALUE);
         consumer.accept(OBJECT_WITH_SINGLE_KEY_AND_STRING_VALUE);
@@ -151,19 +154,19 @@ public class JsonTestUtil {
     // combined
     // ----------------------------------------------------------------------------------------------------------------
 
-    public static void forPrimitive(Consumer<JsonElement> consumer) {
+    public static void forPrimitive(ConsumerWithException<JsonElement> consumer) throws Exception {
         forNull(consumer);
         forBooleans(consumer);
         forNumbers(consumer);
         forStrings(consumer);
     }
 
-    public static void forNonPrimitive(Consumer<JsonElement> consumer) {
+    public static void forNonPrimitive(ConsumerWithException<JsonElement> consumer) throws Exception {
         forArrays(consumer);
         forObjects(consumer);
     }
 
-    public static void forJsonElements(Consumer<JsonElement> consumer) {
+    public static void forJsonElements(ConsumerWithException<JsonElement> consumer) throws Exception {
         forPrimitive(consumer);
         forNonPrimitive(consumer);
     }

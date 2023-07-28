@@ -35,7 +35,7 @@ public class JsonElementConverterTest {
     }
 
     @Test
-    public void test() {
+    public void test() throws Exception {
         JsonTestUtil.forJsonElements(element -> check(element));
         JsonTestUtil.forNonPrimitive(element -> checkNotSame(element));
     }
