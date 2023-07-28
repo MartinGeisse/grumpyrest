@@ -367,8 +367,9 @@ public final class RestApi {
                 responseTransmitter.setContentType("application/text");
                 responseTransmitter.getOutputStream().write("internal server error\n".getBytes(StandardCharsets.UTF_8));
             } catch (Exception e2) {
-                // ignore
+                // ignore -- typically I/O errors which are transient and we can't fix them
             }
+            LOGGER.error("exception during request handling", e);
         }
     }
 
