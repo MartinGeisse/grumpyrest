@@ -1,4 +1,8 @@
 
+## Version 0.7 (WIP)
+
+...
+
 ## Version 0.6
 
 * The order in which the lists of manually added JSON converters, parameter parsers etc. are scanned is now REVERSED!
