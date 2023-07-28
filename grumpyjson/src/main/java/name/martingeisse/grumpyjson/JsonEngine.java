@@ -93,6 +93,8 @@ public final class JsonEngine {
      * Registers the specified dual converter.
      *
      * @param converter the dual converter to register
+     * @param <T>       the dual converter type which must implement both {@link JsonSerializer} and
+     * {@link JsonDeserializer}
      */
     public <T extends JsonSerializer<?> & JsonDeserializer> void registerDualConverter(T converter) {
         registries.registerDualConverter(converter);

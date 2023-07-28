@@ -11,17 +11,36 @@ package name.martingeisse.grumpyjson.registry;
  */
 public class NotRegisteredException extends Exception {
 
+    /**
+     * Constructor.
+     */
     public NotRegisteredException() {
     }
 
+    /**
+     * Constructor.
+     *
+     * @param message the exception message
+     */
     public NotRegisteredException(String message) {
         super(message);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param message the exception message
+     * @param cause   the exception that caused this one
+     */
     public NotRegisteredException(String message, Throwable cause) {
         super(message, cause);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param cause   the exception that caused this one
+     */
     public NotRegisteredException(Throwable cause) {
         super(cause);
     }

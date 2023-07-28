@@ -16,6 +16,12 @@ public final class ListUtil {
     private ListUtil() {
     }
 
+    /**
+     * NOT PUBLIC API
+     *
+     * @param list ...
+     * @param <T>  ...
+     */
     public static <T> void reverseInPlace(List<T> list) {
         List<T> copy = List.copyOf(list);
         list.clear();

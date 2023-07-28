@@ -252,6 +252,8 @@ public final class RestApi {
      * Registers the specified dual converter with the {@link JsonEngine}.
      *
      * @param converter the dual converter to register
+     * @param <T>       the dual converter type which must implement both {@link JsonSerializer} and
+     * {@link JsonDeserializer}
      */
     public <T extends JsonSerializer<?> & JsonDeserializer> void registerDualConverter(T converter) {
         jsonEngine.registerDualConverter(converter);

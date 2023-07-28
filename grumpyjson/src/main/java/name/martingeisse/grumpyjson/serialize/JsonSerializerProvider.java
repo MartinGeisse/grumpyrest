@@ -35,6 +35,7 @@ public interface JsonSerializerProvider {
      *
      * @param clazz the class to return a serializer for
      * @return the registered serializer, possibly auto-generated
+     * @param <T> the static type of the class to serialize
      * @throws NotRegisteredException if the class is not known to this provider
      */
     <T> JsonSerializer<T> getSerializer(Class<T> clazz) throws NotRegisteredException;

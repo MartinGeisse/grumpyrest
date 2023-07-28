@@ -29,12 +29,24 @@ public final class RecordConverterFactory {
     /**
      * NOT PUBLIC API
      */
+    public RecordConverterFactory() {
+    }
+
+    /**
+     * NOT PUBLIC API
+     *
+     * @param registries ...
+     */
     public void setRegistries(JsonRegistries registries) {
         this.registries = registries;
     }
 
     /**
      * NOT PUBLIC API
+     *
+     * @param clazz ...
+     * @return ...
+     * @param <T> ...
      */
     public <T> JsonSerializer<T> getSerializer(Class<T> clazz) {
         //noinspection unchecked
@@ -43,6 +55,9 @@ public final class RecordConverterFactory {
 
     /**
      * NOT PUBLIC API
+     *
+     * @param rawClass ...
+     * @return ...
      */
     public JsonDeserializer getDeserializer(Class<?> rawClass) {
         return getConverter(rawClass);
@@ -50,6 +65,9 @@ public final class RecordConverterFactory {
 
     /**
      * NOT PUBLIC API
+     *
+     * @param clazz ...
+     * @return ...
      */
     public RecordConverter<?> getConverter(Class<?> clazz) {
         return map.computeIfAbsent(clazz, ignored -> new RecordConverter<>(clazz, registries));

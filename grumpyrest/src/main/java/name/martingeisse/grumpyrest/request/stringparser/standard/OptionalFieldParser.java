@@ -25,6 +25,8 @@ public final class OptionalFieldParser implements FromStringParser {
 
     /**
      * Constructor.
+     *
+     * @param registry needed to fetch the parser for the contained type at run-time
      */
     public OptionalFieldParser(FromStringParserRegistry registry) {
         this.registry = registry;

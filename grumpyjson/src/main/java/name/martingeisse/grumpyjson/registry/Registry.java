@@ -46,6 +46,12 @@ public abstract class Registry<K, V> extends Sealable {
     private final List<V> manuallyAddedRegistrables = new ArrayList<>();
     private final ConcurrentMap<K, V> map = new ConcurrentHashMap<>();
 
+    /**
+     * Constructor.
+     */
+    public Registry() {
+    }
+
     // ----------------------------------------------------------------------------------------------------------------
     // configuration-time methods
     // ----------------------------------------------------------------------------------------------------------------

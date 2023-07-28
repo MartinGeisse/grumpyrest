@@ -10,11 +10,24 @@ import name.martingeisse.grumpyjson.serialize.JsonSerializerRegistry;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
+/**
+ * Groups the {@link JsonSerializerRegistry} and {@link JsonDeserializerRegistry} together. These two classes are
+ * separate mostly because it simplifies their implementation, but when using them, the distinction is not useful in
+ * most cases. Code that wants to use them and not make the distinction should instead use this class.
+ *
+ * @param serializerRegistry   the serializer registry
+ * @param deserializerRegistry the deserializer registry
+ */
 public record JsonRegistries(
     JsonSerializerRegistry serializerRegistry,
     JsonDeserializerRegistry deserializerRegistry
 ) implements JsonProviders {
 
+    /**
+     * Creates a default serializer/deserializer registry pair with built-in auto-generation for record converters.
+     *
+     * @return the registries
+     */
     public static JsonRegistries createDefault() {
         RecordConverterFactory recordConverterFactory = new RecordConverterFactory();
         JsonSerializerRegistry serializerRegistry = new JsonSerializerRegistry(recordConverterFactory);
@@ -48,6 +61,8 @@ public record JsonRegistries(
      * Registers the specified dual converter.
      *
      * @param converter the dual converter to register
+     * @param <T>       the dual converter type which must implement both {@link JsonSerializer} and
+     * {@link JsonDeserializer}
      */
     public <T extends JsonSerializer<?> & JsonDeserializer> void registerDualConverter(T converter) {
         registerSerializer(converter);

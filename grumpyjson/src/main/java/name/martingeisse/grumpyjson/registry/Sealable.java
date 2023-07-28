@@ -19,6 +19,12 @@ public abstract class Sealable {
     private final AtomicBoolean sealedFlag = new AtomicBoolean(false);
 
     /**
+     * Constructor
+     */
+    public Sealable() {
+    }
+
+    /**
      * Throws an {@link IllegalStateException} if this object has been sealed already.
      */
     protected final void ensureConfigurationPhase() {

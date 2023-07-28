@@ -19,7 +19,9 @@ public final class JsonSerializerRegistry extends Registry<Class<?>, JsonSeriali
     private final RecordConverterFactory recordConverterFactory;
 
     /**
-     * Constructor
+     * NOT PUBLIC API
+     *
+     * @param recordConverterFactory ...
      */
     public JsonSerializerRegistry(RecordConverterFactory recordConverterFactory) {
         this.recordConverterFactory = recordConverterFactory;
