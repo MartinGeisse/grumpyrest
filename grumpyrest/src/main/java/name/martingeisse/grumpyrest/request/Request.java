@@ -24,6 +24,24 @@ import java.util.List;
 public interface Request {
 
     /**
+     * Getter method for the HTTP method.
+     *
+     * @return the HTTP method
+     */
+    String getMethod();
+
+    /**
+     * Getter method for HTTP request headers. Returns null if a header is not present.
+     * <p>
+     * Neither this method nor its return value provides any high-level parsing. There is simply not enough
+     * consistency between the various HTTP headers to make this useful.
+     *
+     * @param name the name of the header to return
+     * @return the header value, as a string, or null if not present
+     */
+    String getHeader(String name);
+
+    /**
      * Getter method for the path arguments bound to path parameters in the matched route.
      * <p>
      * The returned list contains one element per path parameter. That is, literal path segments do not appear in
