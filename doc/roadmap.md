@@ -1,21 +1,20 @@
 
 # Roadmap
 
-## Future
+## Near Future
 
-* provide a tutorial (I'll delay this until the API has stabilized)
 * seal routes, responseFactoryRegistry in RestApi
-* HOWTO: add response JSON types (existing HOWTO covers request body deserialization)
 * add actual tests to JsonEngineTest
 * More JSON types
-  * record with extra keys as Map<>
   * discriminated union
   * Instant (seconds / milli)
-* When parsing the request body, store the intermediate `JsonElement` to allow deserializing multiple times and/or
-  logging the body without parsing the JSON syntax again
 * custom enum matchers, to allow case-insensitive matching / lowercase matching / make an enum constant like
   `FOO_BAR` publicly look like `foo-bar`
 
+## Medium-Term
+
+* provide a tutorial (I'll delay this until the API has stabilized)
+* HOWTO: add response JSON types (existing HOWTO covers request body deserialization)
 
 ## Features I might add if there is demand and they can be defined well enough
 
