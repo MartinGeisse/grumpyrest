@@ -7,6 +7,7 @@
 package name.martingeisse.grumpyjson.builtin.helper_types;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * This can be used to wrap a property and allow JSON null instead of an actual value. Normally, JSON null
@@ -97,6 +98,29 @@ public final class NullableField<T> {
      */
     public boolean isNull() {
         return value == null;
+    }
+
+    /**
+     * Returns this field's value if {@link #isNonNull()}, otherwise the argument.
+     *
+     * @param other the default to use if this field {@link #isNull()}
+     * @return this value or the argument. Returns the null reference iff both this field {@link #isNull()} and the
+     * argument is a null reference.
+     */
+    public T orElse(T other) {
+        return value == null ? other : value;
+    }
+
+    /**
+     * Returns this field's value if {@link #isNonNull()}, otherwise a value obtained from the argument.
+     *
+     * @param other a supplier for the default to use if this field {@link #isNull()}. Must not be a null reference.
+     * @return this value or the argument-provided value. Returns the null reference iff both this field
+     * {@link #isNull()} and the argument provides a null reference.
+     */
+    public T orElseGet(Supplier<T> other) {
+        Objects.requireNonNull(other, "other");
+        return value == null ? other.get() : value;
     }
 
     @Override
