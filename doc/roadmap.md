@@ -3,9 +3,6 @@
 
 ## Future
 
-* specify path/querystring parameter defaults by the caller, not the parser
-  * check if this is even necessary. Querystring parsing can use OptionalField and path parameters can't be optional
-    because then the route would not match
 * provide a tutorial (I'll delay this until the API has stabilized)
 * seal routes, responseFactoryRegistry in RestApi
 * HOWTO: add response JSON types (existing HOWTO covers request body deserialization)
@@ -16,6 +13,8 @@
   * Instant (seconds / milli)
 * When parsing the request body, store the intermediate `JsonElement` to allow deserializing multiple times and/or
   logging the body without parsing the JSON syntax again
+* custom enum matchers, to allow case-insensitive matching / lowercase matching / make an enum constant like
+  `FOO_BAR` publicly look like `foo-bar`
 
 
 ## Features I might add if there is demand and they can be defined well enough
@@ -33,13 +32,12 @@
   Wrapping has the advantage that you can change the handler interface and easily pass additional information to the
   wrapped handler. Features which are _not_ easily possible by wrapping the handler include:
   * adding information that can be used for route matching. Alternatives are custom matching code in the routes, or
-    setting a central matching strategy. "Adding information" is currently not possible -- we would have to define
-    how that information gets stored first.
-  * changing the path before route matching ("internal redirects")
+    setting a central matching strategy. "Adding information" is currently not possible to add -- we would have to
+    define how that information gets stored first.
+  * changing the path before route matching ("internal redirects"), though this can currently be solved on the
+    servlet level
   * you can forget to wrap a handler, though this is only the case if the wrapped handler uses the exact same
     `SimpleHandler` or `ComplexHandler` interface.
-* custom enum matchers, to allow case-insensitive matching / lowercase matching / make an enum constant like
-  `FOO_BAR` publicly look like `foo-bar`
 * add a JSON converter that allows arbitrary extra fields in a record and collects them into a `Map` which is a
   field in that record.
 
