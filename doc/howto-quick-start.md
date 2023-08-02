@@ -18,7 +18,7 @@ You can then refer to it like this:
 * Maven:
     ```
     <dependency>
-        <groupId>name.martingeisse</groupId>
+        <groupId>io.github.martingeisse</groupId>
         <artifactId>grumpyrest</artifactId>
         <version>0.7</version>
     </dependency>

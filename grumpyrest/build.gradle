@@ -6,7 +6,7 @@ plugins {
 	id 'maven-publish'
 }
 
-group = 'name.martingeisse'
+group = 'io.github.martingeisse'
 version = '0.7'
 
 java {

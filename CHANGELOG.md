@@ -2,6 +2,7 @@
 ## Version 0.7 (WIP)
 
 * `NullableField` and `OptionalField`now have `.orElse()`and `.orElseGet()` methods to easily provide default values.
+* changed Maven group ID to `io.github.martingeisse`
 
 ...
 
