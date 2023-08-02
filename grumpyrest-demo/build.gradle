@@ -3,6 +3,7 @@ plugins {
 	id 'application'
 	id "com.github.ben-manes.versions" version "0.46.0" // support for dependency upgrade command
 	id 'maven-publish'
+	id 'signing'
 }
 
 group = 'io.github.martingeisse'
@@ -32,6 +33,10 @@ sourcesJar {
 
 test {
 	useJUnitPlatform()
+}
+
+signing {
+	sign configurations.archives
 }
 
 publishing {
