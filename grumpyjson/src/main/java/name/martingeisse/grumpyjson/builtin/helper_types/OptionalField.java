@@ -7,6 +7,7 @@
 package name.martingeisse.grumpyjson.builtin.helper_types;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * This can be used to wrap a property and allow it to be absent in JSON. Normally, a missing property in the JSON
@@ -98,6 +99,29 @@ public final class OptionalField<T> {
      */
     public boolean isAbsent() {
         return value == null;
+    }
+
+    /**
+     * Returns this field's value if {@link #isPresent()}, otherwise the argument.
+     *
+     * @param other the default to use if this field {@link #isAbsent()}
+     * @return this value or the argument. Returns the null reference iff both this field {@link #isAbsent()} and the
+     * argument is a null reference.
+     */
+    public T orElse(T other) {
+        return value == null ? other : value;
+    }
+
+    /**
+     * Returns this field's value if {@link #isPresent()}, otherwise a value obtained from the argument.
+     *
+     * @param other a supplier for the default to use if this field {@link #isAbsent()}. Must not be a null reference.
+     * @return this value or the argument-provided value. Returns the null reference iff both this field
+     * {@link #isAbsent()} and the argument provides a null reference.
+     */
+    public T orElseGet(Supplier<T> other) {
+        Objects.requireNonNull(other, "other");
+        return value == null ? other.get() : value;
     }
 
     @Override

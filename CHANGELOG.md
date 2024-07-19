@@ -1,4 +1,10 @@
 
+## Version 0.7 (WIP)
+
+* `NullableField` and `OptionalField`now have `.orElse()`and `.orElseGet()` methods to easily provide default values.
+
+...
+
 ## Version 0.6
 
 * The order in which the lists of manually added JSON converters, parameter parsers etc. are scanned is now REVERSED!

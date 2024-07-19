@@ -26,6 +26,18 @@ public class OptionalFieldTest {
         assertTrue(ofValue.isPresent());
         assertEquals("foo", ofValue.getValueOrNothingAsNull());
         assertEquals("foo", ofValue.getValue());
+
+        assertEquals("bar", ofNothing.orElse("bar"));
+        assertEquals("foo", ofValue.orElse("bar"));
+        assertNull(ofNothing.orElse(null));
+        assertEquals("foo", ofValue.orElse(null));
+
+        assertEquals("bar", ofNothing.orElseGet(() -> "bar"));
+        assertEquals("foo", ofValue.orElseGet(() -> "bar"));
+        assertNull(ofNothing.orElseGet(() -> null));
+        assertEquals("foo", ofValue.orElseGet(() -> null));
+        assertThrows(NullPointerException.class, () -> ofNothing.orElseGet(null));
+        assertThrows(NullPointerException.class, () -> ofValue.orElseGet(null));
     }
 
     @Test

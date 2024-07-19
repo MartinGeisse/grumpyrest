@@ -26,6 +26,18 @@ public class NullableFieldTest {
         assertTrue(ofValue.isNonNull());
         assertEquals("foo", ofValue.getValueOrNull());
         assertEquals("foo", ofValue.getValue());
+
+        assertEquals("bar", ofNull.orElse("bar"));
+        assertEquals("foo", ofValue.orElse("bar"));
+        assertNull(ofNull.orElse(null));
+        assertEquals("foo", ofValue.orElse(null));
+
+        assertEquals("bar", ofNull.orElseGet(() -> "bar"));
+        assertEquals("foo", ofValue.orElseGet(() -> "bar"));
+        assertNull(ofNull.orElseGet(() -> null));
+        assertEquals("foo", ofValue.orElseGet(() -> null));
+        assertThrows(NullPointerException.class, () -> ofNull.orElseGet(null));
+        assertThrows(NullPointerException.class, () -> ofValue.orElseGet(null));
     }
 
     @Test
