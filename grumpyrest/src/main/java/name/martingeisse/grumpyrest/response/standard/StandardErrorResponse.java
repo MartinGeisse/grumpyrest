@@ -76,8 +76,30 @@ public record StandardErrorResponse(int status, String message, List<Field> fiel
      * @return the instance of this class
      */
     public static StandardErrorResponse requestBodyValidationFailed(JsonDeserializationException e) {
+        return requestBodyValidationFailed(e.getFieldErrorNode());
+    }
+
+    /**
+     * This is an error response for failed request body validation. The error lists the fields that failed
+     * validation and their error messages.
+     *
+     * @param errorNode the error node from the failed validation
+     * @return the instance of this class
+     */
+    public static StandardErrorResponse requestBodyValidationFailed(FieldErrorNode errorNode) {
+        return requestBodyValidationFailed(errorNode.flatten());
+    }
+
+    /**
+     * This is an error response for failed request body validation. The error lists the fields that failed
+     * validation and their error messages.
+     *
+     * @param fieldErrors the (flattened) field errors from the failed validation
+     * @return the instance of this class
+     */
+    public static StandardErrorResponse requestBodyValidationFailed(List<FieldErrorNode.FlattenedError> fieldErrors) {
         List<Field> translatedErrors = new ArrayList<>();
-        for (FieldErrorNode.FlattenedError flattenedError : e.getFieldErrorNode().flatten()) {
+        for (FieldErrorNode.FlattenedError flattenedError : fieldErrors) {
             translatedErrors.add(new Field(flattenedError.getPathAsString(), flattenedError.message()));
         }
         return new StandardErrorResponse(400, "invalid request body", translatedErrors);
