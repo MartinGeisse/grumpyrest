@@ -10,6 +10,7 @@ import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -38,6 +39,8 @@ public final class RecordConverterFactory {
      * @param registries ...
      */
     public void setRegistries(JsonRegistries registries) {
+        Objects.requireNonNull(registries, "registries");
+
         this.registries = registries;
     }
 
@@ -49,6 +52,8 @@ public final class RecordConverterFactory {
      * @param <T> ...
      */
     public <T> JsonSerializer<T> getSerializer(Class<T> clazz) {
+        Objects.requireNonNull(clazz, "clazz");
+
         //noinspection unchecked
         return (JsonSerializer<T>) getConverter(clazz);
     }
@@ -60,6 +65,8 @@ public final class RecordConverterFactory {
      * @return ...
      */
     public JsonDeserializer getDeserializer(Class<?> rawClass) {
+        Objects.requireNonNull(rawClass, "rawClass");
+
         return getConverter(rawClass);
     }
 
@@ -70,6 +77,8 @@ public final class RecordConverterFactory {
      * @return ...
      */
     public RecordConverter<?> getConverter(Class<?> clazz) {
+        Objects.requireNonNull(clazz, "clazz");
+
         return map.computeIfAbsent(clazz, ignored -> new RecordConverter<>(clazz, registries));
     }
 

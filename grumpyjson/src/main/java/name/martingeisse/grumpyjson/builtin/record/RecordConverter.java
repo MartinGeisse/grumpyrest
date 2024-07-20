@@ -84,6 +84,7 @@ public final class RecordConverter<T> implements JsonSerializer<T>, JsonDeserial
         Objects.requireNonNull(clazz, "clazz");
         Objects.requireNonNull(registries, "registries");
         Objects.requireNonNull(options, "options");
+
         this.recordInfo = new RecordInfo(clazz);
         this.registries = registries;
         this.options = options;
@@ -92,6 +93,7 @@ public final class RecordConverter<T> implements JsonSerializer<T>, JsonDeserial
     @Override
     public boolean supportsTypeForDeserialization(Type type) {
         Objects.requireNonNull(type, "type");
+
         if (type instanceof Class<?>) {
             return type.equals(recordInfo.getRecordClass());
         } else if (type instanceof ParameterizedType p && p.getRawType() instanceof Class<?>) {
@@ -105,6 +107,7 @@ public final class RecordConverter<T> implements JsonSerializer<T>, JsonDeserial
     public T deserialize(JsonElement json, Type recordType) throws JsonDeserializationException {
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(recordType, "recordType");
+
         if (json instanceof JsonObject jsonObject) {
             List<RecordInfo.ComponentInfo> componentInfos = recordInfo.getComponentInfos();
             int numberOfPresentKnownProperties = 0;
@@ -157,12 +160,15 @@ public final class RecordConverter<T> implements JsonSerializer<T>, JsonDeserial
 
     @Override
     public boolean supportsClassForSerialization(Class<?> clazz) {
+        Objects.requireNonNull(clazz, "clazz");
+
         return clazz.equals(recordInfo.getRecordClass());
     }
 
     @Override
     public JsonElement serialize(T record) {
-        Objects.requireNonNull(record, "value");
+        Objects.requireNonNull(record, "value"); // called value in the interface
+
         JsonObject jsonObject = new JsonObject();
         FieldErrorNode errorNode = null;
         for (RecordInfo.ComponentInfo componentInfo : recordInfo.getComponentInfos()) {
