@@ -38,4 +38,8 @@ public final class LiteralPathSegment extends PathSegment {
         return text.equals(Objects.requireNonNull(segment));
     }
 
+    @Override
+    public String toString() {
+        return text;
+    }
 }

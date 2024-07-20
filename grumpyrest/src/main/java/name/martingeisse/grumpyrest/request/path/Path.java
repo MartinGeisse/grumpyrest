@@ -83,4 +83,16 @@ public record Path(List<PathSegment> segments) {
         return pathArguments;
     }
 
+    @Override
+    public String toString() {
+        if (segments.isEmpty()) {
+            return "/";
+        }
+        StringBuilder builder = new StringBuilder();
+        for (PathSegment segment : segments) {
+            builder.append('/').append(segment);
+        }
+        return builder.toString();
+    }
+
 }

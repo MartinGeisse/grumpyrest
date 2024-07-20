@@ -44,4 +44,9 @@ public final class VariablePathSegment extends PathSegment {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return ":" + variableName;
+    }
+
 }
