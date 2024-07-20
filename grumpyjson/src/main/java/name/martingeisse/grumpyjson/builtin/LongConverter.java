@@ -37,6 +37,7 @@ public final class LongConverter implements JsonSerializer<Long>, JsonDeserializ
     @Override
     public boolean supportsTypeForDeserialization(Type type) {
         Objects.requireNonNull(type, "type");
+
         return type.equals(Long.TYPE) || type.equals(Long.class);
     }
 
@@ -55,12 +56,14 @@ public final class LongConverter implements JsonSerializer<Long>, JsonDeserializ
     @Override
     public boolean supportsClassForSerialization(Class<?> clazz) {
         Objects.requireNonNull(clazz, "clazz");
+
         return clazz.equals(Long.TYPE) || clazz.equals(Long.class);
     }
 
     @Override
     public JsonElement serialize(Long value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
+
         return new JsonPrimitive(value);
     }
 

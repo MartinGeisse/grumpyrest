@@ -10,6 +10,7 @@ import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Objects;
 
 /**
  * NOT PUBLIC API
@@ -38,6 +39,8 @@ final class IntegralNumberDeserializationUtil {
     // ----------------------------------------------------------------------------------------------------------------
 
     static long deserialize(Number number) throws JsonDeserializationException {
+        Objects.requireNonNull(number, "number");
+
         if (number instanceof Long l) {
             return l;
         } else if (number instanceof Integer i) {

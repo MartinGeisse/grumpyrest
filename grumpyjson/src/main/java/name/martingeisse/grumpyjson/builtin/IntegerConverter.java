@@ -37,6 +37,7 @@ public final class IntegerConverter implements JsonSerializer<Integer>, JsonDese
     @Override
     public boolean supportsTypeForDeserialization(Type type) {
         Objects.requireNonNull(type, "type");
+
         return type.equals(Integer.TYPE) || type.equals(Integer.class);
     }
 
@@ -58,12 +59,14 @@ public final class IntegerConverter implements JsonSerializer<Integer>, JsonDese
     @Override
     public boolean supportsClassForSerialization(Class<?> clazz) {
         Objects.requireNonNull(clazz, "clazz");
+
         return clazz.equals(Integer.TYPE) || clazz.equals(Integer.class);
     }
 
     @Override
     public JsonElement serialize(Integer value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
+
         return new JsonPrimitive(value);
     }
 

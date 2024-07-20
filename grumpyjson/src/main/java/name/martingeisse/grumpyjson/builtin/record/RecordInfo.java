@@ -78,6 +78,8 @@ public final class RecordInfo {
      * @return ...
      */
     public Object invokeConstructor(Object[] arguments) {
+        Objects.requireNonNull(arguments, "arguments");
+
         try {
             return constructor.newInstance(arguments);
         } catch (Exception e) {
@@ -98,6 +100,8 @@ public final class RecordInfo {
          * @param component ...
          */
         public ComponentInfo(RecordComponent component) {
+            Objects.requireNonNull(component, "component");
+
             this.component = component;
             component.getAccessor().setAccessible(true);
         }
@@ -136,6 +140,8 @@ public final class RecordInfo {
          * @return ...
          */
         public Object invokeGetter(Object container) {
+            Objects.requireNonNull(container, "container");
+
             Method getter = getGetter();
             try {
                 return getter.invoke(container);
@@ -151,6 +157,8 @@ public final class RecordInfo {
          * @return ...
          */
         public Type getConcreteType(Type concreteRecordType) {
+            Objects.requireNonNull(concreteRecordType, "concreteRecordType");
+
             if (concreteRecordType instanceof Class<?>) {
                 return component.getGenericType();
             } else if (concreteRecordType instanceof ParameterizedType parameterizedRecordType) {

@@ -34,6 +34,7 @@ public final class JsonElementConverter implements JsonSerializer<JsonElement>, 
     @Override
     public boolean supportsTypeForDeserialization(Type type) {
         Objects.requireNonNull(type, "type");
+
         return (type instanceof Class<?> clazz) && JsonElement.class.isAssignableFrom(clazz);
     }
 
@@ -41,18 +42,21 @@ public final class JsonElementConverter implements JsonSerializer<JsonElement>, 
     public JsonElement deserialize(JsonElement json, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
+
         return json.deepCopy();
     }
 
     @Override
     public boolean supportsClassForSerialization(Class<?> clazz) {
         Objects.requireNonNull(clazz, "clazz");
+
         return JsonElement.class.isAssignableFrom(clazz);
     }
 
     @Override
     public JsonElement serialize(JsonElement value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
+
         return value.deepCopy();
     }
 

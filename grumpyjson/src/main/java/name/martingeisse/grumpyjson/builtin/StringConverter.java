@@ -38,6 +38,7 @@ public final class StringConverter implements JsonSerializer<String>, JsonDeseri
     @Override
     public boolean supportsTypeForDeserialization(Type type) {
         Objects.requireNonNull(type, "type");
+
         return type.equals(String.class);
     }
 
@@ -45,6 +46,7 @@ public final class StringConverter implements JsonSerializer<String>, JsonDeseri
     public String deserialize(JsonElement json, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
+
         if (json instanceof JsonPrimitive primitive) {
             if (primitive.isString()) {
                 return primitive.getAsString();
@@ -56,12 +58,14 @@ public final class StringConverter implements JsonSerializer<String>, JsonDeseri
     @Override
     public boolean supportsClassForSerialization(Class<?> clazz) {
         Objects.requireNonNull(clazz, "clazz");
+
         return clazz.equals(String.class);
     }
 
     @Override
     public JsonElement serialize(String value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
+
         return new JsonPrimitive(value);
     }
 

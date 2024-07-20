@@ -33,12 +33,15 @@ public final class EnumConverter<T extends Enum<T>> implements JsonSerializer<T>
      * @param enumClass the enum class to parse
      */
     public EnumConverter(Class<T> enumClass) {
+        Objects.requireNonNull(enumClass, "enumClass");
+
         this.enumClass = enumClass;
     }
 
     @Override
     public boolean supportsTypeForDeserialization(Type type) {
         Objects.requireNonNull(type, "type");
+
         return type.equals(enumClass);
     }
 
@@ -46,6 +49,7 @@ public final class EnumConverter<T extends Enum<T>> implements JsonSerializer<T>
     public Object deserialize(JsonElement json, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
+
         if (!(json instanceof JsonPrimitive primitive) || !primitive.isString()) {
             throw new JsonDeserializationException("expected string, found: " + json);
         }
@@ -59,12 +63,14 @@ public final class EnumConverter<T extends Enum<T>> implements JsonSerializer<T>
     @Override
     public boolean supportsClassForSerialization(Class<?> clazz) {
         Objects.requireNonNull(clazz, "clazz");
+
         return clazz.equals(enumClass);
     }
 
     @Override
     public JsonElement serialize(T value) throws JsonSerializationException {
-        Objects.requireNonNull(value);
+        Objects.requireNonNull(value, "value");
+
         return new JsonPrimitive(value.name());
     }
 

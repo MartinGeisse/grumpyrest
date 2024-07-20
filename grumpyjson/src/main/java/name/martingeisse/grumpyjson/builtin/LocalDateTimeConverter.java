@@ -37,6 +37,7 @@ public final class LocalDateTimeConverter implements JsonSerializer<LocalDateTim
     @Override
     public boolean supportsTypeForDeserialization(Type type) {
         Objects.requireNonNull(type, "type");
+
         return type.equals(LocalDateTime.class);
     }
 
@@ -44,6 +45,7 @@ public final class LocalDateTimeConverter implements JsonSerializer<LocalDateTim
     public LocalDateTime deserialize(JsonElement json, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
+
         if (json instanceof JsonPrimitive primitive && primitive.isString()) {
             try {
                 return LocalDateTime.parse(primitive.getAsString());
@@ -57,12 +59,14 @@ public final class LocalDateTimeConverter implements JsonSerializer<LocalDateTim
     @Override
     public boolean supportsClassForSerialization(Class<?> clazz) {
         Objects.requireNonNull(clazz, "clazz");
+
         return clazz.equals(LocalDateTime.class);
     }
 
     @Override
     public JsonElement serialize(LocalDateTime value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
+
         return new JsonPrimitive(value.toString());
     }
 

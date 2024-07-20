@@ -39,11 +39,15 @@ public final class ListConverter implements JsonSerializer<List<?>>, JsonDeseria
      * @param registries the JSON registries -- needed to fetch the converter for the element type at run-time
      */
     public ListConverter(JsonRegistries registries) {
+        Objects.requireNonNull(registries, "registries");
+
         this.registries = registries;
     }
 
     @Override
     public boolean supportsTypeForDeserialization(Type type) {
+        Objects.requireNonNull(type, "type");
+
         return TypeUtil.isSingleParameterizedType(type, List.class) != null;
     }
 
@@ -51,6 +55,7 @@ public final class ListConverter implements JsonSerializer<List<?>>, JsonDeseria
     public List<?> deserialize(JsonElement json, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
+
         if (json instanceof JsonArray array) {
             Type elementType = TypeUtil.expectSingleParameterizedType(type, List.class);
             JsonDeserializer elementDeserializer;
@@ -80,11 +85,15 @@ public final class ListConverter implements JsonSerializer<List<?>>, JsonDeseria
 
     @Override
     public boolean supportsClassForSerialization(Class<?> clazz) {
+        Objects.requireNonNull(clazz, "clazz");
+
         return List.class.isAssignableFrom(clazz);
     }
 
     @Override
     public JsonElement serialize(List<?> value) throws JsonSerializationException {
+        Objects.requireNonNull(value, "value");
+
         JsonArray result = new JsonArray();
         FieldErrorNode errorNode = null;
         for (int i = 0; i < value.size(); i++) {

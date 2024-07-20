@@ -37,6 +37,7 @@ public final class BooleanConverter implements JsonSerializer<Boolean>, JsonDese
     @Override
     public boolean supportsTypeForDeserialization(Type type) {
         Objects.requireNonNull(type, "type");
+
         return type.equals(Boolean.TYPE) || type.equals(Boolean.class);
     }
 
@@ -57,12 +58,14 @@ public final class BooleanConverter implements JsonSerializer<Boolean>, JsonDese
     @Override
     public boolean supportsClassForSerialization(Class<?> clazz) {
         Objects.requireNonNull(clazz, "clazz");
+
         return clazz.equals(Boolean.TYPE) || clazz.equals(Boolean.class);
     }
 
     @Override
     public JsonElement serialize(Boolean value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
+        
         return new JsonPrimitive(value);
     }
 
