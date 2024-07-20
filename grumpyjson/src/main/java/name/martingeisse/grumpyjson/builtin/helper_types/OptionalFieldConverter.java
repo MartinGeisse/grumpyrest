@@ -15,6 +15,7 @@ import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import name.martingeisse.grumpyjson.util.TypeUtil;
 
 import java.lang.reflect.Type;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -33,16 +34,23 @@ public final class OptionalFieldConverter implements JsonSerializer<OptionalFiel
      * @param registries needed to fetch the converter for the contained type at run-time
      */
     public OptionalFieldConverter(JsonRegistries registries) {
+        Objects.requireNonNull(registries, "registries");
+
         this.registries = registries;
     }
 
     @Override
     public boolean supportsTypeForDeserialization(Type type) {
+        Objects.requireNonNull(type, "type");
+
         return TypeUtil.isSingleParameterizedType(type, OptionalField.class) != null;
     }
 
     @Override
     public OptionalField<?> deserialize(JsonElement json, Type type) throws JsonDeserializationException {
+        Objects.requireNonNull(json, "json");
+        Objects.requireNonNull(type, "type");
+
         try {
             return OptionalField.ofValue(registries.deserialize(json, getInner(type)));
         } catch (Exception e) {
@@ -52,22 +60,30 @@ public final class OptionalFieldConverter implements JsonSerializer<OptionalFiel
 
     @Override
     public OptionalField<?> deserializeAbsent(Type type) {
+        Objects.requireNonNull(type, "type");
+
         getInner(type);
         return OptionalField.ofNothing();
     }
 
     @Override
     public boolean supportsClassForSerialization(Class<?> clazz) {
+        Objects.requireNonNull(clazz, "clazz");
+
         return clazz.equals(OptionalField.class);
     }
 
     @Override
     public JsonElement serialize(OptionalField<?> value) throws JsonSerializationException {
+        Objects.requireNonNull(value, "value");
+
         throw new JsonSerializationException("found OptionalField in a non-vanishable context");
     }
 
     @Override
     public Optional<JsonElement> serializeOptional(OptionalField<?> value) throws JsonSerializationException {
+        Objects.requireNonNull(value, "value");
+
         if (value.isAbsent()) {
             return Optional.empty();
         } else {
@@ -80,6 +96,8 @@ public final class OptionalFieldConverter implements JsonSerializer<OptionalFiel
     }
 
     private Type getInner(Type outer) {
+        Objects.requireNonNull(outer, "outer");
+
         return TypeUtil.expectSingleParameterizedType(outer, OptionalField.class);
     }
 

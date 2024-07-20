@@ -33,36 +33,44 @@ public final class IgnoredFieldConverter implements JsonSerializer<IgnoredField>
 
     @Override
     public boolean supportsTypeForDeserialization(Type type) {
+        Objects.requireNonNull(type, "type");
+
         return type.equals(IgnoredField.class);
     }
 
     @Override
     public IgnoredField deserialize(JsonElement json, Type type) throws JsonDeserializationException {
-        Objects.requireNonNull(json);
-        Objects.requireNonNull(type);
+        Objects.requireNonNull(json, "json");
+        Objects.requireNonNull(type, "type");
+
         return IgnoredField.INSTANCE;
     }
 
     @Override
     public IgnoredField deserializeAbsent(Type type) {
-        Objects.requireNonNull(type);
+        Objects.requireNonNull(type, "type");
+
         return IgnoredField.INSTANCE;
     }
 
     @Override
     public boolean supportsClassForSerialization(Class<?> clazz) {
+        Objects.requireNonNull(clazz, "clazz");
+
         return clazz.equals(IgnoredField.class);
     }
 
     @Override
     public JsonElement serialize(IgnoredField value) throws JsonSerializationException {
-        Objects.requireNonNull(value);
+        Objects.requireNonNull(value, "value");
+
         throw new JsonSerializationException("found IgnoredField in a non-vanishable context");
     }
 
     @Override
     public Optional<JsonElement> serializeOptional(IgnoredField value) throws JsonSerializationException {
-        Objects.requireNonNull(value);
+        Objects.requireNonNull(value, "value");
+
         return Optional.empty();
     }
 

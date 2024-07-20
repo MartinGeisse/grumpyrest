@@ -16,6 +16,7 @@ import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import name.martingeisse.grumpyjson.util.TypeUtil;
 
 import java.lang.reflect.Type;
+import java.util.Objects;
 
 /**
  * The converter for {@link NullableField}.
@@ -33,16 +34,23 @@ public final class NullableFieldConverter implements JsonSerializer<NullableFiel
      * @param registries needed to fetch the converter for the contained type at run-time
      */
     public NullableFieldConverter(JsonRegistries registries) {
+        Objects.requireNonNull(registries, "registries");
+
         this.registries = registries;
     }
 
     @Override
     public boolean supportsTypeForDeserialization(Type type) {
+        Objects.requireNonNull(type, "type");
+
         return TypeUtil.isSingleParameterizedType(type, NullableField.class) != null;
     }
 
     @Override
     public NullableField<?> deserialize(JsonElement json, Type type) throws JsonDeserializationException {
+        Objects.requireNonNull(json, "json");
+        Objects.requireNonNull(type, "type");
+
         Type innerType = TypeUtil.expectSingleParameterizedType(type, NullableField.class);
         if (json.isJsonNull()) {
             return NullableField.ofNull();
@@ -57,11 +65,15 @@ public final class NullableFieldConverter implements JsonSerializer<NullableFiel
 
     @Override
     public boolean supportsClassForSerialization(Class<?> clazz) {
+        Objects.requireNonNull(clazz, "clazz");
+
         return clazz.equals(NullableField.class);
     }
 
     @Override
     public JsonElement serialize(NullableField<?> value) throws JsonSerializationException {
+        Objects.requireNonNull(value, "value");
+
         if (value.isNull()) {
             return JsonNull.INSTANCE;
         } else {

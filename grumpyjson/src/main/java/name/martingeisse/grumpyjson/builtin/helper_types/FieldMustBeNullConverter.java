@@ -34,6 +34,8 @@ public final class FieldMustBeNullConverter implements JsonSerializer<FieldMustB
 
     @Override
     public boolean supportsTypeForDeserialization(Type type) {
+        Objects.requireNonNull(type, "type");
+
         return type.equals(FieldMustBeNull.class);
     }
 
@@ -41,6 +43,7 @@ public final class FieldMustBeNullConverter implements JsonSerializer<FieldMustB
     public FieldMustBeNull deserialize(JsonElement json, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
+
         if (json instanceof JsonNull) {
             return FieldMustBeNull.INSTANCE;
         }
@@ -49,12 +52,15 @@ public final class FieldMustBeNullConverter implements JsonSerializer<FieldMustB
 
     @Override
     public boolean supportsClassForSerialization(Class<?> clazz) {
+        Objects.requireNonNull(clazz, "clazz");
+
         return clazz.equals(FieldMustBeNull.class);
     }
 
     @Override
     public JsonElement serialize(FieldMustBeNull value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
+
         return JsonNull.INSTANCE;
     }
 
