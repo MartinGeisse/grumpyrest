@@ -1,8 +1,8 @@
 package name.martingeisse.grumpyrest.request;
 
-import com.google.gson.reflect.TypeToken;
 import name.martingeisse.grumpyjson.JsonEngine;
 import name.martingeisse.grumpyjson.JsonRegistries;
+import name.martingeisse.grumpyjson.TypeToken;
 import name.martingeisse.grumpyrest.ComplexHandler;
 import name.martingeisse.grumpyrest.RequestCycle;
 import name.martingeisse.grumpyrest.SimpleHandler;

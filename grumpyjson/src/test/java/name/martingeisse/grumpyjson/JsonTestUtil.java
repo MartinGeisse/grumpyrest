@@ -8,7 +8,6 @@ package name.martingeisse.grumpyjson;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;

@@ -6,10 +6,10 @@
  */
 package name.martingeisse.grumpyjson.builtin.helper_types;
 
-import com.google.gson.reflect.TypeToken;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
 import name.martingeisse.grumpyjson.JsonRegistries;
+import name.martingeisse.grumpyjson.TypeToken;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.builtin.IntegerConverter;
 import name.martingeisse.grumpyjson.builtin.StringConverter;

@@ -6,7 +6,7 @@
  */
 package name.martingeisse.grumpyrest.request;
 
-import com.google.gson.reflect.TypeToken;
+import name.martingeisse.grumpyjson.TypeToken;
 import name.martingeisse.grumpyrest.request.stringparser.FromStringParserException;
 import name.martingeisse.grumpyrest.request.stringparser.ParseFromStringService;
 

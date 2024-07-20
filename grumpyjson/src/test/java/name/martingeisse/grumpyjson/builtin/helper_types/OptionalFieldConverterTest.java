@@ -8,8 +8,8 @@ package name.martingeisse.grumpyjson.builtin.helper_types;
 
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
-import com.google.gson.reflect.TypeToken;
 import name.martingeisse.grumpyjson.JsonRegistries;
+import name.martingeisse.grumpyjson.TypeToken;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.builtin.IntegerConverter;
