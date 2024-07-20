@@ -71,7 +71,9 @@ public interface JsonSerializer<T> {
      * This method must not be called with values for whose class {@link #supportsClassForSerialization(Class)} returns
      * false. Calling it with such values anyway results in undefined behavior.
      *
-     * @param value the value to convert to JSON
+     * @param value the value to convert to JSON. This value is not allowed to be null; "optional" refers to the fact
+     *              that the field can vanish in JSON based on the value to serialize, not that the input value is
+     *              optional.
      * @return the generated JSON, or nothing in case the value vanishes in JSON
      * @throws JsonSerializationException if the value is in an inconsistent state, or in a state that cannot be
      * converted to JSON
