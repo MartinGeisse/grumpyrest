@@ -27,12 +27,15 @@ public final class EnumParser<T extends Enum<T>> implements FromStringParser {
      * @param enumClass the enum class to parse
      */
     public EnumParser(Class<T> enumClass) {
+        Objects.requireNonNull(enumClass, "enumClass");
+
         this.enumClass = enumClass;
     }
 
     @Override
     public boolean supportsType(Type type) {
         Objects.requireNonNull(type, "type");
+
         return type.equals(enumClass);
     }
 
@@ -40,6 +43,7 @@ public final class EnumParser<T extends Enum<T>> implements FromStringParser {
     public Object parseFromString(String s, Type type) throws FromStringParserException {
         Objects.requireNonNull(s, "s");
         Objects.requireNonNull(type, "type");
+
         try {
             return Enum.valueOf(enumClass, s);
         } catch (IllegalArgumentException e) {

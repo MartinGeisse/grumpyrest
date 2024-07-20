@@ -31,6 +31,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This class is the main Entry point into grumpyrest. It is used by the application to define the REST API in terms
@@ -91,6 +92,8 @@ public final class RestApi {
      * @param route the route to add
      */
     public void addRoute(Route route) {
+        Objects.requireNonNull(route, "route");
+
         routes.add(route);
     }
 
@@ -103,6 +106,10 @@ public final class RestApi {
      * @param handler the handler to invoke
      */
     public void addComplexRoute(HttpMethod method, Path path, ComplexHandler handler) {
+        Objects.requireNonNull(method, "method");
+        Objects.requireNonNull(path, "path");
+        Objects.requireNonNull(handler, "handler");
+
         addRoute(new Route(method, path, handler));
     }
 
@@ -115,6 +122,10 @@ public final class RestApi {
      * @param handler the handler to invoke
      */
     public void addComplexRoute(HttpMethod method, String path, ComplexHandler handler) {
+        Objects.requireNonNull(method, "method");
+        Objects.requireNonNull(path, "path");
+        Objects.requireNonNull(handler, "handler");
+
         addRoute(new Route(method, path, handler));
     }
 
@@ -127,6 +138,10 @@ public final class RestApi {
      * @param handler the handler to invoke
      */
     public void addRoute(HttpMethod method, Path path, SimpleHandler handler) {
+        Objects.requireNonNull(method, "method");
+        Objects.requireNonNull(path, "path");
+        Objects.requireNonNull(handler, "handler");
+
         addRoute(new Route(method, path, handler));
     }
 
@@ -139,6 +154,10 @@ public final class RestApi {
      * @param handler the handler to invoke
      */
     public void addRoute(HttpMethod method, String path, SimpleHandler handler) {
+        Objects.requireNonNull(method, "method");
+        Objects.requireNonNull(path, "path");
+        Objects.requireNonNull(handler, "handler");
+
         addRoute(new Route(method, path, handler));
     }
 
@@ -164,6 +183,8 @@ public final class RestApi {
      * @param responseFactory the response factory to register
      */
     public void registerResponseFactory(ResponseFactory responseFactory) {
+        Objects.requireNonNull(responseFactory, "responseFactory");
+
         responseFactoryRegistry.register(responseFactory);
     }
 
@@ -191,6 +212,8 @@ public final class RestApi {
      * @param parser the parser to register
      */
     public void registerFromStringParser(FromStringParser parser) {
+        Objects.requireNonNull(parser, "parser");
+
         fromStringParserRegistry.register(parser);
     }
 
@@ -236,6 +259,8 @@ public final class RestApi {
      * @param serializer the serializer to register
      */
     public void registerSerializer(name.martingeisse.grumpyjson.serialize.JsonSerializer<?> serializer) {
+        Objects.requireNonNull(serializer, "serializer");
+
         jsonEngine.registerSerializer(serializer);
     }
 
@@ -245,6 +270,8 @@ public final class RestApi {
      * @param deserializer the deserializer to register
      */
     public void registerDeserializer(name.martingeisse.grumpyjson.deserialize.JsonDeserializer deserializer) {
+        Objects.requireNonNull(deserializer, "deserializer");
+
         jsonEngine.registerDeserializer(deserializer);
     }
 
@@ -256,6 +283,8 @@ public final class RestApi {
      * {@link JsonDeserializer}
      */
     public <T extends JsonSerializer<?> & JsonDeserializer> void registerDualConverter(T converter) {
+        Objects.requireNonNull(converter, "converter");
+
         jsonEngine.registerDualConverter(converter);
     }
 
@@ -295,6 +324,8 @@ public final class RestApi {
      * @return if a route matched, the match result for that route. Otherwise null.
      */
     public RouteMatchResult match(RequestCycle requestCycle) {
+        Objects.requireNonNull(requestCycle, "requestCycle");
+
         for (Route route : routes) {
             RouteMatchResult result = route.match(requestCycle);
             if (result != null) {
@@ -314,6 +345,8 @@ public final class RestApi {
      * @param requestCycle the request cycle to handle
      */
     public void handle(RequestCycle requestCycle) {
+        Objects.requireNonNull(requestCycle, "requestCycle");
+
         try {
 
             // run the handler

@@ -10,6 +10,8 @@ import name.martingeisse.grumpyrest.RequestCycle;
 import name.martingeisse.grumpyrest.response.Response;
 import name.martingeisse.grumpyrest.response.ResponseFactory;
 
+import java.util.Objects;
+
 /**
  * Produces an empty 200 response when null is returned as a response value.
  */
@@ -23,6 +25,8 @@ public final class NullResponseFactory implements ResponseFactory {
 
     @Override
     public Response createResponse(RequestCycle requestCycle, Object value) {
+        Objects.requireNonNull(requestCycle, "requestCycle");
+
         if (value == null) {
             return new StatusOnlyResponse(200);
         } else {

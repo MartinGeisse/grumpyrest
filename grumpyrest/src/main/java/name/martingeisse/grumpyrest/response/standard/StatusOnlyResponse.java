@@ -3,6 +3,8 @@ package name.martingeisse.grumpyrest.response.standard;
 import name.martingeisse.grumpyrest.response.ResponseTransmitter;
 import name.martingeisse.grumpyrest.response.Response;
 
+import java.util.Objects;
+
 /**
  * Sends an empty response with a configurable HTTP status code.
  */
@@ -21,6 +23,8 @@ public final class StatusOnlyResponse implements Response {
 
     @Override
     public void transmit(ResponseTransmitter responseTransmitter) {
+        Objects.requireNonNull(responseTransmitter, "responseTransmitter");
+
         responseTransmitter.setStatus(status);
     }
 

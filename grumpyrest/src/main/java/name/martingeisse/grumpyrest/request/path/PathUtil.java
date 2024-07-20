@@ -27,6 +27,7 @@ public final class PathUtil {
      */
     public static String trimSlashes(String pathText) {
         Objects.requireNonNull(pathText);
+
         while (pathText.startsWith("/")) {
             pathText = pathText.substring(1);
         }

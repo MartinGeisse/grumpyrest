@@ -3,6 +3,8 @@ package name.martingeisse.grumpyrest.servlet;
 import jakarta.servlet.http.HttpServletRequest;
 import name.martingeisse.grumpyrest.request.path.PathUtil;
 
+import java.util.Objects;
+
 /**
  * This object defines how to obtain the request path from the servlet request. It is needed because different
  * servlet containers treat the path differently, and it can make a difference whether a servlet or a servlet filter
@@ -18,6 +20,8 @@ public enum RequestPathSourcingStrategy {
     STARTING_WITH_CONTEXT_PATH {
         @Override
         public String getPath(HttpServletRequest request) {
+            Objects.requireNonNull(request, "request");
+
             return handleResult(mergeParts(mergeParts(getContextPath(request), getServletPath(request)), getPathInfo(request)));
         }
     },
@@ -28,6 +32,8 @@ public enum RequestPathSourcingStrategy {
     STARTING_WITH_SERVLET_PATH {
         @Override
         public String getPath(HttpServletRequest request) {
+            Objects.requireNonNull(request, "request");
+
             return handleResult(mergeParts(getServletPath(request), getPathInfo(request)));
         }
     },
@@ -38,6 +44,8 @@ public enum RequestPathSourcingStrategy {
     PATH_INFO_ONLY {
         @Override
         public String getPath(HttpServletRequest request) {
+            Objects.requireNonNull(request, "request");
+
             return handleResult(getPathInfo(request));
         }
     };
@@ -51,14 +59,20 @@ public enum RequestPathSourcingStrategy {
     public abstract String getPath(HttpServletRequest request);
 
     private static String getContextPath(HttpServletRequest request) {
+        Objects.requireNonNull(request, "request");
+
         return preparePart(request.getContextPath());
     }
 
     private static String getServletPath(HttpServletRequest request) {
+        Objects.requireNonNull(request, "request");
+
         return preparePart(request.getServletPath());
     }
 
     private static String getPathInfo(HttpServletRequest request) {
+        Objects.requireNonNull(request, "request");
+
         return preparePart(request.getPathInfo());
     }
 

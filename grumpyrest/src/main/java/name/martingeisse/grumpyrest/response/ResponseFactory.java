@@ -21,8 +21,9 @@ public interface ResponseFactory {
      *
      * @param requestCycle the request cycle to create a response for. This is passed in case the response factory
      *                     wants to do special stuff like look into request properties.
-     * @param value        the response value to convert to a {@link Response}
-     * @return the response
+     * @param value        the response value to convert to a {@link Response}.
+     *                     May be null if the handler returned null.
+     * @return the response or null
      */
     Response createResponse(RequestCycle requestCycle, Object value);
 

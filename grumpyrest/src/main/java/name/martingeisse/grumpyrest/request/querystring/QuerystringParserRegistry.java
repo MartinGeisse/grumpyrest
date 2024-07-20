@@ -11,6 +11,7 @@ import name.martingeisse.grumpyrest.request.stringparser.FromStringParserRegistr
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Objects;
 
 /**
  * A registry for {@link QuerystringParser} objects. Usually all parsers in this registry are auto-generated, so the
@@ -31,21 +32,29 @@ public final class QuerystringParserRegistry extends Registry<Type, QuerystringP
      *                                 automatically seal the {@link FromStringParserRegistry}.
      */
     public QuerystringParserRegistry(FromStringParserRegistry fromStringParserRegistry) {
+        Objects.requireNonNull(fromStringParserRegistry, "fromStringParserRegistry");
         this.fromStringParserRegistry = fromStringParserRegistry;
     }
 
     @Override
     protected String getErrorMessageForUnknownKey(Type type) {
+        Objects.requireNonNull(type, "type");
+
         return "no querystring parser found and can only auto-generate them for record types, found type: " + type;
     }
 
     @Override
     protected boolean registrableSupports(QuerystringParser registrable, Type key) {
+        Objects.requireNonNull(registrable, "registrable");
+        Objects.requireNonNull(key, "key");
+
         return registrable.supportsType(key);
     }
 
     @Override
     protected QuerystringParser generateRegistrable(Type type) {
+        Objects.requireNonNull(type, "type");
+
         Class<?> rawClass;
         if (type instanceof Class<?> c) {
             rawClass = c;

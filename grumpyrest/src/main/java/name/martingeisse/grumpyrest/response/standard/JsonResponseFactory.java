@@ -11,6 +11,8 @@ import name.martingeisse.grumpyrest.RequestCycle;
 import name.martingeisse.grumpyrest.response.Response;
 import name.martingeisse.grumpyrest.response.ResponseFactory;
 
+import java.util.Objects;
+
 /**
  * Converts any JSON-able value into a {@link Response} by invoking the {@link JsonEngine}, then sending the result
  * with HTTP status code 200.
@@ -25,6 +27,8 @@ public final class JsonResponseFactory implements ResponseFactory {
 
     @Override
     public Response createResponse(RequestCycle requestCycle, Object value) {
+        Objects.requireNonNull(requestCycle, "requestCycle");
+
         if (value == null || !requestCycle.getApi().getJsonEngine().supportsClassForSerialization(value.getClass())) {
             return null;
         }
@@ -32,6 +36,8 @@ public final class JsonResponseFactory implements ResponseFactory {
     }
 
     private Response createResponseForSupportedValue(Object value) {
+        Objects.requireNonNull(value, "value");
+        
         return responseTransmitter -> {
             responseTransmitter.setStatus(200);
             responseTransmitter.setContentType("application/json");

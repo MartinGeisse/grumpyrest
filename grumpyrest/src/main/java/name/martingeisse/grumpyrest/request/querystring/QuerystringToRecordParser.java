@@ -27,6 +27,7 @@ public final class QuerystringToRecordParser implements QuerystringParser {
     QuerystringToRecordParser(Class<?> rawRecordClass, FromStringParserRegistry fromStringParserRegistry) {
         Objects.requireNonNull(rawRecordClass, "rawRecordClass");
         Objects.requireNonNull(fromStringParserRegistry, "fromStringParserRegistry");
+
         this.recordInfo = new RecordInfo(rawRecordClass);
         this.fromStringParserRegistry = fromStringParserRegistry;
     }
@@ -34,6 +35,7 @@ public final class QuerystringToRecordParser implements QuerystringParser {
     @Override
     public boolean supportsType(Type type) {
         Objects.requireNonNull(type, "type");
+
         if (type instanceof Class<?>) {
             return type.equals(recordInfo.getRecordClass());
         } else if (type instanceof ParameterizedType p && p.getRawType() instanceof Class<?>) {

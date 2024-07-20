@@ -11,6 +11,7 @@ import name.martingeisse.grumpyrest.request.stringparser.FromStringParserExcepti
 import name.martingeisse.grumpyrest.request.stringparser.ParseFromStringService;
 
 import java.lang.reflect.Type;
+import java.util.Objects;
 
 /**
  * A concrete argument that was bound to a path parameter. This class contains the argument in its text form, not yet
@@ -31,6 +32,10 @@ public final class PathArgument {
      * @param parseFromStringService ...
      */
     public PathArgument(String name, String text, ParseFromStringService parseFromStringService) {
+        Objects.requireNonNull(name, "name");
+        Objects.requireNonNull(text, "text");
+        Objects.requireNonNull(parseFromStringService, "parseFromStringService");
+
         this.name = name;
         this.text = text;
         this.parseFromStringService = parseFromStringService;
@@ -62,6 +67,8 @@ public final class PathArgument {
      * format according to the type to convert to
      */
     public <T> T getValue(Class<T> clazz) throws FromStringParserException {
+        Objects.requireNonNull(clazz, "clazz");
+
         return clazz.cast(getValue((Type)clazz));
     }
 
@@ -75,6 +82,8 @@ public final class PathArgument {
      * format according to the type to convert to
      */
     public <T> T getValue(TypeToken<T> typeToken) throws FromStringParserException {
+        Objects.requireNonNull(typeToken, "typeToken");
+
         //noinspection unchecked
         return (T)getValue(typeToken.getType());
     }
@@ -88,6 +97,8 @@ public final class PathArgument {
      * format according to the type to convert to
      */
     public Object getValue(Type type) throws FromStringParserException {
+        Objects.requireNonNull(type, "type");
+
         return parseFromStringService.parseFromString(text, type);
     }
 

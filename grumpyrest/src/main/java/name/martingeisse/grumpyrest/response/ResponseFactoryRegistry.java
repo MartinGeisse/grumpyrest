@@ -14,6 +14,7 @@ import name.martingeisse.grumpyrest.RestApi;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Allows to register {@link ResponseFactory}s that provide {@link Response} implementations for the response values
@@ -48,7 +49,9 @@ public final class ResponseFactoryRegistry extends Sealable {
      * @param factory the response factory to register
      */
     public void register(ResponseFactory factory) {
+        Objects.requireNonNull(factory, "factory");
         ensureConfigurationPhase();
+
         factories.add(factory);
     }
 
@@ -67,6 +70,8 @@ public final class ResponseFactoryRegistry extends Sealable {
      * @return the response
      */
     public Response createResponse(RequestCycle requestCycle, Object value) {
+        Objects.requireNonNull(requestCycle, "requestCycle");
+
         ensureRunTimePhase();
         while (value instanceof ResponseValueWrapper wrapper) {
             value = wrapper.getWrappedResponseValue();

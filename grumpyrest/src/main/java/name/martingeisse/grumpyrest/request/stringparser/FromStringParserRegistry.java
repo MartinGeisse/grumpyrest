@@ -12,6 +12,7 @@ import name.martingeisse.grumpyrest.RestApi;
 import name.martingeisse.grumpyrest.request.stringparser.standard.EnumParser;
 
 import java.lang.reflect.Type;
+import java.util.Objects;
 
 /**
  * This registry keeps {@link FromStringParser}s used to parse path parameters and querystring parameters.
@@ -27,6 +28,8 @@ public final class FromStringParserRegistry extends Registry<Type, FromStringPar
 
     @Override
     protected FromStringParser generateRegistrable(Type type) {
+        Objects.requireNonNull(type, "type");
+
         //noinspection rawtypes
         if (type instanceof Class clazz && clazz.isEnum()) {
             //noinspection unchecked,rawtypes
@@ -37,16 +40,24 @@ public final class FromStringParserRegistry extends Registry<Type, FromStringPar
 
     @Override
     protected String getErrorMessageForUnknownKey(Type key) {
+        Objects.requireNonNull(key, "key");
+
         return "no from-string parser found for type: " + key;
     }
 
     @Override
     protected boolean registrableSupports(FromStringParser registrable, Type key) {
+        Objects.requireNonNull(registrable, "registrable");
+        Objects.requireNonNull(key, "key");
+
         return registrable.supportsType(key);
     }
 
     @Override
     public Object parseFromString(String text, Type type) throws FromStringParserException {
+        Objects.requireNonNull(text, "text");
+        Objects.requireNonNull(type, "type");
+
         FromStringParser parser;
         try {
             parser = get(type);

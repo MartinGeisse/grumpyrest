@@ -43,6 +43,7 @@ public record Path(List<PathSegment> segments) {
      */
     public static Path parse(String pathSpec) {
         Objects.requireNonNull(pathSpec);
+
         String[] segmentSpecs = PathUtil.splitIntoSegments(pathSpec);
         List<PathSegment> segments = new ArrayList<>();
         for (String segmentSpec : segmentSpecs) {
@@ -66,6 +67,7 @@ public record Path(List<PathSegment> segments) {
     public List<PathArgument> match(List<String> requestSegments, ParseFromStringService parseFromStringService) {
         Objects.requireNonNull(requestSegments);
         Objects.requireNonNull(parseFromStringService, "parseFromStringService");
+
         if (requestSegments.size() != segments.size()) {
             return null;
         }

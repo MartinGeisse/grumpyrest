@@ -14,6 +14,7 @@ import name.martingeisse.grumpyrest.response.ResponseTransmitter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Implements a standard JSON-based error response format, combined with a selectable HTTP status code.
@@ -37,6 +38,9 @@ public record StandardErrorResponse(int status, String message, List<Field> fiel
      * @param fields  the field errors
      */
     public StandardErrorResponse {
+        Objects.requireNonNull(message, "message");
+        Objects.requireNonNull(fields, "fields");
+
         fields = List.copyOf(fields);
     }
 
@@ -76,6 +80,8 @@ public record StandardErrorResponse(int status, String message, List<Field> fiel
      * @return the instance of this class
      */
     public static StandardErrorResponse requestBodyValidationFailed(JsonDeserializationException e) {
+        Objects.requireNonNull(e, "e");
+
         return requestBodyValidationFailed(e.getFieldErrorNode());
     }
 
@@ -87,6 +93,8 @@ public record StandardErrorResponse(int status, String message, List<Field> fiel
      * @return the instance of this class
      */
     public static StandardErrorResponse requestBodyValidationFailed(FieldErrorNode errorNode) {
+        Objects.requireNonNull(errorNode, "errorNode");
+
         return requestBodyValidationFailed(errorNode.flatten());
     }
 
@@ -98,6 +106,8 @@ public record StandardErrorResponse(int status, String message, List<Field> fiel
      * @return the instance of this class
      */
     public static StandardErrorResponse requestBodyValidationFailed(List<FieldErrorNode.FlattenedError> fieldErrors) {
+        Objects.requireNonNull(fieldErrors, "fieldErrors");
+
         List<Field> translatedErrors = new ArrayList<>();
         for (FieldErrorNode.FlattenedError flattenedError : fieldErrors) {
             translatedErrors.add(new Field(flattenedError.getPathAsString(), flattenedError.message()));
@@ -130,6 +140,8 @@ public record StandardErrorResponse(int status, String message, List<Field> fiel
 
     @Override
     public void transmit(ResponseTransmitter responseTransmitter) throws IOException {
+        Objects.requireNonNull(responseTransmitter, "responseTransmitter");
+
         responseTransmitter.setStatus(status);
         responseTransmitter.setContentType("application/json");
         responseTransmitter.writeJson(new Body(message, fields));
@@ -141,11 +153,27 @@ public record StandardErrorResponse(int status, String message, List<Field> fiel
      * @param path    the field path
      * @param message the error message
      */
-    public record Field(String path, String message) {}
+    public record Field(String path, String message) {
+
+        /**
+         * Constructor.
+         *
+         * @param path    the field path
+         * @param message the error message
+         */
+        public Field {
+            Objects.requireNonNull(path, "path");
+            Objects.requireNonNull(message, "message");
+        }
+
+    }
 
     // helper type so the HTTP status code won't be included in the response body
     record Body(String message, List<Field> fields) {
         public Body {
+            Objects.requireNonNull(message, "message");
+            Objects.requireNonNull(fields, "fields");
+
             fields = List.copyOf(fields);
         }
     }

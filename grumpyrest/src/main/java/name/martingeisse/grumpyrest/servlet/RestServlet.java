@@ -12,6 +12,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import name.martingeisse.grumpyrest.RequestCycle;
 import name.martingeisse.grumpyrest.RestApi;
 
+import java.util.Objects;
+
 /**
  * Java servlet that serves a REST API defined by a {@link RestApi} object.
  */
@@ -34,27 +36,42 @@ public class RestServlet extends HttpServlet {
      * @param requestPathSourcingStrategy how to determine the request path from the servlet request object
      */
     public RestServlet(RestApi api, RequestPathSourcingStrategy requestPathSourcingStrategy) {
+        Objects.requireNonNull(api, "api");
+        Objects.requireNonNull(requestPathSourcingStrategy, "requestPathSourcingStrategy");
+
         this.api = api;
         this.requestPathSourcingStrategy = requestPathSourcingStrategy;
     }
 
     @Override
     protected void doGet(HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+        Objects.requireNonNull(servletRequest, "servletRequest");
+        Objects.requireNonNull(servletResponse, "servletResponse");
+
         api.handle(new RequestCycle(api, servletRequest, servletResponse, requestPathSourcingStrategy));
     }
 
     @Override
     protected void doPut(HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+        Objects.requireNonNull(servletRequest, "servletRequest");
+        Objects.requireNonNull(servletResponse, "servletResponse");
+
         api.handle(new RequestCycle(api, servletRequest, servletResponse, requestPathSourcingStrategy));
     }
 
     @Override
     protected void doPost(HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+        Objects.requireNonNull(servletRequest, "servletRequest");
+        Objects.requireNonNull(servletResponse, "servletResponse");
+
         api.handle(new RequestCycle(api, servletRequest, servletResponse, requestPathSourcingStrategy));
     }
 
     @Override
     protected void doDelete(HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+        Objects.requireNonNull(servletRequest, "servletRequest");
+        Objects.requireNonNull(servletResponse, "servletResponse");
+
         api.handle(new RequestCycle(api, servletRequest, servletResponse, requestPathSourcingStrategy));
     }
 

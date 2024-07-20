@@ -3,6 +3,7 @@ package name.martingeisse.grumpyrest;
 import name.martingeisse.grumpyrest.request.PathArgument;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The result returned by {@link RestApi#match(RequestCycle)} and {@link Route#match(RequestCycle)}.
@@ -19,6 +20,9 @@ public record RouteMatchResult(Route route, List<PathArgument> pathArguments) {
      * @param pathArguments arguments that were bound to path parameters
      */
     public RouteMatchResult {
+        Objects.requireNonNull(route, "route");
+        Objects.requireNonNull(pathArguments, "pathArguments");
+
         pathArguments = List.copyOf(pathArguments);
     }
 

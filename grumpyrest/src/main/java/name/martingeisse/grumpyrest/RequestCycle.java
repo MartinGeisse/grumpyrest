@@ -63,6 +63,11 @@ public final class RequestCycle {
         HttpServletResponse servletResponse,
         RequestPathSourcingStrategy requestPathSourcingStrategy
     ) {
+        Objects.requireNonNull(api, "api");
+        Objects.requireNonNull(servletRequest, "servletRequest");
+        Objects.requireNonNull(servletResponse, "servletResponse");
+        Objects.requireNonNull(requestPathSourcingStrategy, "requestPathSourcingStrategy");
+
         this.api = api;
         this.servletRequest = servletRequest;
         this.servletResponse = servletResponse;
@@ -161,6 +166,7 @@ public final class RequestCycle {
 
     void applyRouteMatchResult(RouteMatchResult matchResult) {
         Objects.requireNonNull(matchResult, "matchResult");
+
         this.routeMatchResult = matchResult;
     }
 
@@ -173,11 +179,16 @@ public final class RequestCycle {
 
         @Override
         public void setContentType(String contentType) {
+            Objects.requireNonNull(contentType, "contentType");
+
             servletResponse.setContentType(contentType);
         }
 
         @Override
         public void addCustomHeader(String name, String value) {
+            Objects.requireNonNull(name, "name");
+            Objects.requireNonNull(value, "value");
+
             servletResponse.addHeader(name, value);
         }
 
@@ -188,6 +199,8 @@ public final class RequestCycle {
 
         @Override
         public void writeJson(Object value) throws JsonSerializationException, IOException {
+            Objects.requireNonNull(value, "value");
+
             api.getJsonEngine().writeTo(value, servletResponse.getOutputStream());
         }
 
@@ -204,6 +217,8 @@ public final class RequestCycle {
 
         @Override
         public String getHeader(String name) {
+            Objects.requireNonNull(name, "name");
+
             return servletRequest.getHeader(name);
         }
 
@@ -212,6 +227,8 @@ public final class RequestCycle {
         }
 
         public Object parseQuerystring(Type type) throws QuerystringParsingException {
+            Objects.requireNonNull(type, "type");
+
             Map<String, String[]> querystringMulti = servletRequest.getParameterMap();
             Map<String, String> querystringSingle = new HashMap<>();
             Map<String, String> errorMap = new HashMap<>();
@@ -250,6 +267,8 @@ public final class RequestCycle {
         }
 
         public <T> T parseBody(Class<T> clazz) {
+            Objects.requireNonNull(clazz, "clazz");
+
             try {
                 return api.getJsonEngine().deserialize(prepareParse(), clazz);
             } catch (JsonDeserializationException e) {
@@ -258,6 +277,8 @@ public final class RequestCycle {
         }
 
         public <T> T parseBody(TypeToken<T> typeToken) {
+            Objects.requireNonNull(typeToken, "typeToken");
+
             try {
                 return api.getJsonEngine().deserialize(prepareParse(), typeToken);
             } catch (JsonDeserializationException e) {
@@ -266,6 +287,8 @@ public final class RequestCycle {
         }
 
         public Object parseBody(Type type) {
+            Objects.requireNonNull(type, "type");
+
             try {
                 return api.getJsonEngine().deserialize(prepareParse(), type);
             } catch (JsonDeserializationException e) {
@@ -292,10 +315,14 @@ public final class RequestCycle {
 
 
         public <T> T parseQuerystring(Class<T> clazz) throws QuerystringParsingException {
+            Objects.requireNonNull(clazz, "clazz");
+
             return clazz.cast(parseQuerystring((Type) clazz));
         }
 
         public <T> T parseQuerystring(TypeToken<T> typeToken) throws QuerystringParsingException {
+            Objects.requireNonNull(typeToken, "typeToken");
+
             //noinspection unchecked
             return (T) parseQuerystring(typeToken.getType());
         }

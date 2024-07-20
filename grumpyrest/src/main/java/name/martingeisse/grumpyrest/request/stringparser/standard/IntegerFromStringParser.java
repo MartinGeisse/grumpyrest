@@ -10,6 +10,7 @@ import name.martingeisse.grumpyrest.request.stringparser.FromStringParser;
 import name.martingeisse.grumpyrest.request.stringparser.FromStringParserException;
 
 import java.lang.reflect.Type;
+import java.util.Objects;
 
 /**
  * Parses integers from their usual decimal text representation.
@@ -24,11 +25,16 @@ public final class IntegerFromStringParser implements FromStringParser {
 
     @Override
     public boolean supportsType(Type type) {
+        Objects.requireNonNull(type, "type");
+
         return type.equals(Integer.TYPE) || type.equals(Integer.class);
     }
 
     @Override
     public Object parseFromString(String s, Type type) throws FromStringParserException {
+        Objects.requireNonNull(s, "s");
+        Objects.requireNonNull(type, "type");
+
         try {
             return Integer.parseInt(s);
         } catch (NumberFormatException e) {

@@ -10,6 +10,7 @@ import name.martingeisse.grumpyjson.builtin.helper_types.OptionalField;
 import name.martingeisse.grumpyrest.ExceptionMessages;
 
 import java.lang.reflect.Type;
+import java.util.Objects;
 
 /**
  * Implementations of this interface are used to parse a higher-level type from a string. This includes built-in
@@ -69,6 +70,8 @@ public interface FromStringParser {
      * @throws FromStringParserException if absent values are not tolerated (this is the default implementation)
      */
     default Object parseFromAbsentString(Type type) throws FromStringParserException {
+        Objects.requireNonNull(type, "type");
+
         throw new FromStringParserException(ExceptionMessages.MISSING_PARAMETER);
     }
 

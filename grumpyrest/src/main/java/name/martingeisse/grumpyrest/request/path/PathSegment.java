@@ -6,6 +6,8 @@
  */
 package name.martingeisse.grumpyrest.request.path;
 
+import java.util.Objects;
+
 /**
  * A single segment from a {@link Path}.
  */
@@ -26,6 +28,8 @@ public abstract class PathSegment {
      * @return the parsed segment object
      */
     public static PathSegment parse(String segmentSpec) {
+        Objects.requireNonNull(segmentSpec, "segmentSpec");
+
         return segmentSpec.startsWith(":")
                 ? new VariablePathSegment(segmentSpec.substring(1))
                 : new LiteralPathSegment(segmentSpec);

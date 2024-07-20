@@ -36,6 +36,7 @@ public enum HttpMethod {
      */
     public final boolean matches(String method) {
         Objects.requireNonNull(method, "method");
+
         return name().equals(method.toUpperCase());
     }
 }

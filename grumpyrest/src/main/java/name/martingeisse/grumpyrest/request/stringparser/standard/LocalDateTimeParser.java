@@ -29,6 +29,7 @@ public final class LocalDateTimeParser implements FromStringParser {
     @Override
     public boolean supportsType(Type type) {
         Objects.requireNonNull(type, "type");
+
         return type.equals(LocalDateTime.class);
     }
 
@@ -36,6 +37,7 @@ public final class LocalDateTimeParser implements FromStringParser {
     public Object parseFromString(String s, Type type) throws FromStringParserException {
         Objects.requireNonNull(s, "s");
         Objects.requireNonNull(type, "type");
+
         try {
             return LocalDateTime.parse(s);
         } catch (DateTimeParseException e) {

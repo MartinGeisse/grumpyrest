@@ -10,6 +10,8 @@ import name.martingeisse.grumpyrest.RequestCycle;
 import name.martingeisse.grumpyrest.response.Response;
 import name.martingeisse.grumpyrest.response.ResponseFactory;
 
+import java.util.Objects;
+
 /**
  * This simply accepts response values that implement {@link Response} themselves and returns them unchanged. Without
  * this factory, a handler could not return such a response object.
@@ -24,6 +26,8 @@ public final class IdentityResponseFactory implements ResponseFactory {
 
     @Override
     public Response createResponse(RequestCycle requestCycle, Object value) {
+        Objects.requireNonNull(requestCycle, "requestCycle");
+
         return (value instanceof Response response) ? response : null;
     }
 

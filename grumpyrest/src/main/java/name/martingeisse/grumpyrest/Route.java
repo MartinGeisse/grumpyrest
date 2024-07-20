@@ -12,6 +12,7 @@ import name.martingeisse.grumpyrest.request.path.Path;
 import name.martingeisse.grumpyrest.request.stringparser.ParseFromStringService;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A route is, conceptually, a set of criteria that determine whether the route matches a specific requests, as well
@@ -42,6 +43,19 @@ import java.util.List;
 public record Route(HttpMethod method, Path path, ComplexHandler handler) {
 
     /**
+     * Standard constructor.
+     *
+     * @param method the HTTP method to match
+     * @param path the path pattern to match. May include path parameters.
+     * @param handler the handler to invoke for requests that match this route
+     */
+    public Route {
+        Objects.requireNonNull(method, "method");
+        Objects.requireNonNull(path, "path");
+        Objects.requireNonNull(handler, "handler");
+    }
+
+    /**
      * This constructor specifies the path pattern as a string instead of a {@link Path} object. Leading and trailing
      * slashes are ignored. A path parameter is specified as a path segment that starts with a ':' character.
      *
@@ -62,6 +76,7 @@ public record Route(HttpMethod method, Path path, ComplexHandler handler) {
      */
     public Route(HttpMethod method, Path path, SimpleHandler handler) {
         this(method, path, (RequestCycle requestCycle) -> handler.handle(requestCycle.getHighlevelRequest()));
+        Objects.requireNonNull(handler, "handler");
     }
 
     /**
@@ -84,6 +99,8 @@ public record Route(HttpMethod method, Path path, ComplexHandler handler) {
      * @return if matched, a match result that contains this route. Otherwise null.
      */
     public RouteMatchResult match(RequestCycle requestCycle) {
+        Objects.requireNonNull(requestCycle, "requestCycle");
+
         if (!method.matches(requestCycle.getServletRequest().getMethod())) {
             return null;
         }
@@ -105,6 +122,8 @@ public record Route(HttpMethod method, Path path, ComplexHandler handler) {
      * @throws Exception on errors -- will be treated like a response value.
      */
     public Object invokeHandler(RequestCycle requestCycle) throws Exception {
+        Objects.requireNonNull(requestCycle, "requestCycle");
+
         return handler.handle(requestCycle);
     }
 
