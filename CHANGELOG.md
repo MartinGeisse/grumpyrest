@@ -1,7 +1,11 @@
 
 ## Version 0.7 (WIP)
 
+* reduced minimum Java version from 20 to 17
 * `NullableField` and `OptionalField`now have `.orElse()`and `.orElseGet()` methods to easily provide default values.
+* Add argument checks against null to many methods
+* improve the checks against loss of precision or range when deserializing integral types
+* add toString() support to `Path` and `PathSegment`
 
 ...
 
