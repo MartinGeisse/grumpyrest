@@ -55,7 +55,7 @@ dependencies {
 	implementation 'com.google.errorprone:error_prone_annotations:2.19.1'
 
 	// JSON
-	implementation 'com.google.code.gson:gson:2.10.1'
+	implementation 'com.google.code.gson:gson:2.11.0'
 
 	// testing
 	testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'

@@ -60,7 +60,7 @@ dependencies {
 	implementation 'org.slf4j:slf4j-api:2.0.7'
 
 	// JSON
-	implementation 'com.google.code.gson:gson:2.10.1'
+	implementation 'com.google.code.gson:gson:2.11.0'
 
 	// web server
 	implementation 'org.eclipse.jetty:jetty-servlets:11.0.15'
