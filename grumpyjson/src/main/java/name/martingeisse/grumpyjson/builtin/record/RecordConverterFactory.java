@@ -6,7 +6,7 @@
  */
 package name.martingeisse.grumpyjson.builtin.record;
 
-import name.martingeisse.grumpyjson.JsonRegistries;
+import name.martingeisse.grumpyjson.JsonProviders;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 
@@ -24,7 +24,7 @@ is built only once per record class.
  */
 public final class RecordConverterFactory {
 
-    private JsonRegistries registries;
+    private JsonProviders providers;
     private final ConcurrentHashMap<Class<?>, RecordConverter<?>> map = new ConcurrentHashMap<>();
 
     /**
@@ -36,12 +36,12 @@ public final class RecordConverterFactory {
     /**
      * NOT PUBLIC API
      *
-     * @param registries ...
+     * @param providers ...
      */
-    public void setRegistries(JsonRegistries registries) {
-        Objects.requireNonNull(registries, "registries");
+    public void setProviders(JsonProviders providers) {
+        Objects.requireNonNull(providers, "providers");
 
-        this.registries = registries;
+        this.providers = providers;
     }
 
     /**
@@ -79,7 +79,7 @@ public final class RecordConverterFactory {
     public RecordConverter<?> getConverter(Class<?> clazz) {
         Objects.requireNonNull(clazz, "clazz");
 
-        return map.computeIfAbsent(clazz, ignored -> new RecordConverter<>(clazz, registries));
+        return map.computeIfAbsent(clazz, ignored -> new RecordConverter<>(clazz, providers));
     }
 
 }

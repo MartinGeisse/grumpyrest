@@ -9,6 +9,7 @@ package name.martingeisse.grumpyjson.builtin;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import name.martingeisse.grumpyjson.FieldErrorNode;
+import name.martingeisse.grumpyjson.JsonProviders;
 import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
@@ -31,17 +32,17 @@ import java.util.Objects;
  */
 public final class ListConverter implements JsonSerializer<List<?>>, JsonDeserializer {
 
-    private final JsonRegistries registries;
+    private final JsonProviders providers;
 
     /**
      * Constructor.
      *
-     * @param registries the JSON registries -- needed to fetch the converter for the element type at run-time
+     * @param providers the JSON providers -- needed to fetch the converter for the element type at run-time
      */
-    public ListConverter(JsonRegistries registries) {
-        Objects.requireNonNull(registries, "registries");
+    public ListConverter(JsonProviders providers) {
+        Objects.requireNonNull(providers, "providers");
 
-        this.registries = registries;
+        this.providers = providers;
     }
 
     @Override
@@ -60,7 +61,7 @@ public final class ListConverter implements JsonSerializer<List<?>>, JsonDeseria
             Type elementType = TypeUtil.expectSingleParameterizedType(type, List.class);
             JsonDeserializer elementDeserializer;
             try {
-                elementDeserializer = registries.getDeserializer(elementType);
+                elementDeserializer = providers.getDeserializer(elementType);
             } catch (NotRegisteredException e) {
                 throw new JsonDeserializationException(e.getMessage());
             }
@@ -98,7 +99,7 @@ public final class ListConverter implements JsonSerializer<List<?>>, JsonDeseria
         FieldErrorNode errorNode = null;
         for (int i = 0; i < value.size(); i++) {
             try {
-                result.add(registries.serialize(value.get(i)));
+                result.add(providers.serialize(value.get(i)));
             } catch (JsonSerializationException e) {
                 errorNode = e.getFieldErrorNode().in(Integer.toString(i)).and(errorNode);
             } catch (Exception e) {

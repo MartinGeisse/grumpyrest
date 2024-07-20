@@ -1,7 +1,9 @@
 
 ## Version 0.8 (WIP)
 
-
+* Added our own `TypeToken` class to use instead of Gson's one. This is a first step to decouple the API from Gson.
+* Make the built-in converters use the `JsonProviders` interface to fetch the converters they depend on, instead of
+  depending on the full `JsonRegistries` type.
 
 ## Version 0.7
 

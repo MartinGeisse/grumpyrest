@@ -8,6 +8,7 @@ package name.martingeisse.grumpyjson.builtin.helper_types;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
+import name.martingeisse.grumpyjson.JsonProviders;
 import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
@@ -26,17 +27,17 @@ import java.util.Objects;
  */
 public final class NullableFieldConverter implements JsonSerializer<NullableField<?>>, JsonDeserializer {
 
-    private final JsonRegistries registries;
+    private final JsonProviders providers;
 
     /**
      * Constructor.
      *
-     * @param registries needed to fetch the converter for the contained type at run-time
+     * @param providers needed to fetch the converter for the contained type at run-time
      */
-    public NullableFieldConverter(JsonRegistries registries) {
-        Objects.requireNonNull(registries, "registries");
+    public NullableFieldConverter(JsonProviders providers) {
+        Objects.requireNonNull(providers, "providers");
 
-        this.registries = registries;
+        this.providers = providers;
     }
 
     @Override
@@ -56,7 +57,7 @@ public final class NullableFieldConverter implements JsonSerializer<NullableFiel
             return NullableField.ofNull();
         } else {
             try {
-                return NullableField.ofValue(registries.deserialize(json, innerType));
+                return NullableField.ofValue(providers.deserialize(json, innerType));
             } catch (Exception e) {
                 throw new JsonDeserializationException(e);
             }
@@ -78,7 +79,7 @@ public final class NullableFieldConverter implements JsonSerializer<NullableFiel
             return JsonNull.INSTANCE;
         } else {
             try {
-                return registries.serialize(value.getValueOrNull());
+                return providers.serialize(value.getValueOrNull());
             } catch (Exception e) {
                 throw new JsonSerializationException(e);
             }

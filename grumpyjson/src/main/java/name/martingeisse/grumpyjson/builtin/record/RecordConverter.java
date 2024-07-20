@@ -10,7 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import name.martingeisse.grumpyjson.ExceptionMessages;
 import name.martingeisse.grumpyjson.FieldErrorNode;
-import name.martingeisse.grumpyjson.JsonRegistries;
+import name.martingeisse.grumpyjson.JsonProviders;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
@@ -58,7 +58,7 @@ public final class RecordConverter<T> implements JsonSerializer<T>, JsonDeserial
     }
 
     private final RecordInfo recordInfo;
-    private final JsonRegistries registries;
+    private final JsonProviders providers;
     private final Options options;
 
     /**
@@ -66,10 +66,10 @@ public final class RecordConverter<T> implements JsonSerializer<T>, JsonDeserial
      * auto-generated for unknown records, and this constructor does not add any features on top of that.
      *
      * @param clazz      the record class
-     * @param registries the JSON registries -- needed to fetch the converters for field types at run-time
+     * @param providers the JSON providers -- needed to fetch the converters for field types at run-time
      */
-    public RecordConverter(Class<T> clazz, JsonRegistries registries) {
-        this(clazz, registries, new Options(false));
+    public RecordConverter(Class<T> clazz, JsonProviders providers) {
+        this(clazz, providers, new Options(false));
     }
 
     /**
@@ -77,16 +77,16 @@ public final class RecordConverter<T> implements JsonSerializer<T>, JsonDeserial
      * constructor in cases where the auto-generated ones are not sufficient.
      *
      * @param clazz      the record class
-     * @param registries the JSON registries -- needed to fetch the converters for field types at run-time
+     * @param providers the JSON providers -- needed to fetch the converters for field types at run-time
      * @param options    options that control the conversion from and to JSON
      */
-    public RecordConverter(Class<T> clazz, JsonRegistries registries, Options options) {
+    public RecordConverter(Class<T> clazz, JsonProviders providers, Options options) {
         Objects.requireNonNull(clazz, "clazz");
-        Objects.requireNonNull(registries, "registries");
+        Objects.requireNonNull(providers, "providers");
         Objects.requireNonNull(options, "options");
 
         this.recordInfo = new RecordInfo(clazz);
-        this.registries = registries;
+        this.providers = providers;
         this.options = options;
     }
 
@@ -123,7 +123,7 @@ public final class RecordConverter<T> implements JsonSerializer<T>, JsonDeserial
                 }
                 try {
                     Type concreteFieldType = componentInfo.getConcreteType(recordType);
-                    JsonDeserializer deserializer = registries.getDeserializer(concreteFieldType);
+                    JsonDeserializer deserializer = providers.getDeserializer(concreteFieldType);
                     if (propertyJson == null) {
                         fieldValues[i] = deserializer.deserializeAbsent(concreteFieldType);
                     } else {
@@ -178,7 +178,7 @@ public final class RecordConverter<T> implements JsonSerializer<T>, JsonDeserial
                 if (value == null) {
                     throw new JsonSerializationException("field is null");
                 }
-                Optional<JsonElement> optionalJson = registries.serializeOptional(value);
+                Optional<JsonElement> optionalJson = providers.serializeOptional(value);
                 optionalJson.ifPresent(jsonElement -> jsonObject.add(name, jsonElement));
             } catch (JsonSerializationException e) {
                 errorNode = e.getFieldErrorNode().in(name).and(errorNode);

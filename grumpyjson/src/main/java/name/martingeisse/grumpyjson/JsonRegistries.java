@@ -33,7 +33,7 @@ public record JsonRegistries(
         JsonSerializerRegistry serializerRegistry = new JsonSerializerRegistry(recordConverterFactory);
         JsonDeserializerRegistry deserializerRegistry = new JsonDeserializerRegistry(recordConverterFactory);
         JsonRegistries registries = new JsonRegistries(serializerRegistry, deserializerRegistry);
-        recordConverterFactory.setRegistries(registries);
+        recordConverterFactory.setProviders(registries);
         return registries;
     }
 

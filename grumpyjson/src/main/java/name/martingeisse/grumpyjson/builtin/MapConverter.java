@@ -10,6 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import name.martingeisse.grumpyjson.FieldErrorNode;
+import name.martingeisse.grumpyjson.JsonProviders;
 import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
@@ -33,15 +34,15 @@ import java.util.Objects;
  */
 public final class MapConverter implements JsonSerializer<Map<?, ?>>, JsonDeserializer {
 
-    private final JsonRegistries registries;
+    private final JsonProviders providers;
 
     /**
      * Constructor.
      *
-     * @param registries the JSON registries -- needed to fetch the converters for the key and value types at run-time
+     * @param providers the JSON providers -- needed to fetch the converters for the key and value types at run-time
      */
-    public MapConverter(JsonRegistries registries) {
-        this.registries = registries;
+    public MapConverter(JsonProviders providers) {
+        this.providers = providers;
     }
 
     @Override
@@ -66,8 +67,8 @@ public final class MapConverter implements JsonSerializer<Map<?, ?>>, JsonDeseri
             Type valueType = keyAndValueTypes[1];
             JsonDeserializer keyDeserializer, valueDeserializer;
             try {
-                keyDeserializer = registries.getDeserializer(keyType);
-                valueDeserializer = registries.getDeserializer(valueType);
+                keyDeserializer = providers.getDeserializer(keyType);
+                valueDeserializer = providers.getDeserializer(valueType);
             } catch (NotRegisteredException e) {
                 throw new JsonDeserializationException(e.getMessage());
             }
@@ -117,7 +118,7 @@ public final class MapConverter implements JsonSerializer<Map<?, ?>>, JsonDeseri
             }
             JsonElement keyJson;
             try {
-                keyJson = registries.serialize(keyObject);
+                keyJson = providers.serialize(keyObject);
             } catch (JsonSerializationException e) {
                 errorNode = e.getFieldErrorNode().in("[" + keyObject + "]").and(errorNode);
                 continue;
@@ -138,7 +139,7 @@ public final class MapConverter implements JsonSerializer<Map<?, ?>>, JsonDeseri
                 if (valueObject == null) {
                     throw new JsonSerializationException("map contains null value");
                 }
-                JsonElement valueJson = registries.serialize(valueObject);
+                JsonElement valueJson = providers.serialize(valueObject);
                 result.add(keyText, valueJson);
 
             } catch (JsonSerializationException e) {
