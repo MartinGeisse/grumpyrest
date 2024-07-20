@@ -9,6 +9,7 @@ package name.martingeisse.grumpyjson.serialize;
 import com.google.gson.JsonElement;
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalField;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -72,13 +73,15 @@ public interface JsonSerializer<T> {
      * false. Calling it with such values anyway results in undefined behavior.
      *
      * @param value the value to convert to JSON. This value is not allowed to be null; "optional" refers to the fact
-     *              that the field can vanish in JSON based on the value to serialize, not that the input value is
-     *              optional.
+     *              that serialization happens in a context in which the field can vanish in JSON based on the value to
+     *              serialize, not that the input value is optional.
      * @return the generated JSON, or nothing in case the value vanishes in JSON
      * @throws JsonSerializationException if the value is in an inconsistent state, or in a state that cannot be
      * converted to JSON
      */
     default Optional<JsonElement> serializeOptional(T value) throws JsonSerializationException {
+        Objects.requireNonNull(value, "value");
+
         return Optional.of(serialize(value));
     }
 

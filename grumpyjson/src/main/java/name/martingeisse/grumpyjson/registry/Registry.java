@@ -72,6 +72,7 @@ public abstract class Registry<K, V> extends Sealable {
      */
     public final void register(V registrable) {
         Objects.requireNonNull(registrable, "registrable");
+
         ensureConfigurationPhase();
         manuallyAddedRegistrables.add(registrable);
     }
@@ -98,6 +99,7 @@ public abstract class Registry<K, V> extends Sealable {
      */
     public final boolean supports(K key) {
         Objects.requireNonNull(key, "key");
+
         ensureRunTimePhase();
         return getOrNull(key) != null;
     }
@@ -122,6 +124,7 @@ public abstract class Registry<K, V> extends Sealable {
 
     private V getOrNull(K key) {
         Objects.requireNonNull(key, "key");
+
         ensureRunTimePhase();
         return map.computeIfAbsent(key, ignored -> {
             for (V registrable : manuallyAddedRegistrables) {

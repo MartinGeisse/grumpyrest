@@ -142,6 +142,7 @@ public final class JsonEngine {
      */
     public boolean supportsClassForSerialization(Class<?> clazz) {
         Objects.requireNonNull(clazz, "clazz");
+
         return registries.supportsClassForSerialization(clazz);
     }
 
@@ -153,6 +154,7 @@ public final class JsonEngine {
      */
     public boolean supportsTypeForDeserialization(Type type) {
         Objects.requireNonNull(type, "type");
+
         return registries.supportsTypeForDeserialization(type);
     }
 
@@ -172,6 +174,7 @@ public final class JsonEngine {
     public <T> T deserialize(String source, Class<T> clazz) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(clazz, "clazz");
+
         return deserialize(wrapSource(source), clazz);
     }
 
@@ -187,6 +190,7 @@ public final class JsonEngine {
     public <T> T deserialize(String source, TypeToken<T> typeToken) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(typeToken, "typeToken");
+
         return deserialize(wrapSource(source), typeToken);
     }
 
@@ -201,6 +205,7 @@ public final class JsonEngine {
     public Object deserialize(String source, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(type, "type");
+
         return deserialize(wrapSource(source), type);
     }
 
@@ -217,6 +222,7 @@ public final class JsonEngine {
     public <T> T deserialize(InputStream source, Class<T> clazz) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(clazz, "clazz");
+
         return deserialize(wrapSource(source), clazz);
     }
 
@@ -233,6 +239,7 @@ public final class JsonEngine {
     public <T> T deserialize(InputStream source, TypeToken<T> typeToken) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(typeToken, "typeToken");
+
         return deserialize(wrapSource(source), typeToken);
     }
 
@@ -248,6 +255,7 @@ public final class JsonEngine {
     public Object deserialize(InputStream source, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(type, "type");
+
         return deserialize(wrapSource(source), type);
     }
 
@@ -263,6 +271,7 @@ public final class JsonEngine {
     public <T> T deserialize(Reader source, Class<T> clazz) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(clazz, "clazz");
+
         return clazz.cast(deserialize(source, (Type) clazz));
     }
 
@@ -278,6 +287,7 @@ public final class JsonEngine {
     public <T> T deserialize(Reader source, TypeToken<T> typeToken) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(typeToken, "typeToken");
+
         //noinspection unchecked
         return (T) deserialize(source, typeToken.getType());
     }
@@ -293,6 +303,7 @@ public final class JsonEngine {
     public Object deserialize(Reader source, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(type, "type");
+
         JsonElement json;
         try {
             json = gson.fromJson(source, JsonElement.class);
@@ -315,6 +326,8 @@ public final class JsonEngine {
      * This method transforms the error message so it does not reveal too much internals.
      */
     private static String mapGsonErrorMessage(String message) {
+        Objects.requireNonNull(message, "message");
+
         Matcher matcher = GSON_SYNTAX_ERROR_LOCATION_PATTERN.matcher(message);
         if (matcher.find()) {
             return "syntax error in JSON at line " + matcher.group(1) + ", column " + matcher.group(2);
@@ -334,6 +347,7 @@ public final class JsonEngine {
     public <T> T deserialize(JsonElement source, Class<T> clazz) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(clazz, "clazz");
+
         return clazz.cast(deserialize(source, (Type) clazz));
     }
 
@@ -349,6 +363,7 @@ public final class JsonEngine {
     public <T> T deserialize(JsonElement source, TypeToken<T> typeToken) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(typeToken, "typeToken");
+
         //noinspection unchecked
         return (T) deserialize(source, typeToken.getType());
     }
@@ -364,6 +379,7 @@ public final class JsonEngine {
     public Object deserialize(JsonElement source, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(type, "type");
+
         return registries.deserialize(source, type);
     }
 
@@ -380,6 +396,7 @@ public final class JsonEngine {
      */
     public String serializeToString(Object value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
+
         StringWriter writer = new StringWriter();
         writeTo(value, writer);
         return writer.toString();
@@ -396,6 +413,7 @@ public final class JsonEngine {
     public void writeTo(Object value, OutputStream destination) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(destination, "destination");
+
         OutputStreamWriter writer = new OutputStreamWriter(destination, StandardCharsets.UTF_8);
         writeTo(value, writer);
         try {
@@ -417,6 +435,7 @@ public final class JsonEngine {
     public void writeTo(Object value, Writer destination) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
         Objects.requireNonNull(destination, "destination");
+
         gson.toJson(registries.serialize(value), destination);
     }
 
@@ -429,6 +448,7 @@ public final class JsonEngine {
      */
     public JsonElement toJsonElement(Object value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
+
         return registries.serialize(value);
     }
 
@@ -437,10 +457,14 @@ public final class JsonEngine {
     // -----------------------------------------------------------------------
 
     private static Reader wrapSource(String source) {
+        Objects.requireNonNull(source, "source");
+
         return new StringReader(source);
     }
 
     private static Reader wrapSource(InputStream source) {
+        Objects.requireNonNull(source, "source");
+
         return new InputStreamReader(source, StandardCharsets.UTF_8);
     }
 

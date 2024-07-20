@@ -44,6 +44,7 @@ public record JsonRegistries(
      */
     public void registerSerializer(name.martingeisse.grumpyjson.serialize.JsonSerializer<?> serializer) {
         Objects.requireNonNull(serializer, "serializer");
+
         serializerRegistry().register(serializer);
     }
 
@@ -54,6 +55,7 @@ public record JsonRegistries(
      */
     public void registerDeserializer(name.martingeisse.grumpyjson.deserialize.JsonDeserializer deserializer) {
         Objects.requireNonNull(deserializer, "deserializer");
+
         deserializerRegistry().register(deserializer);
     }
 
@@ -80,21 +82,29 @@ public record JsonRegistries(
 
     @Override
     public boolean supportsClassForSerialization(Class<?> clazz) {
+        Objects.requireNonNull(clazz, "clazz");
+
         return serializerRegistry.supportsClassForSerialization(clazz);
     }
 
     @Override
     public <T> JsonSerializer<T> getSerializer(Class<T> clazz) throws NotRegisteredException {
+        Objects.requireNonNull(clazz, "clazz");
+
         return serializerRegistry.getSerializer(clazz);
     }
 
     @Override
     public boolean supportsTypeForDeserialization(Type type) {
+        Objects.requireNonNull(type, "type");
+
         return deserializerRegistry.supportsTypeForDeserialization(type);
     }
 
     @Override
     public JsonDeserializer getDeserializer(Type type) throws NotRegisteredException {
+        Objects.requireNonNull(type, "type");
+
         return deserializerRegistry.getDeserializer(type);
     }
 

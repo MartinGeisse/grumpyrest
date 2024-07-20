@@ -12,6 +12,7 @@ import name.martingeisse.grumpyjson.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This class typically gets constructed by grumpyjson and consumed by grumpyrest, without any need for the application
@@ -68,7 +69,8 @@ public abstract class FieldErrorNode {
      * and possibly use field path suffixes. If this node is later used below another field path prefix, then that
      * prefix applies to all errors from this and the other node.
      *
-     * @param other the other node to group together with this one
+     * @param other the other node to group together with this one. May be null, in which case this method just returns
+     *              this node -- this simplifies combining optional errors from multiple sources.
      * @return the node that groups both nodes
      */
     public final FieldErrorNode and(FieldErrorNode other) {
@@ -86,6 +88,8 @@ public abstract class FieldErrorNode {
      * @return the node that has the prefix applied
      */
     public final FieldErrorNode in(String fieldName) {
+        Objects.requireNonNull(fieldName, "fieldName");
+
         return new Field(fieldName, this);
     }
 
@@ -129,6 +133,8 @@ public abstract class FieldErrorNode {
         private final String message;
 
         private Message(String message) {
+            Objects.requireNonNull(message, "message");
+
             this.message = message;
         }
 
@@ -143,6 +149,9 @@ public abstract class FieldErrorNode {
 
         @Override
         protected void flatten(List<FlattenedError> errors, List<String> segments) {
+            Objects.requireNonNull(errors, "errors");
+            Objects.requireNonNull(segments, "segments");
+
             errors.add(new FlattenedError(message, segments));
         }
 
@@ -161,6 +170,8 @@ public abstract class FieldErrorNode {
         private final Exception exception;
 
         private InternalException(Exception exception) {
+            Objects.requireNonNull(exception, "exception");
+
             this.exception = exception;
         }
 
@@ -175,6 +186,9 @@ public abstract class FieldErrorNode {
 
         @Override
         protected void flatten(List<FlattenedError> errors, List<String> segments) {
+            Objects.requireNonNull(errors, "errors");
+            Objects.requireNonNull(segments, "segments");
+
             errors.add(new FlattenedError(ExceptionMessages.INTERNAL_ERROR, segments));
         }
 
@@ -189,6 +203,9 @@ public abstract class FieldErrorNode {
         private final FieldErrorNode second;
 
         private Siblings(FieldErrorNode first, FieldErrorNode second) {
+            Objects.requireNonNull(first, "first");
+            Objects.requireNonNull(second, "second");
+
             this.first = first;
             this.second = second;
         }
@@ -213,6 +230,9 @@ public abstract class FieldErrorNode {
 
         @Override
         protected void flatten(List<FlattenedError> errors, List<String> segments) {
+            Objects.requireNonNull(errors, "errors");
+            Objects.requireNonNull(segments, "segments");
+
             first.flatten(errors, segments);
             second.flatten(errors, segments);
         }
@@ -228,6 +248,9 @@ public abstract class FieldErrorNode {
         private final FieldErrorNode node;
 
         private Field(String name, FieldErrorNode node) {
+            Objects.requireNonNull(name, "name");
+            Objects.requireNonNull(node, "node");
+
             this.name = name;
             this.node = node;
         }
@@ -252,6 +275,9 @@ public abstract class FieldErrorNode {
 
         @Override
         protected void flatten(List<FlattenedError> errors, List<String> segments) {
+            Objects.requireNonNull(errors, "errors");
+            Objects.requireNonNull(segments, "segments");
+
             segments.add(name);
             node.flatten(errors, segments);
             segments.remove(segments.size() - 1);
@@ -278,6 +304,9 @@ public abstract class FieldErrorNode {
          * @param fieldPath the field names, from root to leaf
          */
         public FlattenedError {
+            Objects.requireNonNull(message, "message");
+            Objects.requireNonNull(fieldPath, "fieldPath");
+
             fieldPath = List.copyOf(fieldPath);
         }
 

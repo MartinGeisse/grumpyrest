@@ -12,6 +12,8 @@ import name.martingeisse.grumpyjson.builtin.record.RecordConverterFactory;
 import name.martingeisse.grumpyjson.registry.NotRegisteredException;
 import name.martingeisse.grumpyjson.registry.Registry;
 
+import java.util.Objects;
+
 /**
  * This registry keeps the {@link JsonSerializer}s used by a {@link JsonEngine}.
  */
@@ -25,16 +27,23 @@ public final class JsonSerializerRegistry extends Registry<Class<?>, JsonSeriali
      * @param recordConverterFactory ...
      */
     public JsonSerializerRegistry(RecordConverterFactory recordConverterFactory) {
+        Objects.requireNonNull(recordConverterFactory, "recordConverterFactory");
+
         this.recordConverterFactory = recordConverterFactory;
     }
 
     @Override
     protected boolean registrableSupports(JsonSerializer<?> registrable, Class<?> key) {
+        Objects.requireNonNull(registrable, "registrable");
+        Objects.requireNonNull(key, "key");
+
         return registrable.supportsClassForSerialization(key);
     }
 
     @Override
     protected JsonSerializer<?> generateRegistrable(Class<?> clazz) {
+        Objects.requireNonNull(clazz, "clazz");
+
         if (clazz.isRecord()) {
             return recordConverterFactory.getSerializer(clazz);
         }
@@ -47,16 +56,22 @@ public final class JsonSerializerRegistry extends Registry<Class<?>, JsonSeriali
 
     @Override
     protected String getErrorMessageForUnknownKey(Class<?> clazz) {
+        Objects.requireNonNull(clazz, "clazz");
+
         return "no JSON serializer found and can only auto-generate them for record classes, found class: " + clazz;
     }
 
     @Override
     public boolean supportsClassForSerialization(Class<?> clazz) {
+        Objects.requireNonNull(clazz, "clazz");
+
         return supports(clazz);
     }
 
     @Override
     public <T> JsonSerializer<T> getSerializer(Class<T> clazz) throws NotRegisteredException {
+        Objects.requireNonNull(clazz, "clazz");
+
         //noinspection unchecked
         return (JsonSerializer<T>)get(clazz);
     }

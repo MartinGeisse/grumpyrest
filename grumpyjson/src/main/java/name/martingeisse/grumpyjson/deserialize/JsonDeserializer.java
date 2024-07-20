@@ -11,6 +11,7 @@ import name.martingeisse.grumpyjson.ExceptionMessages;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Defines the conversion from JSON to a Java object / value for one or more types.
@@ -65,6 +66,8 @@ public interface JsonDeserializer {
      * @throws JsonDeserializationException if the JSON does not match the expected structure
      */
     default Object deserializeAbsent(Type type) throws JsonDeserializationException {
+        Objects.requireNonNull(type, "type");
+
         throw new JsonDeserializationException(ExceptionMessages.MISSING_PROPERTY);
     }
 

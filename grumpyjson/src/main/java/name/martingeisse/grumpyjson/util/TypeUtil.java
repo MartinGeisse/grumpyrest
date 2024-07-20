@@ -10,6 +10,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * NOT PUBLIC API
@@ -39,6 +40,9 @@ public class TypeUtil {
      * @return the type arguments, or null if the type is not as expected
      */
     public static Type[] isParameterizedType(Type type, Class<?> expectedRawClass, int expectedNumberOfTypeArguments) {
+        Objects.requireNonNull(type, "type");
+        Objects.requireNonNull(expectedRawClass, "expectedRawClass");
+
         if (type instanceof ParameterizedType p && p.getRawType().equals(expectedRawClass)) {
             Type[] typeArguments = p.getActualTypeArguments();
             if (typeArguments.length == expectedNumberOfTypeArguments) {
@@ -57,6 +61,9 @@ public class TypeUtil {
      * @return the type argument, or null if the type is not as expected
      */
     public static Type isSingleParameterizedType(Type type, Class<?> expectedRawClass) {
+        Objects.requireNonNull(type, "type");
+        Objects.requireNonNull(expectedRawClass, "expectedRawClass");
+
         Type[] result = isParameterizedType(type, expectedRawClass, 1);
         return result == null ? null : result[0];
     }
@@ -72,6 +79,9 @@ public class TypeUtil {
      * @return the type arguments
      */
     public static Type[] expectParameterizedType(Type type, Class<?> expectedRawClass, int expectedNumberOfTypeArguments) {
+        Objects.requireNonNull(type, "type");
+        Objects.requireNonNull(expectedRawClass, "expectedRawClass");
+
         Type[] result = isParameterizedType(type, expectedRawClass, expectedNumberOfTypeArguments);
         if (result == null) {
             throw new RuntimeException("paramterized type not as expected");
@@ -89,6 +99,9 @@ public class TypeUtil {
      * @return the type argument
      */
     public static Type expectSingleParameterizedType(Type type, Class<?> expectedRawClass) {
+        Objects.requireNonNull(type, "type");
+        Objects.requireNonNull(expectedRawClass, "expectedRawClass");
+
         Type result = isSingleParameterizedType(type, expectedRawClass);
         if (result == null) {
             throw new RuntimeException("paramterized type not as expected");
@@ -122,6 +135,9 @@ public class TypeUtil {
      * @return the type with type variables replaced
      */
     public static Type replaceTypeVariables(Type original, Map<String, Type> bindings) {
+        Objects.requireNonNull(original, "original");
+        Objects.requireNonNull(bindings, "bindings");
+
         if (original instanceof Class<?>) {
             return original;
         } else if (original instanceof ParameterizedType parameterized) {

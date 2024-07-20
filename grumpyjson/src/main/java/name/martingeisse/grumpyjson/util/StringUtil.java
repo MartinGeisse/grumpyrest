@@ -7,6 +7,7 @@
 package name.martingeisse.grumpyjson.util;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * NOT PUBLIC API
@@ -24,6 +25,9 @@ public class StringUtil {
      * @return ...
      */
     public static String join(final List<?> list, String separator) {
+        Objects.requireNonNull(list, "list");
+        Objects.requireNonNull(separator, "separator");
+
         StringBuilder builder = new StringBuilder();
         boolean first = true;
         for (Object element : list) {

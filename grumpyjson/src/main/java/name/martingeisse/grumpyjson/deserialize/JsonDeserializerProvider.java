@@ -51,6 +51,7 @@ public interface JsonDeserializerProvider {
     default Object deserialize(JsonElement source, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(source, "source");
         Objects.requireNonNull(type, "type");
+
         JsonDeserializer deserializer;
         try {
             deserializer = getDeserializer(type);
@@ -71,6 +72,7 @@ public interface JsonDeserializerProvider {
      */
     default Object deserializeAbsent(Type type) throws JsonDeserializationException {
         Objects.requireNonNull(type, "type");
+
         JsonDeserializer deserializer;
         try {
             deserializer = getDeserializer(type);

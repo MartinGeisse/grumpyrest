@@ -50,6 +50,7 @@ public interface JsonSerializerProvider {
      */
     default JsonElement serialize(Object value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
+
         Class<?> clazz = value.getClass();
         @SuppressWarnings("rawtypes") JsonSerializer serializer;
         try {
@@ -72,6 +73,7 @@ public interface JsonSerializerProvider {
      */
     default Optional<JsonElement> serializeOptional(Object value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
+
         Class<?> clazz = value.getClass();
         @SuppressWarnings("rawtypes") JsonSerializer serializer;
         try {
