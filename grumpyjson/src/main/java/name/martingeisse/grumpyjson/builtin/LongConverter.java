@@ -18,51 +18,48 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 
 /**
- * A converter for the primitive type int and its boxed type, {@link Integer}.
+ * A converter for the primitive type long and its boxed type, {@link Long}.
  * <p>
- * This maps to and from integral JSON numbers in the 32-bit signed integer range.
+ * This maps to and from integral JSON numbers in the 64-bit signed integer range.
  * <p>
  * This converter is registered by default, and only needs to be manually registered if it gets removed, such as by
  * calling {@link JsonRegistries#clear()}.
  */
-public final class IntegerConverter implements JsonSerializer<Integer>, JsonDeserializer {
+public final class LongConverter implements JsonSerializer<Long>, JsonDeserializer {
 
     /**
      * Constructor
      */
-    public IntegerConverter() {
+    public LongConverter() {
         // needed to silence Javadoc error because the implicit constructor doesn't have a doc comment
     }
 
     @Override
     public boolean supportsTypeForDeserialization(Type type) {
         Objects.requireNonNull(type, "type");
-        return type.equals(Integer.TYPE) || type.equals(Integer.class);
+        return type.equals(Long.TYPE) || type.equals(Long.class);
     }
 
     @Override
-    public Integer deserialize(JsonElement json, Type type) throws JsonDeserializationException {
+    public Long deserialize(JsonElement json, Type type) throws JsonDeserializationException {
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
 
         if (json instanceof JsonPrimitive primitive && primitive.isNumber()) {
-            long longValue = IntegralNumberDeserializationUtil.deserialize(primitive.getAsNumber());
-            int intValue = (int)longValue;
-            IntegralNumberDeserializationUtil.verifyBounds(longValue, intValue);
-            return intValue;
+            return IntegralNumberDeserializationUtil.deserialize(primitive.getAsNumber());
         }
 
-        throw new JsonDeserializationException("expected integer, found: " + json);
+        throw new JsonDeserializationException("expected long (64-bit integer), found: " + json);
     }
 
     @Override
     public boolean supportsClassForSerialization(Class<?> clazz) {
         Objects.requireNonNull(clazz, "clazz");
-        return clazz.equals(Integer.TYPE) || clazz.equals(Integer.class);
+        return clazz.equals(Long.TYPE) || clazz.equals(Long.class);
     }
 
     @Override
-    public JsonElement serialize(Integer value) throws JsonSerializationException {
+    public JsonElement serialize(Long value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
         return new JsonPrimitive(value);
     }
