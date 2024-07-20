@@ -1,4 +1,8 @@
 
+## Version 0.8 (WIP)
+
+
+
 ## Version 0.7
 
 * reduced minimum Java version from 20 to 17
