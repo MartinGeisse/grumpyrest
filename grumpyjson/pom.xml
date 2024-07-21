@@ -5,6 +5,30 @@
     <artifactId>grumpyjson</artifactId>
     <version>0.1-SNAPSHOT</version>
 
+    <name>Grumpyjson</name>
+    <description>A JSON databinding framework based purely on static type information, without using annotations.</description>
+    <url>https://github.com/GrumpyStuff/grumpyrest</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/license/mit</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Martin Geisse</name>
+            <email>martingeisse@googlemail.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/GrumpyStuff/grumpyrest.git</connection>
+        <developerConnection>scm:git:ssh://github.com:GrumpyStuff/grumpyrest.git</developerConnection>
+        <url>http://github.com/GrumpyStuff/grumpyrest/tree/master</url>
+    </scm>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
