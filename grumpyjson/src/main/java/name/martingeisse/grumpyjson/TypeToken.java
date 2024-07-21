@@ -23,6 +23,12 @@ import java.lang.reflect.Type;
 public abstract class TypeToken<T> {
 
     /**
+     * Constructor
+     */
+    protected TypeToken() {
+    }
+
+    /**
      * Obtains the type represented by this type token.
      *
      * @return the type
