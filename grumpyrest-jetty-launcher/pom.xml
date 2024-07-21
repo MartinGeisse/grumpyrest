@@ -20,7 +20,7 @@
         </dependency>
         <dependency>
             <groupId>io.github.grumpystuff</groupId>
-            <artifactId>grumpyjson</artifactId>
+            <artifactId>grumpyrest</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
