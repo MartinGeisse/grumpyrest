@@ -5,6 +5,8 @@
     <artifactId>grumpyrest-parent</artifactId>
     <version>0.1-SNAPSHOT</version>
 
+    <packaging>pom</packaging>
+
     <url>https://github.com/GrumpyStuff/grumpyrest</url>
 
     <licenses>
