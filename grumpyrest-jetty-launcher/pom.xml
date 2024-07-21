@@ -2,11 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>grumpyrest-jetty-launcher</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.8-SNAPSHOT</version>
     <parent>
         <groupId>io.github.grumpystuff</groupId>
         <artifactId>grumpyrest-parent</artifactId>
-        <version>0.1-SNAPSHOT</version>
+        <version>0.8-SNAPSHOT</version>
     </parent>
 
     <name>Grumpyjson</name>
@@ -16,12 +16,12 @@
         <dependency>
             <groupId>io.github.grumpystuff</groupId>
             <artifactId>grumpyjson</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.8-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>io.github.grumpystuff</groupId>
             <artifactId>grumpyrest</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.8-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

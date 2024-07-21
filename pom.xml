@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.grumpystuff</groupId>
     <artifactId>grumpyrest-parent</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.8-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
