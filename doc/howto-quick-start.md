@@ -3,6 +3,8 @@
 
 ## Publish to Maven Local
 
+TODO rework this section
+
 grumpyrest is not yet available on Maven Central. To use it, clone the repo:
 
     git clone https://github.com/MartinGeisse/grumpyrest.git

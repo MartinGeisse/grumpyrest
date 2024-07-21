@@ -1,4 +1,0 @@
-include 'grumpyjson'
-include 'grumpyrest'
-include 'grumpyrest-jetty-launcher'
-include 'grumpyrest-demo'
