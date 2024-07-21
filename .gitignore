@@ -1,6 +1,10 @@
 /.idea
 /.gradle
 /grumpyjson/build
+/grumpyjson/target
 /grumpyrest/build
+/grumpyrest/target
 /grumpyrest-jetty-launcher/build
+/grumpyrest-jetty-launcher/target
 /grumpyrest-demo/build
+/grumpyrest-demo/target
