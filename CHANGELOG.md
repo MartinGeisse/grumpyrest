@@ -11,9 +11,6 @@
 * renamed the base Java package to io.github.grumpystuff to match the group ID
 * fix documentation, wiki sync and javadoc sync for the new GitHub namespace
 
-TODO remove GSON dependency!
-
-
 ## Version 0.8
 
 * Make the built-in converters use the `JsonProviders` interface to fetch the converters they depend on, instead of
