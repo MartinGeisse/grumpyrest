@@ -1,9 +1,24 @@
 
-## Version 0.8 (WIP)
+## Version 0.8
 
-* Added our own `TypeToken` class to use instead of Gson's one. This is a first step to decouple the API from Gson.
 * Make the built-in converters use the `JsonProviders` interface to fetch the converters they depend on, instead of
   depending on the full `JsonRegistries` type.
+* Work on decoupling from Gson as the only possible JSON library:
+  * Added our own `TypeToken` class to use instead of Gson's one
+  * Added our own JSON model classes (`JsonBoolean`, `JsonNumber` etc.) to use instead of Gson's ones
+  * Split off `StructuralJsonEngine` as a base class of `JsonEngine`. This class provides conversion between domain
+    types and the JSON model classes only, without support for the actual JSON _syntax_. The latter gets added by
+    `JsonEngine`.
+  * Split off `GsonBasedJsonEngine` as a subclass of `JsonEngine` to provide JSON syntax support using Gson. It converts
+    between Gson's JSON model classes and our own to do that. `JsonEngine` is now `abstract` and defines the methods
+    for handling the JSON syntax, but does not implement them to avoid a dependency on any concrete JSON parser /
+    formatter such as Gson.
+  * The `RestApi` constructor expects the `JsonEngine` as an argument now to make it independent of the concrete JSON
+    syntax implementation.
+* Grumpyrest is now getting published on Maven Central
+* Replaced the Gradle-based build system by a Maven-based one
+* added lots of checks against null arguments
+* minor bugfixes, improved error messages etc.
 
 ## Version 0.7
 
