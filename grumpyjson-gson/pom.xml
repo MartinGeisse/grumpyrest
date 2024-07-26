@@ -2,11 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>grumpyjson-gson</artifactId>
-    <version>0.9-SNAPSHOT</version>
+    <version>0.9</version>
     <parent>
         <groupId>io.github.grumpystuff</groupId>
         <artifactId>grumpyrest-parent</artifactId>
-        <version>0.9-SNAPSHOT</version>
+        <version>0.9</version>
     </parent>
 
     <name>Grumpyjson Gson Bridge</name>
@@ -18,7 +18,7 @@
         <dependency>
             <groupId>io.github.grumpystuff</groupId>
             <artifactId>grumpyjson-core</artifactId>
-            <version>0.9-SNAPSHOT</version>
+            <version>0.9</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
