@@ -30,8 +30,17 @@ Now suppose that another requirement pops up: If the client sends a `DisplayName
 should be trimmed automatically, and if it is empty (possibly becoming empty by trimming), then it should be treated as
 `null`. Now we have a problem: While we could easily change the record constructor of `DisplayName` to trim its
 arguments, we can not make it turn the enclosing `NullableField` into a nullish state if the string is empty. We need
-to override the converter for `NullableField<DisplayName>` to do that -- but we still want the original behaviour
+to override the deserializer for `NullableField<DisplayName>` to do that -- but we still want the original behaviour
 for `NullableField<...>` with any other type argument.
+
+    At this point, you might get confused about the terms "converter" and "deserializer". A "converter" is both a
+    serializer and deserializer at the same time, since for most types, it is convenient to have a single class do
+    both conversions. Grumpyjson really doesn't care if they are the same or different, but provides a convenience
+    method to register a converter for both operations. 
+
+    In our example, you'll have to write only the special deserializer for `NullableField<DisplayName>`. The serializer
+    for `NullableField.class` is the standard one, and the serializer and deserializer for `DisplayName.class` can be
+    auto-generated the normal way.
 
 Doing that is actually quite simple. The deserializer registry allows to register a deserializer for an arbitrary
 type, including generics with specific, concrete type arguments such as `NullableField<DisplayName>`. For that, we
@@ -49,18 +58,19 @@ public boolean supportsTypeForDeserialization(Type type) {
 }
 ```
 
-The registry will now consider this converter capable of deserializing a `NullableField<DisplayName>`. Since it returns
-`false` for all other types, the registry won't use it for those.
+The registry will now consider this deserializer capable of deserializing a `NullableField<DisplayName>`. Since it
+returns `false` for all other types, the registry won't use it for those.
 
 The second step is to make the registry _prefer_ it over the generic `NullableField<...>` converter. This happens by
-registering it _after_ the generic one: For any type to register, the registry will ask all converters in the order
+registering it _after_ the generic one: For any type to register, the registry will ask all deserializers in the order
 from last-registered to first-registered, and take the first one that can handle that type. This supports the way
 converters are typically registered: Generic ones first, from a centralized place, and specific ones later from the
 individual feature modules.
 
-Finally, you'll have to remember that your own converter is now resposible for the whole of `NullableField<DisplayName>`
-which means that it will not only have to trim that string and map it to `NullableField.ofNull()` if empty, but it
-will also have to accept JSON `null` and map _that_ to `NullableField.ofNull()` too.
+Finally, you'll have to remember that your own deserializer is now resposible for the whole of
+`NullableField<DisplayName>` which means that it will not only have to trim that string and map it to
+`NullableField.ofNull()` if empty, but it  will also have to accept JSON `null` and map _that_ to
+`NullableField.ofNull()` too.
 
 ## Overriding specific types during serialization
 
@@ -88,11 +98,26 @@ public boolean supportsClassForSerialization(Class<?> clazz) {
 }
 ```
 
-## Overriding specific values during deserialization
+## Overriding specific values during serialization
 
+Finally, there is the case where we want to pass different values to different serializers. Grumpyjson actually does
+not have a mechanism for that, because it isn't needed.
 
+As an example, let's assume that we want to serialize a date/time field, of type `LocalDateTime`. However, for the first
+version of our API, we got error reports about client programs that could not handle values before the Unix epoch,
+1970-01-01, correctly and would crash or behave incorrectly. The exact "zero date" of midnight at that day might be
+problematic too. On the other hand, a solution was found that works if such timestamps were replaced by JSON `null`.
 
+Both kinds of timestamps, before and after the Unix epoch, have class `LocalDateTime`. So we cannot use the class to
+distinguish them -- we have to use the actual value. The serializer registry operates solely on the class, so it
+would pass both kinds of `LocalDateTime` to the same serializer. Consequently, we override that serializer as explained
+above.
 
+Our specialized serializer for `LocalDateTime` inspects the timestamp to serialize, and either replaces it by `null`
+or passes the value on to the normal serializer. How does it do that? By calling the original serializer, of course!
+
+```
+```
 
 
 
