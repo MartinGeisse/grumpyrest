@@ -114,7 +114,7 @@
     </dependencies>
 
     <modules>
-        <module>grumpyjson</module>
+        <module>grumpyjson-core</module>
         <module>grumpyrest</module>
         <module>grumpyrest-demo</module>
     </modules>
