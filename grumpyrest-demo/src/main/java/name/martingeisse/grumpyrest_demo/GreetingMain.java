@@ -6,7 +6,7 @@
  */
 package name.martingeisse.grumpyrest_demo;
 
-import name.martingeisse.grumpyjson.GsonBasedJsonEngine;
+import name.martingeisse.grumpyjson.gson.GsonBasedJsonEngine;
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalField;
 import name.martingeisse.grumpyrest.RestApi;
 import name.martingeisse.grumpyrest.request.HttpMethod;

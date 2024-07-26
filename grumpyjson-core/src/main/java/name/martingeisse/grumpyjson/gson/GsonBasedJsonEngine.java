@@ -4,10 +4,12 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-package name.martingeisse.grumpyjson;
+package name.martingeisse.grumpyjson.gson;
 
 
 import com.google.gson.*;
+import name.martingeisse.grumpyjson.JsonEngine;
+import name.martingeisse.grumpyjson.TypeToken;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.json_model.JsonElement;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;

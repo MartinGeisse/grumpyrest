@@ -6,7 +6,7 @@
  */
 package name.martingeisse.grumpyrest_demo.shop;
 
-import name.martingeisse.grumpyjson.GsonBasedJsonEngine;
+import name.martingeisse.grumpyjson.gson.GsonBasedJsonEngine;
 import name.martingeisse.grumpyjson.builtin.helper_types.NullableField;
 import name.martingeisse.grumpyrest.request.HttpMethod;
 import name.martingeisse.grumpyrest.request.Request;

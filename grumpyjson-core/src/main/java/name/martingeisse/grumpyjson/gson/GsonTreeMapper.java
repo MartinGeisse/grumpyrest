@@ -1,4 +1,4 @@
-package name.martingeisse.grumpyjson;
+package name.martingeisse.grumpyjson.gson;
 
 import name.martingeisse.grumpyjson.json_model.*;
 import name.martingeisse.grumpyjson.util.Parameters;
