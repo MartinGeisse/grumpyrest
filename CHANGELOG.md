@@ -5,7 +5,9 @@
   start a project with Grumpyrest, but had to be replaced later anyway to allow changes. Such code is better located
   in a demo, so I moved these two classes into the grumpyrest-demo subproject.
 * added a HOWTO on overriding type converters
-* split grumpyjson-gson out of grumpyjson and renamed the latter to grumpyjson-core
+* split grumpyjson-gson out of grumpyjson and renamed the latter to grumpyjson-core.
+  * moved the dependency on Gson to grumpyjson-gson
+  * grumpyjson-core and grumpyrest are no longer depending on Gson
 * renamed the base Java package to io.github.grumpystuff to match the group ID
 * fix documentation, wiki sync and javadoc sync for the new GitHub namespace
 
