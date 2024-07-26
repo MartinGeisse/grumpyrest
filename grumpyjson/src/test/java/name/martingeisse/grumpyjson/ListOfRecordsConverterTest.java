@@ -6,18 +6,20 @@
  */
 package name.martingeisse.grumpyjson;
 
-import com.google.gson.JsonObject;
 import name.martingeisse.grumpyjson.builtin.IntegerConverter;
 import name.martingeisse.grumpyjson.builtin.ListConverter;
 import name.martingeisse.grumpyjson.builtin.StringConverter;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.json_model.JsonArray;
+import name.martingeisse.grumpyjson.json_model.JsonNumber;
+import name.martingeisse.grumpyjson.json_model.JsonObject;
+import name.martingeisse.grumpyjson.json_model.JsonString;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Type;
 import java.util.List;
 
-import static name.martingeisse.grumpyjson.JsonTestUtil.buildArray;
 import static name.martingeisse.grumpyjson.JsonTestUtil.createRegistries;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -43,24 +45,19 @@ public class ListOfRecordsConverterTest {
     @Test
     public void testHappyCase() throws Exception {
 
-        JsonObject object1 = new JsonObject();
-        object1.addProperty("myInt", 12);
-        object1.addProperty("myString", "foo");
-
-        JsonObject object2 = new JsonObject();
-        object2.addProperty("myInt", 34);
-        object2.addProperty("myString", "bar");
+        JsonObject object1 = JsonObject.of("myInt", JsonNumber.of(12), "myString", JsonString.of("foo"));
+        JsonObject object2 = JsonObject.of("myInt", JsonNumber.of(34), "myString", JsonString.of("bar"));
 
         Record record1 = new Record(12, "foo");
         Record record2 = new Record(34, "bar");
 
-        assertEquals(buildArray(), serializer.serialize(List.of()));
-        assertEquals(buildArray(object1), serializer.serialize(List.of(record1)));
-        assertEquals(buildArray(object1, object2), serializer.serialize(List.of(record1, record2)));
+        assertEquals(JsonArray.of(), serializer.serialize(List.of()));
+        assertEquals(JsonArray.of(object1), serializer.serialize(List.of(record1)));
+        assertEquals(JsonArray.of(object1, object2), serializer.serialize(List.of(record1, record2)));
 
-        assertEquals(List.of(), deserializer.deserialize(buildArray(), listOfRecordsType));
-        assertEquals(List.of(record1), deserializer.deserialize(buildArray(object1), listOfRecordsType));
-        assertEquals(List.of(record1, record2), deserializer.deserialize(buildArray(object1, object2), listOfRecordsType));
+        assertEquals(List.of(), deserializer.deserialize(JsonArray.of(), listOfRecordsType));
+        assertEquals(List.of(record1), deserializer.deserialize(JsonArray.of(object1), listOfRecordsType));
+        assertEquals(List.of(record1, record2), deserializer.deserialize(JsonArray.of(object1, object2), listOfRecordsType));
     }
 
 }

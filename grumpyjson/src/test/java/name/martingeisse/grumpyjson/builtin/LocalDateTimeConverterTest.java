@@ -6,7 +6,7 @@
  */
 package name.martingeisse.grumpyjson.builtin;
 
-import com.google.gson.JsonPrimitive;
+import name.martingeisse.grumpyjson.json_model.JsonString;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -21,14 +21,14 @@ public class LocalDateTimeConverterTest {
     @Test
     public void testDeserializationHappyCase() throws Exception {
         Assertions.assertEquals(LocalDateTime.of(2020, 10, 25, 14, 15, 16),
-                converter.deserialize(new JsonPrimitive("2020-10-25T14:15:16"), LocalDateTime.class));
+                converter.deserialize(JsonString.of("2020-10-25T14:15:16"), LocalDateTime.class));
         Assertions.assertEquals(LocalDateTime.of(2020, 1, 5, 4, 5, 6),
-                converter.deserialize(new JsonPrimitive("2020-01-05T04:05:06"), LocalDateTime.class));
+                converter.deserialize(JsonString.of("2020-01-05T04:05:06"), LocalDateTime.class));
     }
 
     @Test
     public void testDeserializationWrongFormat() {
-        assertFailsDeserialization(converter, new JsonPrimitive("2020-01-05T1:2:3"), LocalDateTime.class);
+        assertFailsDeserialization(converter, JsonString.of("2020-01-05T1:2:3"), LocalDateTime.class);
     }
 
     @Test
@@ -41,13 +41,13 @@ public class LocalDateTimeConverterTest {
 
     @Test
     public void testSerializationHappyCase() {
-        Assertions.assertEquals(new JsonPrimitive("2020-01-05T14:00"),
+        Assertions.assertEquals(JsonString.of("2020-01-05T14:00"),
                 converter.serialize(LocalDateTime.of(2020, 1, 5, 14, 0)));
-        Assertions.assertEquals(new JsonPrimitive("2020-01-05T14:15"),
+        Assertions.assertEquals(JsonString.of("2020-01-05T14:15"),
                 converter.serialize(LocalDateTime.of(2020, 1, 5, 14, 15)));
-        Assertions.assertEquals(new JsonPrimitive("2020-01-05T14:15:16"),
+        Assertions.assertEquals(JsonString.of("2020-01-05T14:15:16"),
                 converter.serialize(LocalDateTime.of(2020, 1, 5, 14, 15, 16)));
-        Assertions.assertEquals(new JsonPrimitive("2020-01-05T14:15:16.123456789"),
+        Assertions.assertEquals(JsonString.of("2020-01-05T14:15:16.123456789"),
                 converter.serialize(LocalDateTime.of(2020, 1, 5, 14, 15, 16, 123456789)));
     }
 

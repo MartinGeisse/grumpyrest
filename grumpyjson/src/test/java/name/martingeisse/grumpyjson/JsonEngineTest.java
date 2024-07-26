@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 public class JsonEngineTest {
 
-    private final JsonEngine engine = new JsonEngine();
+    private final JsonEngine engine = new GsonBasedJsonEngine();
 
     @Test
     public void testNullToJson() {

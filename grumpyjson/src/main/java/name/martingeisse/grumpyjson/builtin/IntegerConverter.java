@@ -6,11 +6,11 @@
  */
 package name.martingeisse.grumpyjson.builtin;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.json_model.JsonElement;
+import name.martingeisse.grumpyjson.json_model.JsonNumber;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 
@@ -46,14 +46,10 @@ public final class IntegerConverter implements JsonSerializer<Integer>, JsonDese
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
 
-        if (json instanceof JsonPrimitive primitive && primitive.isNumber()) {
-            long longValue = IntegralNumberDeserializationUtil.deserialize(primitive.getAsNumber());
-            int intValue = (int)longValue;
-            IntegralNumberDeserializationUtil.verifyBounds(longValue, intValue);
-            return intValue;
-        }
-
-        throw new JsonDeserializationException("expected integer, found: " + json);
+        long longValue = IntegralNumberDeserializationUtil.deserialize(json.deserializerExpectsNumber());
+        int intValue = (int)longValue;
+        IntegralNumberDeserializationUtil.verifyBounds(longValue, intValue);
+        return intValue;
     }
 
     @Override
@@ -67,7 +63,7 @@ public final class IntegerConverter implements JsonSerializer<Integer>, JsonDese
     public JsonElement serialize(Integer value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
 
-        return new JsonPrimitive(value);
+        return JsonNumber.of(value);
     }
 
 }

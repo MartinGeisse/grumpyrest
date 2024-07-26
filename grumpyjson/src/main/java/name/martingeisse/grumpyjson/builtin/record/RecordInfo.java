@@ -76,15 +76,14 @@ public final class RecordInfo {
      *
      * @param arguments ...
      * @return ...
+     * @throws InstantiationException ...
+     * @throws IllegalAccessException ...
+     * @throws IllegalArgumentException ...
+     * @throws InvocationTargetException ...
      */
-    public Object invokeConstructor(Object[] arguments) {
-        Objects.requireNonNull(arguments, "arguments");
-
-        try {
-            return constructor.newInstance(arguments);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public Object invokeConstructor(Object[] arguments) throws InstantiationException, IllegalAccessException,
+            IllegalArgumentException, InvocationTargetException {
+        return constructor.newInstance(arguments);
     }
 
     /**

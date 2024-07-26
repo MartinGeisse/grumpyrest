@@ -6,8 +6,8 @@
  */
 package name.martingeisse.grumpyjson.deserialize;
 
-import com.google.gson.JsonElement;
 import name.martingeisse.grumpyjson.ExceptionMessages;
+import name.martingeisse.grumpyjson.json_model.JsonElement;
 
 import java.lang.reflect.Type;
 import java.util.List;

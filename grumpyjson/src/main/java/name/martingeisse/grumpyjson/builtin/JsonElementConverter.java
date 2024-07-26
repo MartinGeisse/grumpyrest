@@ -6,10 +6,10 @@
  */
 package name.martingeisse.grumpyjson.builtin;
 
-import com.google.gson.JsonElement;
 import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.json_model.JsonElement;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 
@@ -43,7 +43,7 @@ public final class JsonElementConverter implements JsonSerializer<JsonElement>, 
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
 
-        return json.deepCopy();
+        return json;
     }
 
     @Override
@@ -57,7 +57,7 @@ public final class JsonElementConverter implements JsonSerializer<JsonElement>, 
     public JsonElement serialize(JsonElement value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
 
-        return value.deepCopy();
+        return value;
     }
 
 }

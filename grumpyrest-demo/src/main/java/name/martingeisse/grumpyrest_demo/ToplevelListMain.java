@@ -6,6 +6,7 @@
  */
 package name.martingeisse.grumpyrest_demo;
 
+import name.martingeisse.grumpyjson.GsonBasedJsonEngine;
 import name.martingeisse.grumpyrest.RestApi;
 import name.martingeisse.grumpyrest.request.HttpMethod;
 import name.martingeisse.grumpyrest_jetty_launcher.GrumpyrestJettyLauncher;
@@ -15,7 +16,7 @@ import java.util.List;
 public class ToplevelListMain {
 
     public static void main(String[] args) throws Exception {
-        RestApi api = new RestApi();
+        RestApi api = new RestApi(new GsonBasedJsonEngine());
         api.addRoute(HttpMethod.GET, "/", request -> List.of(1, 2, 3));
         api.seal();
 

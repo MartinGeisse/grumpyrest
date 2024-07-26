@@ -6,7 +6,7 @@
  */
 package name.martingeisse.grumpyjson.builtin;
 
-import com.google.gson.JsonPrimitive;
+import name.martingeisse.grumpyjson.json_model.JsonNumber;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -18,9 +18,9 @@ public class IntegerConverterTest {
 
     @Test
     public void testDeserializationHappyCase() throws Exception {
-        Assertions.assertEquals(0, converter.deserialize(new JsonPrimitive(0), Integer.TYPE));
-        Assertions.assertEquals(123, converter.deserialize(new JsonPrimitive(123), Integer.TYPE));
-        Assertions.assertEquals(-123, converter.deserialize(new JsonPrimitive(-123), Integer.TYPE));
+        Assertions.assertEquals(0, converter.deserialize(JsonNumber.of(0), Integer.TYPE));
+        Assertions.assertEquals(123, converter.deserialize(JsonNumber.of(123), Integer.TYPE));
+        Assertions.assertEquals(-123, converter.deserialize(JsonNumber.of(-123), Integer.TYPE));
     }
 
     @Test
@@ -33,22 +33,22 @@ public class IntegerConverterTest {
 
     @Test
     public void testDeserializationFloat() {
-        assertFailsDeserialization(converter, new JsonPrimitive(12.34), Integer.TYPE);
+        assertFailsDeserialization(converter, JsonNumber.of(12.34), Integer.TYPE);
     }
 
     @Test
     public void testDeserializationSmallLong() throws Exception {
-        Assertions.assertEquals(12, converter.deserialize(new JsonPrimitive(12L), Integer.TYPE));
+        Assertions.assertEquals(12, converter.deserialize(JsonNumber.of(12L), Integer.TYPE));
     }
 
     @Test
     public void testDeserializationTooLarge() {
-        assertFailsDeserialization(converter, new JsonPrimitive(0x80000000L), Integer.TYPE);
+        assertFailsDeserialization(converter, JsonNumber.of(0x80000000L), Integer.TYPE);
     }
 
     @Test
     public void testSerializationHappyCase() {
-        Assertions.assertEquals(new JsonPrimitive(123), converter.serialize(123));
+        Assertions.assertEquals(JsonNumber.of(123), converter.serialize(123));
     }
 
     @Test

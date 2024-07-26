@@ -6,11 +6,11 @@
  */
 package name.martingeisse.grumpyrest;
 
-import com.google.gson.JsonElement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import name.martingeisse.grumpyjson.TypeToken;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
+import name.martingeisse.grumpyjson.json_model.JsonElement;
 import name.martingeisse.grumpyjson.registry.NotRegisteredException;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyrest.request.PathArgument;

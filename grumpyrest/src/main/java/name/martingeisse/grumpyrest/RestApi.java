@@ -18,6 +18,7 @@ import name.martingeisse.grumpyrest.request.querystring.QuerystringParserRegistr
 import name.martingeisse.grumpyrest.request.stringparser.FromStringParser;
 import name.martingeisse.grumpyrest.request.stringparser.FromStringParserRegistry;
 import name.martingeisse.grumpyrest.request.stringparser.standard.IntegerFromStringParser;
+import name.martingeisse.grumpyrest.request.stringparser.standard.LongFromStringParser;
 import name.martingeisse.grumpyrest.request.stringparser.standard.StringFromStringParser;
 import name.martingeisse.grumpyrest.response.*;
 import name.martingeisse.grumpyrest.response.standard.IdentityResponseFactory;
@@ -41,9 +42,9 @@ public final class RestApi {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RestApi.class);
 
+    private final JsonEngine jsonEngine;
     private final List<Route> routes = new ArrayList<>();
     private final ResponseFactoryRegistry responseFactoryRegistry = new ResponseFactoryRegistry();
-    private final JsonEngine jsonEngine = new JsonEngine();
     private final FromStringParserRegistry fromStringParserRegistry = new FromStringParserRegistry();
     private final QuerystringParserRegistry querystringParserRegistry = new QuerystringParserRegistry(fromStringParserRegistry);
 
@@ -66,8 +67,13 @@ public final class RestApi {
      * defaults can be removed to support special cases that, for example, use different rules / formats or require a
      * more lenient parser. In normal cases, the defaults support standard types out of the box and support for
      * application types can be added without removing any of the standard implementations.
+     *
+     * @param jsonEngine the JSON engine to use
      */
-    public RestApi() {
+    public RestApi(JsonEngine jsonEngine) {
+        Objects.requireNonNull(jsonEngine, "jsonEngine");
+
+        this.jsonEngine = jsonEngine;
 
         // HTTP response factories
         registerResponseFactory(new NullResponseFactory());
@@ -77,6 +83,7 @@ public final class RestApi {
         // from-string parsers
         registerFromStringParser(new StringFromStringParser());
         registerFromStringParser(new IntegerFromStringParser());
+        registerFromStringParser(new LongFromStringParser());
 
     }
 
@@ -377,7 +384,7 @@ public final class RestApi {
                     if (hint == null) {
                         LOGGER.error(e.getMessage());
                     } else {
-                        LOGGER.error(hint + " original error: " + e.getMessage());
+                        LOGGER.error("{} original error: {}", hint, e.getMessage());
                     }
                 }
             } catch (Exception e) {

@@ -6,13 +6,13 @@
  */
 package name.martingeisse.grumpyjson.builtin;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import name.martingeisse.grumpyjson.FieldErrorNode;
 import name.martingeisse.grumpyjson.JsonProviders;
 import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.json_model.JsonArray;
+import name.martingeisse.grumpyjson.json_model.JsonElement;
 import name.martingeisse.grumpyjson.registry.NotRegisteredException;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
@@ -57,31 +57,29 @@ public final class ListConverter implements JsonSerializer<List<?>>, JsonDeseria
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
 
-        if (json instanceof JsonArray array) {
-            Type elementType = TypeUtil.expectSingleParameterizedType(type, List.class);
-            JsonDeserializer elementDeserializer;
-            try {
-                elementDeserializer = providers.getDeserializer(elementType);
-            } catch (NotRegisteredException e) {
-                throw new JsonDeserializationException(e.getMessage());
-            }
-            List<Object> result = new ArrayList<>();
-            FieldErrorNode errorNode = null;
-            for (int i = 0; i < array.size(); i++) {
-                try {
-                    result.add(elementDeserializer.deserialize(array.get(i), elementType));
-                } catch (JsonDeserializationException e) {
-                    errorNode = e.getFieldErrorNode().in(Integer.toString(i)).and(errorNode);
-                } catch (Exception e) {
-                    errorNode = FieldErrorNode.create(e).in(Integer.toString(i)).and(errorNode);
-                }
-            }
-            if (errorNode != null) {
-                throw new JsonDeserializationException(errorNode);
-            }
-            return List.copyOf(result);
+        List<JsonElement> jsonChildren = json.deserializerExpectsArray();
+        Type elementType = TypeUtil.expectSingleParameterizedType(type, List.class);
+        JsonDeserializer elementDeserializer;
+        try {
+            elementDeserializer = providers.getDeserializer(elementType);
+        } catch (NotRegisteredException e) {
+            throw new JsonDeserializationException(e.getMessage());
         }
-        throw new JsonDeserializationException("expected list, found: " + json);
+        List<Object> resultChildren = new ArrayList<>();
+        FieldErrorNode errorNode = null;
+        for (int i = 0; i < jsonChildren.size(); i++) {
+            try {
+                resultChildren.add(elementDeserializer.deserialize(jsonChildren.get(i), elementType));
+            } catch (JsonDeserializationException e) {
+                errorNode = e.getFieldErrorNode().in(Integer.toString(i)).and(errorNode);
+            } catch (Exception e) {
+                errorNode = FieldErrorNode.create(e).in(Integer.toString(i)).and(errorNode);
+            }
+        }
+        if (errorNode != null) {
+            throw new JsonDeserializationException(errorNode);
+        }
+        return List.copyOf(resultChildren);
     }
 
     @Override
@@ -95,11 +93,11 @@ public final class ListConverter implements JsonSerializer<List<?>>, JsonDeseria
     public JsonElement serialize(List<?> value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
 
-        JsonArray result = new JsonArray();
+        List<JsonElement> jsonChildren = new ArrayList<>();
         FieldErrorNode errorNode = null;
         for (int i = 0; i < value.size(); i++) {
             try {
-                result.add(providers.serialize(value.get(i)));
+                jsonChildren.add(providers.serialize(value.get(i)));
             } catch (JsonSerializationException e) {
                 errorNode = e.getFieldErrorNode().in(Integer.toString(i)).and(errorNode);
             } catch (Exception e) {
@@ -109,7 +107,7 @@ public final class ListConverter implements JsonSerializer<List<?>>, JsonDeseria
         if (errorNode != null) {
             throw new JsonSerializationException(errorNode);
         }
-        return result;
+        return JsonArray.of(jsonChildren);
     }
 
 }

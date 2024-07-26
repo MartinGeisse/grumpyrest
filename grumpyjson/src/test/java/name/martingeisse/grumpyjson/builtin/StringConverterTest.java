@@ -6,7 +6,7 @@
  */
 package name.martingeisse.grumpyjson.builtin;
 
-import com.google.gson.JsonPrimitive;
+import name.martingeisse.grumpyjson.json_model.JsonString;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -18,8 +18,8 @@ public class StringConverterTest {
 
     @Test
     public void testDeserializationHappyCase() throws Exception {
-        Assertions.assertEquals("", converter.deserialize(new JsonPrimitive(""), String.class));
-        Assertions.assertEquals("abc", converter.deserialize(new JsonPrimitive("abc"), String.class));
+        Assertions.assertEquals("", converter.deserialize(JsonString.of(""), String.class));
+        Assertions.assertEquals("abc", converter.deserialize(JsonString.of("abc"), String.class));
     }
 
     @Test
@@ -32,7 +32,7 @@ public class StringConverterTest {
 
     @Test
     public void testSerializationHappyCase() {
-        Assertions.assertEquals(new JsonPrimitive("foo"), converter.serialize("foo"));
+        Assertions.assertEquals(JsonString.of("foo"), converter.serialize("foo"));
     }
 
     @Test

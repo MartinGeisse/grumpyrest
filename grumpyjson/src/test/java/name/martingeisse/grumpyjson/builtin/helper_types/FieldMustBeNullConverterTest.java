@@ -6,7 +6,7 @@
  */
 package name.martingeisse.grumpyjson.builtin.helper_types;
 
-import com.google.gson.JsonNull;
+import name.martingeisse.grumpyjson.json_model.JsonNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

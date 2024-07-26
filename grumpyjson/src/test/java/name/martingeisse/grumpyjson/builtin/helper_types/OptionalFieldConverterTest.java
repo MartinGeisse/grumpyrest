@@ -6,14 +6,15 @@
  */
 package name.martingeisse.grumpyjson.builtin.helper_types;
 
-import com.google.gson.JsonNull;
-import com.google.gson.JsonPrimitive;
 import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.TypeToken;
-import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
-import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.builtin.IntegerConverter;
 import name.martingeisse.grumpyjson.builtin.StringConverter;
+import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
+import name.martingeisse.grumpyjson.json_model.JsonNull;
+import name.martingeisse.grumpyjson.json_model.JsonNumber;
+import name.martingeisse.grumpyjson.json_model.JsonString;
+import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import org.junit.jupiter.api.Test;
 
 import java.io.OutputStream;
@@ -38,9 +39,9 @@ public class OptionalFieldConverterTest {
     @Test
     public void testDeserializationHappyCase() throws Exception {
         assertEquals(OptionalField.ofNothing(), converter.deserializeAbsent(OPTIONAL_INTEGER_TYPE));
-        assertEquals(OptionalField.ofValue(12), converter.deserialize(new JsonPrimitive(12), OPTIONAL_INTEGER_TYPE));
+        assertEquals(OptionalField.ofValue(12), converter.deserialize(JsonNumber.of(12), OPTIONAL_INTEGER_TYPE));
         assertEquals(OptionalField.ofNothing(), converter.deserializeAbsent(OPTIONAL_STRING_TYPE));
-        assertEquals(OptionalField.ofValue("foo"), converter.deserialize(new JsonPrimitive("foo"), OPTIONAL_STRING_TYPE));
+        assertEquals(OptionalField.ofValue("foo"), converter.deserialize(JsonString.of("foo"), OPTIONAL_STRING_TYPE));
     }
 
     @Test
@@ -65,13 +66,12 @@ public class OptionalFieldConverterTest {
     @Test
     public void testSerializationHappyCase() {
         assertEquals(Optional.empty(), converter.serializeOptional(OptionalField.ofNothing()));
-        assertEquals(Optional.of(new JsonPrimitive(12)), converter.serializeOptional(OptionalField.ofValue(12)));
-        assertEquals(Optional.of(new JsonPrimitive("foo")), converter.serializeOptional(OptionalField.ofValue("foo")));
+        assertEquals(Optional.of(JsonNumber.of(12)), converter.serializeOptional(OptionalField.ofValue(12)));
+        assertEquals(Optional.of(JsonString.of("foo")), converter.serializeOptional(OptionalField.ofValue("foo")));
     }
 
     @Test
     public void testSerializationWithNull() {
-        //noinspection DataFlowIssue
         assertThrows(NullPointerException.class, () -> converter.serializeOptional(null));
     }
 

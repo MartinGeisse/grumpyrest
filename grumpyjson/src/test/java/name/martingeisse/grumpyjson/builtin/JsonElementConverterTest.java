@@ -6,38 +6,20 @@
  */
 package name.martingeisse.grumpyjson.builtin;
 
-import com.google.gson.JsonElement;
 import name.martingeisse.grumpyjson.JsonTestUtil;
-import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
+import name.martingeisse.grumpyjson.json_model.JsonElement;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class JsonElementConverterTest {
 
     private final JsonElementConverter converter = new JsonElementConverter();
 
-    private void check(JsonElement element) {
-        try {
-            assertEquals(element, converter.deserialize(element, JsonElement.class));
-        } catch (JsonDeserializationException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void checkNotSame(JsonElement element) {
-        try {
-            assertNotSame(element, converter.deserialize(element, JsonElement.class));
-        } catch (JsonDeserializationException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Test
     public void test() throws Exception {
-        JsonTestUtil.forJsonElements(element -> check(element));
-        JsonTestUtil.forNonPrimitive(element -> checkNotSame(element));
+        JsonTestUtil.forJsonElements(element -> assertSame(element, converter.deserialize(element, JsonElement.class)));
+        JsonTestUtil.forJsonElements(element -> assertSame(element, converter.serialize(element)));
     }
 
 }

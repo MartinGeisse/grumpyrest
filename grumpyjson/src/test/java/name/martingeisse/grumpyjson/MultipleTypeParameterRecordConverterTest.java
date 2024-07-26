@@ -6,16 +6,16 @@
  */
 package name.martingeisse.grumpyjson;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import name.martingeisse.grumpyjson.builtin.IntegerConverter;
 import name.martingeisse.grumpyjson.builtin.StringConverter;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.json_model.JsonNumber;
+import name.martingeisse.grumpyjson.json_model.JsonObject;
+import name.martingeisse.grumpyjson.json_model.JsonString;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static name.martingeisse.grumpyjson.JsonTestUtil.buildCustomObject;
 import static name.martingeisse.grumpyjson.JsonTestUtil.createRegistries;
 
 /**
@@ -39,9 +39,9 @@ public class MultipleTypeParameterRecordConverterTest {
 
     @Test
     public void testHappyCase() throws Exception {
-        JsonObject innerJson = buildCustomObject("a", new JsonPrimitive("foo"), "b", new JsonPrimitive(12));
-        JsonObject middleJson = buildCustomObject("inner", innerJson);
-        JsonObject outerJson = buildCustomObject("middle", middleJson);
+        JsonObject innerJson = JsonObject.of("a", JsonString.of("foo"), "b", JsonNumber.of(12));
+        JsonObject middleJson = JsonObject.of("inner", innerJson);
+        JsonObject outerJson = JsonObject.of("middle", middleJson);
 
         Inner<String, Integer> innerRecord = new Inner<>("foo", 12);
         Middle<Integer, String> middleRecord = new Middle<>(innerRecord);

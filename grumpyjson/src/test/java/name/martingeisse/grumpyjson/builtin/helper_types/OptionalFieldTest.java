@@ -20,7 +20,7 @@ public class OptionalFieldTest {
         assertTrue(ofNothing.isAbsent());
         assertFalse(ofNothing.isPresent());
         assertNull(ofNothing.getValueOrNothingAsNull());
-        assertThrows(IllegalStateException.class, () -> ofNothing.getValue());
+        assertThrows(IllegalStateException.class, ofNothing::getValue);
 
         assertFalse(ofValue.isAbsent());
         assertTrue(ofValue.isPresent());

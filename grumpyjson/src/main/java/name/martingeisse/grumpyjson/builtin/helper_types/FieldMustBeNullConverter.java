@@ -6,11 +6,11 @@
  */
 package name.martingeisse.grumpyjson.builtin.helper_types;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.json_model.JsonElement;
+import name.martingeisse.grumpyjson.json_model.JsonNull;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 
@@ -44,10 +44,8 @@ public final class FieldMustBeNullConverter implements JsonSerializer<FieldMustB
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
 
-        if (json instanceof JsonNull) {
-            return FieldMustBeNull.INSTANCE;
-        }
-        throw new JsonDeserializationException("expected null, found: " + json);
+        json.deserializerExpectsNull();
+        return FieldMustBeNull.INSTANCE;
     }
 
     @Override

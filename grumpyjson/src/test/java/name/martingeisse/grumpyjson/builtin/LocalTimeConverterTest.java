@@ -6,7 +6,7 @@
  */
 package name.martingeisse.grumpyjson.builtin;
 
-import com.google.gson.JsonPrimitive;
+import name.martingeisse.grumpyjson.json_model.JsonString;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -21,14 +21,14 @@ public class LocalTimeConverterTest {
     @Test
     public void testDeserializationHappyCase() throws Exception {
         Assertions.assertEquals(LocalTime.of(14, 15, 16),
-                converter.deserialize(new JsonPrimitive("14:15:16"), LocalTime.class));
+                converter.deserialize(JsonString.of("14:15:16"), LocalTime.class));
         Assertions.assertEquals(LocalTime.of(4, 5, 6),
-                converter.deserialize(new JsonPrimitive("04:05:06"), LocalTime.class));
+                converter.deserialize(JsonString.of("04:05:06"), LocalTime.class));
     }
 
     @Test
     public void testDeserializationWrongFormat() {
-        assertFailsDeserialization(converter, new JsonPrimitive("1:2:3"), LocalTime.class);
+        assertFailsDeserialization(converter, JsonString.of("1:2:3"), LocalTime.class);
     }
 
     @Test
@@ -41,13 +41,13 @@ public class LocalTimeConverterTest {
 
     @Test
     public void testSerializationHappyCase() {
-        Assertions.assertEquals(new JsonPrimitive("14:00"),
+        Assertions.assertEquals(JsonString.of("14:00"),
                 converter.serialize(LocalTime.of(14, 0)));
-        Assertions.assertEquals(new JsonPrimitive("14:15"),
+        Assertions.assertEquals(JsonString.of("14:15"),
                 converter.serialize(LocalTime.of(14, 15)));
-        Assertions.assertEquals(new JsonPrimitive("14:15:16"),
+        Assertions.assertEquals(JsonString.of("14:15:16"),
                 converter.serialize(LocalTime.of(14, 15, 16)));
-        Assertions.assertEquals(new JsonPrimitive("14:15:16.123456789"),
+        Assertions.assertEquals(JsonString.of("14:15:16.123456789"),
                 converter.serialize(LocalTime.of(14, 15, 16, 123456789)));
     }
 

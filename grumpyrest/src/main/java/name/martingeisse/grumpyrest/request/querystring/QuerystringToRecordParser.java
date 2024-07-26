@@ -12,6 +12,7 @@ import name.martingeisse.grumpyrest.request.stringparser.FromStringParser;
 import name.martingeisse.grumpyrest.request.stringparser.FromStringParserException;
 import name.martingeisse.grumpyrest.request.stringparser.FromStringParserRegistry;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
@@ -91,7 +92,17 @@ public final class QuerystringToRecordParser implements QuerystringParser {
         if (!fieldErrors.isEmpty()) {
             throw new QuerystringParsingException(Map.copyOf(fieldErrors));
         }
-        return recordInfo.invokeConstructor(fieldValues);
+        try {
+            return recordInfo.invokeConstructor(fieldValues);
+        } catch (InvocationTargetException e) {
+            // Since records are considered data containers, we expect exceptions from a record constructor to be
+            // related to the record arguments, which we know. So returning the exception message in the response
+            // should not leak any sensitive information. This allows error messages related to the *combination*
+            // of multiple fields to be visible in the response without writing any custom code.
+            throw new QuerystringParsingException(Map.of("(root)", e.getTargetException().getMessage()));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

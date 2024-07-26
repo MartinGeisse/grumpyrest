@@ -6,10 +6,10 @@
  */
 package name.martingeisse.grumpyjson.builtin.helper_types;
 
-import com.google.gson.JsonElement;
 import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.json_model.JsonElement;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 

@@ -6,6 +6,7 @@
  */
 package name.martingeisse.grumpyrest_demo;
 
+import name.martingeisse.grumpyjson.GsonBasedJsonEngine;
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalField;
 import name.martingeisse.grumpyrest.RestApi;
 import name.martingeisse.grumpyrest.request.HttpMethod;
@@ -17,7 +18,7 @@ public class GreetingMain {
     record MakeGreetingResponse(String greeting) {}
 
     public static void main(String[] args) throws Exception {
-        RestApi api = new RestApi();
+        RestApi api = new RestApi(new GsonBasedJsonEngine());
         api.addRoute(HttpMethod.GET, "/", request -> "Hello World!");
         api.addRoute(HttpMethod.POST, "/", request -> {
             MakeGreetingRequest requestBody = request.parseBody(MakeGreetingRequest.class);

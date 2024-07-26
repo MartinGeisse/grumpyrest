@@ -6,11 +6,11 @@
  */
 package name.martingeisse.grumpyjson.builtin;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.json_model.JsonElement;
+import name.martingeisse.grumpyjson.json_model.JsonNumber;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 
@@ -46,11 +46,7 @@ public final class LongConverter implements JsonSerializer<Long>, JsonDeserializ
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
 
-        if (json instanceof JsonPrimitive primitive && primitive.isNumber()) {
-            return IntegralNumberDeserializationUtil.deserialize(primitive.getAsNumber());
-        }
-
-        throw new JsonDeserializationException("expected long (64-bit integer), found: " + json);
+        return IntegralNumberDeserializationUtil.deserialize(json.deserializerExpectsNumber());
     }
 
     @Override
@@ -64,7 +60,7 @@ public final class LongConverter implements JsonSerializer<Long>, JsonDeserializ
     public JsonElement serialize(Long value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
 
-        return new JsonPrimitive(value);
+        return JsonNumber.of(value);
     }
 
 }

@@ -6,7 +6,7 @@
  */
 package name.martingeisse.grumpyjson.builtin;
 
-import com.google.gson.JsonPrimitive;
+import name.martingeisse.grumpyjson.json_model.JsonString;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -21,15 +21,15 @@ public class LocalDateConverterTest {
 
     @Test
     public void testDeserializationHappyCase() throws Exception {
-        Assertions.assertEquals(LocalDate.of(2020, 10, 25), converter.deserialize(new JsonPrimitive("2020-10-25"), LocalDate.class));
-        Assertions.assertEquals(LocalDate.of(2020, 1, 5), converter.deserialize(new JsonPrimitive("2020-01-05"), LocalDate.class));
+        Assertions.assertEquals(LocalDate.of(2020, 10, 25), converter.deserialize(JsonString.of("2020-10-25"), LocalDate.class));
+        Assertions.assertEquals(LocalDate.of(2020, 1, 5), converter.deserialize(JsonString.of("2020-01-05"), LocalDate.class));
     }
 
     @Test
     public void testDeserializationWrongFormat() {
-        assertFailsDeserialization(converter, new JsonPrimitive("2020-1-05"), LocalDate.class);
-        assertFailsDeserialization(converter, new JsonPrimitive("2020-01-5"), LocalDate.class);
-        assertFailsDeserialization(converter, new JsonPrimitive("20-01-05"), LocalDate.class);
+        assertFailsDeserialization(converter, JsonString.of("2020-1-05"), LocalDate.class);
+        assertFailsDeserialization(converter, JsonString.of("2020-01-5"), LocalDate.class);
+        assertFailsDeserialization(converter, JsonString.of("20-01-05"), LocalDate.class);
     }
 
     @Test
@@ -42,7 +42,7 @@ public class LocalDateConverterTest {
 
     @Test
     public void testSerializationHappyCase() {
-        Assertions.assertEquals(new JsonPrimitive("2020-01-05"), converter.serialize(LocalDate.of(2020, 1, 5)));
+        Assertions.assertEquals(JsonString.of("2020-01-05"), converter.serialize(LocalDate.of(2020, 1, 5)));
     }
 
     @Test

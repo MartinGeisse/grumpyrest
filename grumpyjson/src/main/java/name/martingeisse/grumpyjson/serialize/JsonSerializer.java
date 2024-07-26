@@ -6,8 +6,8 @@
  */
 package name.martingeisse.grumpyjson.serialize;
 
-import com.google.gson.JsonElement;
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalField;
+import name.martingeisse.grumpyjson.json_model.JsonElement;
 
 import java.util.Objects;
 import java.util.Optional;

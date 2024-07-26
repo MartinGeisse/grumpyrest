@@ -6,16 +6,17 @@
  */
 package name.martingeisse.grumpyjson.builtin.record;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import name.martingeisse.grumpyjson.ExceptionMessages;
 import name.martingeisse.grumpyjson.FieldErrorNode;
 import name.martingeisse.grumpyjson.JsonProviders;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.json_model.JsonElement;
+import name.martingeisse.grumpyjson.json_model.JsonObject;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
@@ -108,54 +109,62 @@ public final class RecordConverter<T> implements JsonSerializer<T>, JsonDeserial
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(recordType, "recordType");
 
-        if (json instanceof JsonObject jsonObject) {
-            List<RecordInfo.ComponentInfo> componentInfos = recordInfo.getComponentInfos();
-            int numberOfPresentKnownProperties = 0;
-            Object[] fieldValues = new Object[componentInfos.size()];
-            FieldErrorNode errorNode = null;
+        Map<String, JsonElement> jsonProperties = json.deserializerExpectsObject();
+        List<RecordInfo.ComponentInfo> componentInfos = recordInfo.getComponentInfos();
+        int numberOfPresentKnownProperties = 0;
+        Object[] fieldValues = new Object[componentInfos.size()];
+        FieldErrorNode errorNode = null;
 
-            for (int i = 0; i < componentInfos.size(); i++) {
-                RecordInfo.ComponentInfo componentInfo = componentInfos.get(i);
-                String name = componentInfo.getName();
-                JsonElement propertyJson = jsonObject.get(name);
-                if (propertyJson != null) {
-                    numberOfPresentKnownProperties++;
-                }
-                try {
-                    Type concreteFieldType = componentInfo.getConcreteType(recordType);
-                    JsonDeserializer deserializer = providers.getDeserializer(concreteFieldType);
-                    if (propertyJson == null) {
-                        fieldValues[i] = deserializer.deserializeAbsent(concreteFieldType);
-                    } else {
-                        fieldValues[i] = deserializer.deserialize(propertyJson, concreteFieldType);
-                    }
-                } catch (JsonDeserializationException e) {
-                    errorNode = e.getFieldErrorNode().in(name).and(errorNode);
-                } catch (Exception e) {
-                    errorNode = FieldErrorNode.create(e).in(name).and(errorNode);
-                }
+        for (int i = 0; i < componentInfos.size(); i++) {
+            RecordInfo.ComponentInfo componentInfo = componentInfos.get(i);
+            String name = componentInfo.getName();
+            JsonElement propertyJson = jsonProperties.get(name);
+            if (propertyJson != null) {
+                numberOfPresentKnownProperties++;
             }
+            try {
+                Type concreteFieldType = componentInfo.getConcreteType(recordType);
+                JsonDeserializer deserializer = providers.getDeserializer(concreteFieldType);
+                if (propertyJson == null) {
+                    fieldValues[i] = deserializer.deserializeAbsent(concreteFieldType);
+                } else {
+                    fieldValues[i] = deserializer.deserialize(propertyJson, concreteFieldType);
+                }
+            } catch (JsonDeserializationException e) {
+                errorNode = e.getFieldErrorNode().in(name).and(errorNode);
+            } catch (Exception e) {
+                errorNode = FieldErrorNode.create(e).in(name).and(errorNode);
+            }
+        }
 
-            // jsonObject.size() counts the present properties; numberOfPresentKnownProperties counts the present
-            // *known* properties. So they differ iff there is at least one present unknown property.
-            if (!options.ignoreUnknownProperties() && numberOfPresentKnownProperties != jsonObject.size()) {
-                // this is more expensive, so only do this if there is really an error
-                Set<String> propertyNames = new HashSet<>(jsonObject.keySet());
-                for (RecordInfo.ComponentInfo componentInfo : componentInfos) {
-                    propertyNames.remove(componentInfo.getName());
-                }
-                for (String unexpectedProperty : propertyNames) {
-                    errorNode = FieldErrorNode.create(ExceptionMessages.UNEXPECTED_PROPERTY).in(unexpectedProperty).and(errorNode);
-                }
+        // jsonObject.size() counts the present properties; numberOfPresentKnownProperties counts the present
+        // *known* properties. So they differ iff there is at least one present unknown property.
+        if (!options.ignoreUnknownProperties() && numberOfPresentKnownProperties != jsonProperties.size()) {
+            // this is more expensive, so only do this if there is really an error
+            Set<String> propertyNames = new HashSet<>(jsonProperties.keySet());
+            for (RecordInfo.ComponentInfo componentInfo : componentInfos) {
+                propertyNames.remove(componentInfo.getName());
             }
+            for (String unexpectedProperty : propertyNames) {
+                errorNode = FieldErrorNode.create(ExceptionMessages.UNEXPECTED_PROPERTY).in(unexpectedProperty).and(errorNode);
+            }
+        }
 
-            if (errorNode != null) {
-                throw new JsonDeserializationException(errorNode);
-            }
+        if (errorNode != null) {
+            throw new JsonDeserializationException(errorNode);
+        }
+        try {
             //noinspection unchecked
             return (T) recordInfo.invokeConstructor(fieldValues);
+        } catch (InvocationTargetException e) {
+            // Since records are considered data containers, we expect exceptions from a record constructor to be
+            // related to the record arguments, which we know. So returning the exception message in the response
+            // should not leak any sensitive information. This allows error messages related to the *combination*
+            // of multiple fields to be visible in the response without writing any custom code.
+            throw new JsonDeserializationException(FieldErrorNode.create(e.getTargetException().getMessage()));
+        } catch (Exception e) {
+            throw new JsonDeserializationException(FieldErrorNode.create(e));
         }
-        throw new JsonDeserializationException("expected object, found: " + json);
     }
 
     @Override
@@ -169,7 +178,7 @@ public final class RecordConverter<T> implements JsonSerializer<T>, JsonDeserial
     public JsonElement serialize(T record) {
         Objects.requireNonNull(record, "value"); // called value in the interface
 
-        JsonObject jsonObject = new JsonObject();
+        Map<String, JsonElement> jsonProperties = new HashMap<>();
         FieldErrorNode errorNode = null;
         for (RecordInfo.ComponentInfo componentInfo : recordInfo.getComponentInfos()) {
             String name = componentInfo.getName();
@@ -179,7 +188,7 @@ public final class RecordConverter<T> implements JsonSerializer<T>, JsonDeserial
                     throw new JsonSerializationException("field is null");
                 }
                 Optional<JsonElement> optionalJson = providers.serializeOptional(value);
-                optionalJson.ifPresent(jsonElement -> jsonObject.add(name, jsonElement));
+                optionalJson.ifPresent(jsonElement -> jsonProperties.put(name, jsonElement));
             } catch (JsonSerializationException e) {
                 errorNode = e.getFieldErrorNode().in(name).and(errorNode);
             } catch (Exception e) {
@@ -189,7 +198,7 @@ public final class RecordConverter<T> implements JsonSerializer<T>, JsonDeserial
         if (errorNode != null) {
             throw new JsonSerializationException(errorNode);
         }
-        return jsonObject;
+        return JsonObject.of(jsonProperties);
     }
 
 }

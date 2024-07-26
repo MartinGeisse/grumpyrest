@@ -6,10 +6,12 @@
  */
 package name.martingeisse.grumpyjson;
 
-import com.google.gson.JsonObject;
 import name.martingeisse.grumpyjson.builtin.IntegerConverter;
 import name.martingeisse.grumpyjson.builtin.StringConverter;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.json_model.JsonNumber;
+import name.martingeisse.grumpyjson.json_model.JsonObject;
+import name.martingeisse.grumpyjson.json_model.JsonString;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -32,9 +34,7 @@ public class ShallowRecordConverterTest {
 
     @Test
     public void testHappyCase() throws Exception {
-        JsonObject json = new JsonObject();
-        json.addProperty("myInt", 123);
-        json.addProperty("myString", "foo");
+        JsonObject json = JsonObject.of("myInt", JsonNumber.of(123), "myString", JsonString.of("foo"));
 
         Record record = new Record(123, "foo");
 
@@ -53,8 +53,7 @@ public class ShallowRecordConverterTest {
 
     @Test
     public void testMissingProperty() {
-        JsonObject json = new JsonObject();
-        json.addProperty("myInt", 123);
+        JsonObject json = JsonObject.of("myInt", JsonNumber.of(123));
         JsonTestUtil.assertFieldErrors(
                 assertFailsDeserialization(deserializer, json, Record.class),
                 new FieldErrorNode.FlattenedError(ExceptionMessages.MISSING_PROPERTY, "myString")
@@ -63,21 +62,20 @@ public class ShallowRecordConverterTest {
 
     @Test
     public void testPropertyWithWrongType() {
-        JsonObject json = new JsonObject();
-        json.addProperty("myInt", "foo");
-        json.addProperty("myString", "foo");
+        JsonObject json = JsonObject.of("myInt", JsonString.of("foo"), "myString", JsonString.of("foo"));
         JsonTestUtil.assertFieldErrors(
                 assertFailsDeserialization(deserializer, json, Record.class),
-                new FieldErrorNode.FlattenedError("expected integer, found: \"foo\"", "myInt")
+                new FieldErrorNode.FlattenedError("expected number, found: JSON:\"foo\"", "myInt")
         );
     }
 
     @Test
     public void testUnexpectedProperty() {
-        JsonObject json = new JsonObject();
-        json.addProperty("myInt", 123);
-        json.addProperty("thisDoesNotBelongHere", 456);
-        json.addProperty("myString", "foo");
+        JsonObject json = JsonObject.of(
+                "myInt", JsonNumber.of(123),
+                "thisDoesNotBelongHere", JsonNumber.of(456),
+                "myString", JsonString.of("foo")
+        );
         JsonTestUtil.assertFieldErrors(
                 assertFailsDeserialization(deserializer, json, Record.class),
                 new FieldErrorNode.FlattenedError(ExceptionMessages.UNEXPECTED_PROPERTY, "thisDoesNotBelongHere")
@@ -86,13 +84,11 @@ public class ShallowRecordConverterTest {
 
     @Test
     public void testMultipleFieldErrors() {
-        JsonObject json = new JsonObject();
-        json.addProperty("myInt", "foo");
-        json.addProperty("thisDoesNotBelongHere", 456);
+        JsonObject json = JsonObject.of("myInt", JsonString.of("foo"), "thisDoesNotBelongHere", JsonNumber.of(456));
         JsonTestUtil.assertFieldErrors(
                 assertFailsDeserialization(deserializer, json, Record.class),
                 new FieldErrorNode.FlattenedError(ExceptionMessages.UNEXPECTED_PROPERTY, "thisDoesNotBelongHere"),
-                new FieldErrorNode.FlattenedError("expected integer, found: \"foo\"", "myInt"),
+                new FieldErrorNode.FlattenedError("expected number, found: JSON:\"foo\"", "myInt"),
                 new FieldErrorNode.FlattenedError(ExceptionMessages.MISSING_PROPERTY, "myString")
         );
     }

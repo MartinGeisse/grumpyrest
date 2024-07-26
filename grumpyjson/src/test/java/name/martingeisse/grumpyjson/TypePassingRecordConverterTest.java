@@ -6,13 +6,13 @@
  */
 package name.martingeisse.grumpyjson;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import name.martingeisse.grumpyjson.builtin.IntegerConverter;
 import name.martingeisse.grumpyjson.builtin.ListConverter;
 import name.martingeisse.grumpyjson.builtin.StringConverter;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.json_model.JsonArray;
+import name.martingeisse.grumpyjson.json_model.JsonObject;
+import name.martingeisse.grumpyjson.json_model.JsonString;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -49,9 +49,9 @@ public class TypePassingRecordConverterTest {
     @Test
     public void testHappyCase() throws Exception {
         JsonArray othersJson = buildStringArray("bar", "baz");
-        JsonObject innerJson = buildCustomObject("best", new JsonPrimitive("foo"), "others", othersJson);
-        JsonObject middleJson = buildCustomObject("inner", innerJson);
-        JsonObject outerJson = buildCustomObject("middle", middleJson);
+        JsonObject innerJson = JsonObject.of("best", JsonString.of("foo"), "others", othersJson);
+        JsonObject middleJson = JsonObject.of("inner", innerJson);
+        JsonObject outerJson = JsonObject.of("middle", middleJson);
 
         List<String> otherStrings = List.of("bar", "baz");
         Inner<String> innerRecord = new Inner<>("foo", otherStrings);

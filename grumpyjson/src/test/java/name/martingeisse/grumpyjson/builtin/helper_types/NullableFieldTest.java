@@ -20,7 +20,7 @@ public class NullableFieldTest {
         assertTrue(ofNull.isNull());
         assertFalse(ofNull.isNonNull());
         assertNull(ofNull.getValueOrNull());
-        assertThrows(IllegalStateException.class, () -> ofNull.getValue());
+        assertThrows(IllegalStateException.class, ofNull::getValue);
 
         assertFalse(ofValue.isNull());
         assertTrue(ofValue.isNonNull());

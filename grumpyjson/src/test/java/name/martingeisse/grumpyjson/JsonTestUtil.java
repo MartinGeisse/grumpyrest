@@ -7,14 +7,15 @@
 package name.martingeisse.grumpyjson;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import com.google.gson.*;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.json_model.*;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import org.junit.jupiter.api.Assertions;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -36,70 +37,62 @@ public class JsonTestUtil {
     // booleans
     // ----------------------------------------------------------------------------------------------------------------
 
-    public static void forBooleans(ConsumerWithException<? super JsonPrimitive> consumer) throws Exception {
-        consumer.accept(new JsonPrimitive(false));
-        consumer.accept(new JsonPrimitive(true));
+    public static void forBooleans(ConsumerWithException<? super JsonBoolean> consumer) throws Exception {
+        consumer.accept(JsonBoolean.of(false));
+        consumer.accept(JsonBoolean.of(true));
     }
 
     // ----------------------------------------------------------------------------------------------------------------
     // numbers
     // ----------------------------------------------------------------------------------------------------------------
 
-    public static void forNumbers(ConsumerWithException<? super JsonPrimitive> consumer) throws Exception {
-        consumer.accept(new JsonPrimitive(0));
-        consumer.accept(new JsonPrimitive(1));
-        consumer.accept(new JsonPrimitive(2));
-        consumer.accept(new JsonPrimitive(123));
-        consumer.accept(new JsonPrimitive(-55));
+    public static void forNumbers(ConsumerWithException<? super JsonNumber> consumer) throws Exception {
+        consumer.accept(JsonNumber.of(0));
+        consumer.accept(JsonNumber.of(1));
+        consumer.accept(JsonNumber.of(2));
+        consumer.accept(JsonNumber.of(123));
+        consumer.accept(JsonNumber.of(-55));
     }
 
     // ----------------------------------------------------------------------------------------------------------------
     // strings
     // ----------------------------------------------------------------------------------------------------------------
 
-    public static void forStrings(ConsumerWithException<? super JsonPrimitive> consumer) throws Exception {
-        consumer.accept(new JsonPrimitive(""));
-        consumer.accept(new JsonPrimitive("foo"));
-        consumer.accept(new JsonPrimitive("{}"));
-        consumer.accept(new JsonPrimitive("0"));
-        consumer.accept(new JsonPrimitive("1"));
-        consumer.accept(new JsonPrimitive("true"));
-        consumer.accept(new JsonPrimitive("false"));
-        consumer.accept(new JsonPrimitive("null"));
+    public static void forStrings(ConsumerWithException<? super JsonString> consumer) throws Exception {
+        consumer.accept(JsonString.of(""));
+        consumer.accept(JsonString.of("foo"));
+        consumer.accept(JsonString.of("{}"));
+        consumer.accept(JsonString.of("0"));
+        consumer.accept(JsonString.of("1"));
+        consumer.accept(JsonString.of("true"));
+        consumer.accept(JsonString.of("false"));
+        consumer.accept(JsonString.of("null"));
     }
 
     // ----------------------------------------------------------------------------------------------------------------
     // arrays
     // ----------------------------------------------------------------------------------------------------------------
 
-    public static final JsonArray EMPTY_ARRAY = new JsonArray();
+    public static final JsonArray EMPTY_ARRAY = JsonArray.of();
     public static final JsonArray SINGLE_INT_ARRAY = buildIntArray(12);
     public static final JsonArray INT_ARRAY = buildIntArray(12, 34, 56);
     public static final JsonArray SINGLE_STRING_ARRAY = buildStringArray("foo");
     public static final JsonArray STRING_ARRAY = buildStringArray("foo", "bar", "baz");
 
     public static JsonArray buildIntArray(int... numbers) {
-        JsonArray array = new JsonArray();
+        List<JsonElement> elements = new ArrayList<>();
         for (int number : numbers) {
-            array.add(number);
+            elements.add(JsonNumber.of(number));
         }
-        return array;
+        return JsonArray.of(elements);
     }
 
     public static JsonArray buildStringArray(String... strings) {
-        JsonArray array = new JsonArray();
+        List<JsonElement> elements = new ArrayList<>();
         for (String string : strings) {
-            array.add(string);
+            elements.add(JsonString.of(string));
         }
-        return array;
-    }
-
-    public static JsonArray buildArray(JsonElement... elements) {
-        JsonArray array = new JsonArray();
-        for (JsonElement element : elements) {
-            array.add(element);
-        }
-        return array;
+        return JsonArray.of(elements);
     }
 
     public static void forArrays(ConsumerWithException<? super JsonElement> consumer) throws Exception {
@@ -114,28 +107,16 @@ public class JsonTestUtil {
     // objects
     // ----------------------------------------------------------------------------------------------------------------
 
-    public static final JsonObject EMPTY_OBJECT = new JsonObject();
-    public static final JsonObject OBJECT_WITH_SINGLE_KEY_AND_INT_VALUE = buildCustomObject("foo", new JsonPrimitive(123));
-    public static final JsonObject OBJECT_WITH_SINGLE_KEY_AND_STRING_VALUE = buildCustomObject("foo", new JsonPrimitive("xyz"));
-    public static final JsonObject OBJECT_WITH_SINGLE_KEY_AND_NULL_VALUE = buildCustomObject("foo", JsonNull.INSTANCE);
-    public static final JsonObject OBJECT_WITH_SINGLE_KEY_AND_FALSE_VALUE = buildCustomObject("foo", new JsonPrimitive(false));
-    public static final JsonObject OBJECT_WITH_SINGLE_KEY_AND_TRUE_VALUE = buildCustomObject("foo", new JsonPrimitive(true));
-    public static final JsonObject OBJECT_WITH_SINGLE_INT_KEY_AND_INT_VALUE = buildCustomObject("0", new JsonPrimitive(123));
-    public static final JsonObject OBJECT_WITH_SINGLE_EMPTY_KEY_AND_INT_VALUE = buildCustomObject("", new JsonPrimitive(123));
+    public static final JsonObject EMPTY_OBJECT = JsonObject.of();
+    public static final JsonObject OBJECT_WITH_SINGLE_KEY_AND_INT_VALUE = JsonObject.of("foo", JsonNumber.of(123));
+    public static final JsonObject OBJECT_WITH_SINGLE_KEY_AND_STRING_VALUE = JsonObject.of("foo", JsonString.of("xyz"));
+    public static final JsonObject OBJECT_WITH_SINGLE_KEY_AND_NULL_VALUE = JsonObject.of("foo", JsonNull.INSTANCE);
+    public static final JsonObject OBJECT_WITH_SINGLE_KEY_AND_FALSE_VALUE = JsonObject.of("foo", JsonBoolean.of(false));
+    public static final JsonObject OBJECT_WITH_SINGLE_KEY_AND_TRUE_VALUE = JsonObject.of("foo", JsonBoolean.of(true));
+    public static final JsonObject OBJECT_WITH_SINGLE_INT_KEY_AND_INT_VALUE = JsonObject.of("0", JsonNumber.of(123));
+    public static final JsonObject OBJECT_WITH_SINGLE_EMPTY_KEY_AND_INT_VALUE = JsonObject.of("", JsonNumber.of(123));
     public static final JsonObject OBJECT_WITH_TWO_PROPERTIES =
-            buildCustomObject("foo", new JsonPrimitive(123), "bar", new JsonPrimitive("xyz"));
-
-    public static JsonObject buildCustomObject(String key, JsonElement value) {
-        JsonObject object = new JsonObject();
-        object.add(key, value);
-        return object;
-    }
-
-    public static JsonObject buildCustomObject(String key1, JsonElement value1, String key2, JsonElement value2) {
-        JsonObject object = buildCustomObject(key1, value1);
-        object.add(key2, value2);
-        return object;
-    }
+            JsonObject.of("foo", JsonNumber.of(123), "bar", JsonString.of("xyz"));
 
     public static void forObjects(ConsumerWithException<? super JsonObject> consumer) throws Exception {
         consumer.accept(EMPTY_OBJECT);

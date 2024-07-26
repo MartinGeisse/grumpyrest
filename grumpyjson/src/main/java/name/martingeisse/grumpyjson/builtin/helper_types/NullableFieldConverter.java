@@ -6,12 +6,12 @@
  */
 package name.martingeisse.grumpyjson.builtin.helper_types;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import name.martingeisse.grumpyjson.JsonProviders;
 import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.json_model.JsonElement;
+import name.martingeisse.grumpyjson.json_model.JsonNull;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import name.martingeisse.grumpyjson.util.TypeUtil;
@@ -53,11 +53,13 @@ public final class NullableFieldConverter implements JsonSerializer<NullableFiel
         Objects.requireNonNull(type, "type");
 
         Type innerType = TypeUtil.expectSingleParameterizedType(type, NullableField.class);
-        if (json.isJsonNull()) {
+        if (json instanceof JsonNull) {
             return NullableField.ofNull();
         } else {
             try {
                 return NullableField.ofValue(providers.deserialize(json, innerType));
+            } catch (JsonDeserializationException e) {
+                throw e;
             } catch (Exception e) {
                 throw new JsonDeserializationException(e);
             }
@@ -80,6 +82,8 @@ public final class NullableFieldConverter implements JsonSerializer<NullableFiel
         } else {
             try {
                 return providers.serialize(value.getValueOrNull());
+            } catch (JsonSerializationException e) {
+                throw e;
             } catch (Exception e) {
                 throw new JsonSerializationException(e);
             }

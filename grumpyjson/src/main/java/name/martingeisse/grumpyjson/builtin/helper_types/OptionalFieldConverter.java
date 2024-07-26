@@ -6,11 +6,11 @@
  */
 package name.martingeisse.grumpyjson.builtin.helper_types;
 
-import com.google.gson.JsonElement;
 import name.martingeisse.grumpyjson.JsonProviders;
 import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.json_model.JsonElement;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import name.martingeisse.grumpyjson.util.TypeUtil;
@@ -54,6 +54,8 @@ public final class OptionalFieldConverter implements JsonSerializer<OptionalFiel
 
         try {
             return OptionalField.ofValue(providers.deserialize(json, getInner(type)));
+        } catch (JsonDeserializationException e) {
+            throw e;
         } catch (Exception e) {
             throw new JsonDeserializationException(e);
         }
@@ -90,6 +92,8 @@ public final class OptionalFieldConverter implements JsonSerializer<OptionalFiel
         } else {
             try {
                 return Optional.of(providers.serialize(value.getValueOrNothingAsNull()));
+            } catch (JsonSerializationException e) {
+                throw e;
             } catch (Exception e) {
                 throw new JsonSerializationException(e);
             }

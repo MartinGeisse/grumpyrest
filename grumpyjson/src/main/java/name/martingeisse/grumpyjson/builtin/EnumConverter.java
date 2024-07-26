@@ -6,10 +6,10 @@
  */
 package name.martingeisse.grumpyjson.builtin;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.json_model.JsonElement;
+import name.martingeisse.grumpyjson.json_model.JsonString;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 
@@ -50,13 +50,11 @@ public final class EnumConverter<T extends Enum<T>> implements JsonSerializer<T>
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
 
-        if (!(json instanceof JsonPrimitive primitive) || !primitive.isString()) {
-            throw new JsonDeserializationException("expected string, found: " + json);
-        }
+        String text = json.deserializerExpectsString();
         try {
-            return Enum.valueOf(enumClass, primitive.getAsString());
+            return Enum.valueOf(enumClass, text);
         } catch (IllegalArgumentException e) {
-            throw new JsonDeserializationException("unknown value: " + primitive.getAsString());
+            throw new JsonDeserializationException("unknown value");
         }
     }
 
@@ -71,7 +69,7 @@ public final class EnumConverter<T extends Enum<T>> implements JsonSerializer<T>
     public JsonElement serialize(T value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
 
-        return new JsonPrimitive(value.name());
+        return JsonString.of(value.name());
     }
 
 }

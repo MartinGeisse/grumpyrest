@@ -6,14 +6,14 @@
  */
 package name.martingeisse.grumpyjson.builtin;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import name.martingeisse.grumpyjson.FieldErrorNode;
 import name.martingeisse.grumpyjson.JsonProviders;
 import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.json_model.JsonElement;
+import name.martingeisse.grumpyjson.json_model.JsonObject;
+import name.martingeisse.grumpyjson.json_model.JsonString;
 import name.martingeisse.grumpyjson.registry.NotRegisteredException;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
@@ -61,39 +61,37 @@ public final class MapConverter implements JsonSerializer<Map<?, ?>>, JsonDeseri
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
 
-        if (json instanceof JsonObject map) {
-            Type[] keyAndValueTypes = TypeUtil.expectParameterizedType(type, List.class, 2);
-            Type keyType = keyAndValueTypes[0];
-            Type valueType = keyAndValueTypes[1];
-            JsonDeserializer keyDeserializer, valueDeserializer;
-            try {
-                keyDeserializer = providers.getDeserializer(keyType);
-                valueDeserializer = providers.getDeserializer(valueType);
-            } catch (NotRegisteredException e) {
-                throw new JsonDeserializationException(e.getMessage());
-            }
-            Map<Object, Object> result = new HashMap<>();
-            FieldErrorNode errorNode = null;
-            for (Map.Entry<String, JsonElement> entry : map.entrySet()) {
-                String keyText = entry.getKey();
-                boolean isAtKey = true;
-                try {
-                    Object key = keyDeserializer.deserialize(new JsonPrimitive(keyText), keyType);
-                    isAtKey = false;
-                    Object value = valueDeserializer.deserialize(entry.getValue(), valueType);
-                    result.put(key, value);
-                } catch (JsonDeserializationException e) {
-                    errorNode = e.getFieldErrorNode().in(buildFromJsonFieldName(isAtKey, keyText)).and(errorNode);
-                } catch (Exception e) {
-                    errorNode = FieldErrorNode.create(e).in(buildFromJsonFieldName(isAtKey, keyText)).and(errorNode);
-                }
-            }
-            if (errorNode != null) {
-                throw new JsonDeserializationException(errorNode);
-            }
-            return Map.copyOf(result);
+        Map<String, JsonElement> jsonProperties = json.deserializerExpectsObject();
+        Type[] keyAndValueTypes = TypeUtil.expectParameterizedType(type, List.class, 2);
+        Type keyType = keyAndValueTypes[0];
+        Type valueType = keyAndValueTypes[1];
+        JsonDeserializer keyDeserializer, valueDeserializer;
+        try {
+            keyDeserializer = providers.getDeserializer(keyType);
+            valueDeserializer = providers.getDeserializer(valueType);
+        } catch (NotRegisteredException e) {
+            throw new JsonDeserializationException(e.getMessage());
         }
-        throw new JsonDeserializationException("expected object, found: " + json);
+        Map<Object, Object> result = new HashMap<>();
+        FieldErrorNode errorNode = null;
+        for (Map.Entry<String, JsonElement> entry : jsonProperties.entrySet()) {
+            String keyText = entry.getKey();
+            boolean isAtKey = true;
+            try {
+                Object key = keyDeserializer.deserialize(JsonString.of(keyText), keyType);
+                isAtKey = false;
+                Object value = valueDeserializer.deserialize(entry.getValue(), valueType);
+                result.put(key, value);
+            } catch (JsonDeserializationException e) {
+                errorNode = e.getFieldErrorNode().in(buildFromJsonFieldName(isAtKey, keyText)).and(errorNode);
+            } catch (Exception e) {
+                errorNode = FieldErrorNode.create(e).in(buildFromJsonFieldName(isAtKey, keyText)).and(errorNode);
+            }
+        }
+        if (errorNode != null) {
+            throw new JsonDeserializationException(errorNode);
+        }
+        return Map.copyOf(result);
     }
 
     @Override
@@ -107,7 +105,7 @@ public final class MapConverter implements JsonSerializer<Map<?, ?>>, JsonDeseri
     public JsonElement serialize(Map<?, ?> map) throws JsonSerializationException {
         Objects.requireNonNull(map, "value"); // called value in the interface
 
-        JsonObject result = new JsonObject();
+        Map<String, JsonElement> jsonProperties = new HashMap<>();
         FieldErrorNode errorNode = null;
         for (Map.Entry<?, ?> entry : map.entrySet()) {
 
@@ -126,13 +124,15 @@ public final class MapConverter implements JsonSerializer<Map<?, ?>>, JsonDeseri
                 errorNode = FieldErrorNode.create(e).in("[" + keyObject + "]").and(errorNode);
                 continue;
             }
-            if (!(keyJson instanceof JsonPrimitive p) || !p.isString()) {
+            String keyText;
+            if (keyJson instanceof JsonString s) {
+                keyText = s.getValue();
+            } else {
                 errorNode = FieldErrorNode.create("map key does not serialize to a JSON string")
                     .in("[" + keyObject + "]")
                     .and(errorNode);
                 continue;
             }
-            String keyText = keyJson.getAsString();
             try {
                 // handle value
                 Object valueObject = entry.getValue();
@@ -140,7 +140,7 @@ public final class MapConverter implements JsonSerializer<Map<?, ?>>, JsonDeseri
                     throw new JsonSerializationException("map contains null value");
                 }
                 JsonElement valueJson = providers.serialize(valueObject);
-                result.add(keyText, valueJson);
+                jsonProperties.put(keyText, valueJson);
 
             } catch (JsonSerializationException e) {
                 errorNode = e.getFieldErrorNode().in(keyText).and(errorNode);
@@ -151,6 +151,6 @@ public final class MapConverter implements JsonSerializer<Map<?, ?>>, JsonDeseri
         if (errorNode != null) {
             throw new JsonSerializationException(errorNode);
         }
-        return result;
+        return JsonObject.of(jsonProperties);
     }
 }

@@ -6,9 +6,9 @@
  */
 package name.martingeisse.grumpyjson.builtin;
 
-import com.google.gson.JsonPrimitive;
 import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.json_model.JsonString;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -53,15 +53,15 @@ public class EnumConverterTest {
 
     @Test
     public void testDeserializationHappyCase() throws Exception {
-        assertEquals(MyEnum.FOO_BAR, deserializer.deserialize(new JsonPrimitive("FOO_BAR"), MyEnum.class));
-        assertEquals(MyEnum.ABC_DEF, deserializer.deserialize(new JsonPrimitive("ABC_DEF"), MyEnum.class));
+        assertEquals(MyEnum.FOO_BAR, deserializer.deserialize(JsonString.of("FOO_BAR"), MyEnum.class));
+        assertEquals(MyEnum.ABC_DEF, deserializer.deserialize(JsonString.of("ABC_DEF"), MyEnum.class));
     }
 
     @Test
     public void testDeserializationUnknownConstant() {
-        assertFailsDeserialization(deserializer, new JsonPrimitive("FOO_BAR "), MyEnum.class);
-        assertFailsDeserialization(deserializer, new JsonPrimitive(" FOO_BAR"), MyEnum.class);
-        assertFailsDeserialization(deserializer, new JsonPrimitive("foo_bar"), MyEnum.class);
+        assertFailsDeserialization(deserializer, JsonString.of("FOO_BAR "), MyEnum.class);
+        assertFailsDeserialization(deserializer, JsonString.of(" FOO_BAR"), MyEnum.class);
+        assertFailsDeserialization(deserializer, JsonString.of("foo_bar"), MyEnum.class);
     }
 
     @Test
@@ -74,7 +74,7 @@ public class EnumConverterTest {
 
     @Test
     public void testSerializationHappyCase() {
-        Assertions.assertEquals(new JsonPrimitive("FOO_BAR"), serializer.serialize(MyEnum.FOO_BAR));
+        Assertions.assertEquals(JsonString.of("FOO_BAR"), serializer.serialize(MyEnum.FOO_BAR));
     }
 
     @Test

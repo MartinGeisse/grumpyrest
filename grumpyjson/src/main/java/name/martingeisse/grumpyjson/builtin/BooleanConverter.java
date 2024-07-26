@@ -6,11 +6,11 @@
  */
 package name.martingeisse.grumpyjson.builtin;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.json_model.JsonBoolean;
+import name.martingeisse.grumpyjson.json_model.JsonElement;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 
@@ -46,13 +46,7 @@ public final class BooleanConverter implements JsonSerializer<Boolean>, JsonDese
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
 
-        if (json instanceof JsonPrimitive primitive) {
-            if (primitive.isBoolean()) {
-                return primitive.getAsBoolean();
-            }
-        }
-
-        throw new JsonDeserializationException("expected boolean, found: " + json);
+        return json.deserializerExpectsBoolean();
     }
 
     @Override
@@ -66,7 +60,7 @@ public final class BooleanConverter implements JsonSerializer<Boolean>, JsonDese
     public JsonElement serialize(Boolean value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
         
-        return new JsonPrimitive(value);
+        return JsonBoolean.of(value);
     }
 
 }

@@ -6,6 +6,7 @@
  */
 package name.martingeisse.grumpyrest_demo.shop;
 
+import name.martingeisse.grumpyjson.GsonBasedJsonEngine;
 import name.martingeisse.grumpyjson.builtin.helper_types.NullableField;
 import name.martingeisse.grumpyrest.request.HttpMethod;
 import name.martingeisse.grumpyrest.request.Request;
@@ -85,7 +86,7 @@ public final class ShopSystem {
     // ----------------------------------------------------------------------------------------------------------------
 
     public RestApi buildApi() {
-        RestApi api = new RestApi();
+        RestApi api = new RestApi(new GsonBasedJsonEngine());
         addBrowsingRoutes(api);
         addCartRoutes(api);
         addOrderRoutes(api);
@@ -97,14 +98,14 @@ public final class ShopSystem {
     // general-purpose API types and associated helper methods
     // ----------------------------------------------------------------------------------------------------------------
 
-    record CategoryLink(int id, String name) {}
+    public record CategoryLink(int id, String name) {}
 
     @SuppressWarnings("unused")
     private CategoryLink getCategoryLink(int id) {
         return new CategoryLink(id, categories.get(id).name);
     }
 
-    record ProductLink(int id, String name) {}
+    public record ProductLink(int id, String name) {}
 
     private ProductLink getProductLink(int id) {
         return new ProductLink(id, products.get(id).name);
@@ -119,7 +120,7 @@ public final class ShopSystem {
         api.addRoute(HttpMethod.GET, "/products/:id", this::handleGetProduct);
     }
 
-    record CategoryResponse(
+    public record CategoryResponse(
         String name,
         NullableField<CategoryLink> parentCategory,
         List<CategoryLink> childCategories,
@@ -145,7 +146,7 @@ public final class ShopSystem {
         );
     }
 
-    record ProductResponse(
+    public record ProductResponse(
         CategoryLink category,
         String name,
         String description,
@@ -174,9 +175,9 @@ public final class ShopSystem {
         api.addRoute(HttpMethod.POST, "/cart/:userId/clear", this::handleClearCart);
     }
 
-    record GetCartResponse(List<GetCartResponseLineItem> lineItems) {}
+    public record GetCartResponse(List<GetCartResponseLineItem> lineItems) {}
 
-    record GetCartResponseLineItem(ProductLink productLink, int quantity) {}
+    public record GetCartResponseLineItem(ProductLink productLink, int quantity) {}
 
     public GetCartResponse handleGetCart(Request request) throws Exception {
         int userId = request.getPathArguments().get(0).getValue(Integer.class);
@@ -188,7 +189,7 @@ public final class ShopSystem {
     }
 
     // the user comes from the URL, in a later version probably from the authentication header
-    record AddToCartRequest(int productId, int quantity) {}
+    public record AddToCartRequest(int productId, int quantity) {}
 
     public Void handleAddToCart(Request request) throws Exception {
         int userId = request.getPathArguments().get(0).getValue(Integer.class);
@@ -223,11 +224,11 @@ public final class ShopSystem {
         api.addRoute(HttpMethod.POST, "/orders/:userId/place", this::handlePlaceOrder);
     }
 
-    record GetOrderHistoryResponse(List<GetOrderHistoryResponseOrder> orders) {}
+    public record GetOrderHistoryResponse(List<GetOrderHistoryResponseOrder> orders) {}
 
-    record GetOrderHistoryResponseOrder(List<GetOrderHistoryResponseLineItem> lineItems) {}
+    public record GetOrderHistoryResponseOrder(List<GetOrderHistoryResponseLineItem> lineItems) {}
 
-    record GetOrderHistoryResponseLineItem(int quantity, String name, int unitPrice) {}
+    public record GetOrderHistoryResponseLineItem(int quantity, String name, int unitPrice) {}
 
     public GetOrderHistoryResponse handleGetOrderHistory(Request request) throws Exception {
         int userId = request.getPathArguments().get(0).getValue(Integer.class);

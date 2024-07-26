@@ -6,11 +6,11 @@
  */
 package name.martingeisse.grumpyjson.builtin;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.json_model.JsonElement;
+import name.martingeisse.grumpyjson.json_model.JsonString;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 
@@ -47,12 +47,7 @@ public final class StringConverter implements JsonSerializer<String>, JsonDeseri
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
 
-        if (json instanceof JsonPrimitive primitive) {
-            if (primitive.isString()) {
-                return primitive.getAsString();
-            }
-        }
-        throw new JsonDeserializationException("expected int, found: " + json);
+        return json.deserializerExpectsString();
     }
 
     @Override
@@ -66,7 +61,7 @@ public final class StringConverter implements JsonSerializer<String>, JsonDeseri
     public JsonElement serialize(String value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
 
-        return new JsonPrimitive(value);
+        return JsonString.of(value);
     }
 
 }

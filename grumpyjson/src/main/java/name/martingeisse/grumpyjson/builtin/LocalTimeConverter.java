@@ -6,11 +6,11 @@
  */
 package name.martingeisse.grumpyjson.builtin;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 import name.martingeisse.grumpyjson.JsonRegistries;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializationException;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.json_model.JsonElement;
+import name.martingeisse.grumpyjson.json_model.JsonString;
 import name.martingeisse.grumpyjson.serialize.JsonSerializationException;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 
@@ -46,14 +46,12 @@ public final class LocalTimeConverter implements JsonSerializer<LocalTime>, Json
         Objects.requireNonNull(json, "json");
         Objects.requireNonNull(type, "type");
 
-        if (json instanceof JsonPrimitive primitive && primitive.isString()) {
-            try {
-                return LocalTime.parse(primitive.getAsString());
-            } catch (DateTimeParseException e) {
-                throw new JsonDeserializationException(e.getMessage());
-            }
+        String text = json.deserializerExpectsString();
+        try {
+            return LocalTime.parse(text);
+        } catch (DateTimeParseException e) {
+            throw new JsonDeserializationException(e.getMessage());
         }
-        throw new JsonDeserializationException("expected string, found: " + json);
     }
 
     @Override
@@ -67,7 +65,7 @@ public final class LocalTimeConverter implements JsonSerializer<LocalTime>, Json
     public JsonElement serialize(LocalTime value) throws JsonSerializationException {
         Objects.requireNonNull(value, "value");
 
-        return new JsonPrimitive(value.toString());
+        return JsonString.of(value.toString());
     }
 
 }

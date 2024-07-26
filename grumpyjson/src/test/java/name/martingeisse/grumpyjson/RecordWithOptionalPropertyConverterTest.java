@@ -6,12 +6,13 @@
  */
 package name.martingeisse.grumpyjson;
 
-import com.google.gson.JsonObject;
 import name.martingeisse.grumpyjson.builtin.IntegerConverter;
 import name.martingeisse.grumpyjson.builtin.StringConverter;
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalField;
 import name.martingeisse.grumpyjson.builtin.helper_types.OptionalFieldConverter;
 import name.martingeisse.grumpyjson.deserialize.JsonDeserializer;
+import name.martingeisse.grumpyjson.json_model.JsonNumber;
+import name.martingeisse.grumpyjson.json_model.JsonObject;
 import name.martingeisse.grumpyjson.serialize.JsonSerializer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,7 @@ public class RecordWithOptionalPropertyConverterTest {
 
     @Test
     public void testHappyCaseWithAbsentOptionalProperty() throws Exception {
-        JsonObject jsonObjectWithoutValue = new JsonObject();
+        JsonObject jsonObjectWithoutValue = JsonObject.of();
 
         Record recordWithoutValue = new Record(OptionalField.ofNothing());
 
@@ -45,8 +46,7 @@ public class RecordWithOptionalPropertyConverterTest {
 
     @Test
     public void testHappyCaseWithPresentOptionalProperty() throws Exception {
-        JsonObject jsonObjectWithValue = new JsonObject();
-        jsonObjectWithValue.addProperty("myInt", 123);
+        JsonObject jsonObjectWithValue = JsonObject.of("myInt", JsonNumber.of(123));
 
         Record recordWithValue = new Record(OptionalField.ofValue(123));
 

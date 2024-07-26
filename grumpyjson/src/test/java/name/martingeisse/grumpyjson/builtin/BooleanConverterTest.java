@@ -6,7 +6,7 @@
  */
 package name.martingeisse.grumpyjson.builtin;
 
-import com.google.gson.JsonPrimitive;
+import name.martingeisse.grumpyjson.json_model.JsonBoolean;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -18,8 +18,8 @@ public class BooleanConverterTest {
 
     @Test
     public void testDeserializationHappyCase() throws Exception {
-        Assertions.assertEquals(true, converter.deserialize(new JsonPrimitive(true), Boolean.TYPE));
-        Assertions.assertEquals(false, converter.deserialize(new JsonPrimitive(false), Boolean.TYPE));
+        Assertions.assertEquals(true, converter.deserialize(JsonBoolean.of(true), Boolean.TYPE));
+        Assertions.assertEquals(false, converter.deserialize(JsonBoolean.of(false), Boolean.TYPE));
     }
 
     @Test
@@ -32,8 +32,8 @@ public class BooleanConverterTest {
 
     @Test
     public void testSerializationHappyCase() {
-        Assertions.assertEquals(new JsonPrimitive(true), converter.serialize(true));
-        Assertions.assertEquals(new JsonPrimitive(false), converter.serialize(false));
+        Assertions.assertEquals(JsonBoolean.of(true), converter.serialize(true));
+        Assertions.assertEquals(JsonBoolean.of(false), converter.serialize(false));
     }
 
     @Test
