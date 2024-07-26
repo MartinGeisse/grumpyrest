@@ -9,8 +9,6 @@
   * record with extra keys as Map<>
   * discriminated union
   * Instant (seconds / milli)
-* When parsing the request body, store the intermediate `JsonElement` to allow deserializing multiple times and/or
-  logging the body without parsing the JSON syntax again
 
 ## Medium-Term
 
