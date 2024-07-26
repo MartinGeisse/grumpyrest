@@ -4,6 +4,13 @@
 * Removed the grumpyrest-jetty-launcher subproject. This project contained only two helper classes that at best helped
   start a project with Grumpyrest, but had to be replaced later anyway to allow changes. Such code is better located
   in a demo, so I moved these two classes into the grumpyrest-demo subproject.
+* added a HOWTO on overriding type converters
+* split grumpyjson-gson out of grumpyjson and renamed the latter to grumpyjson-core
+* renamed the base Java package to io.github.grumpystuff to match the group ID
+* fix documentation, wiki sync and javadoc sync for the new GitHub namespace
+
+TODO remove GSON dependency!
+
 
 ## Version 0.8
 
