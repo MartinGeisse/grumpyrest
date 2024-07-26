@@ -6,18 +6,18 @@
 * Maven:
     ```
     <dependency>
-        <groupId>name.martingeisse</groupId>
+        <groupId>io.github.grumpystuff</groupId>
         <artifactId>grumpyrest</artifactId>
         <version>0.9</version>
     </dependency>
     ```
 * Gradle (long):
     ```
-    implementation group: 'name.martingeisse', name: 'grumpyrest', version: '0.9'
+    implementation group: 'io.github.grumpystuff', name: 'grumpyrest', version: '0.9'
     ```
 * Gradle (short):
     ```
-    implementation 'name.martingeisse:grumpyrest:0.9'
+    implementation 'io.github.grumpystuff:grumpyrest:0.9'
     ```
 
 ## Using the Jetty Launcher from the Demo
