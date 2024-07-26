@@ -43,7 +43,7 @@ Response 2: `{"greeting": "Hello, Joe! Nice to meet you."}`
 
 # Using grumpyrest
 
-See [Quick Start](https://github.com/MartinGeisse/grumpyrest/wiki/howto-quick-start) to get an example project up and running quickly. Also, the
+See [Quick Start](https://github.com/GrumpyStuff/grumpyrest/wiki/howto-quick-start) to get an example project up and running quickly. Also, the
 grumpyrest-demo subproject shows how to use it.
 
 It is not on Maven Central yet, unfortunately, so I cannot just give the Maven coordinates here. See the quick
@@ -51,10 +51,10 @@ start on how to use it anyway.
 
 # Further Reading
 
-[howto](https://github.com/MartinGeisse/grumpyrest/wiki/howto) -- explains common tasks.
+[howto](https://github.com/GrumpyStuff/grumpyrest/wiki/howto) -- explains common tasks.
 
-[javadoc](https://martingeisse.github.io/javadoc/grumpyrest)
+[javadoc](https://grumpystuff.github.io/javadoc/grumpyrest)
 
-[concept file](https://github.com/MartinGeisse/grumpyrest/wiki/concept) -- understand the idea behind grumpyrest
+[concept file](https://github.com/GrumpyStuff/grumpyrest/wiki/concept) -- understand the idea behind grumpyrest
 
-[roadmap](https://github.com/MartinGeisse/grumpyrest/wiki/roadmap)
+[roadmap](https://github.com/GrumpyStuff/grumpyrest/wiki/roadmap)
