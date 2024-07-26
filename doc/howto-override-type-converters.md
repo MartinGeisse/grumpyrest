@@ -106,7 +106,8 @@ not have a mechanism for that, because it isn't needed.
 As an example, let's assume that we want to serialize a date/time field, of type `LocalDateTime`. However, for the first
 version of our API, we got error reports about client programs that could not handle values before the Unix epoch,
 1970-01-01, correctly and would crash or behave incorrectly. The exact "zero date" of midnight at that day might be
-problematic too. On the other hand, a solution was found that works if such timestamps were replaced by JSON `null`.
+problematic too. On the other hand, a solution was found that works if such timestamps were replaced by JSON `null`,
+and it was decided that the switch should be made at the start of 1971.
 
 Both kinds of timestamps, before and after the Unix epoch, have class `LocalDateTime`. So we cannot use the class to
 distinguish them -- we have to use the actual value. The serializer registry operates solely on the class, so it
@@ -117,15 +118,24 @@ Our specialized serializer for `LocalDateTime` inspects the timestamp to seriali
 or passes the value on to the normal serializer. How does it do that? By calling the original serializer, of course!
 
 ```
+public final class MyLocalDateTimeSerializer implements JsonSerializer<LocalDateTime> {
+
+    private static final LocalDateTime NULL_THRESHOLD = LocalDateTime.of(1971, 1, 1, 0, 0, 0);
+    private static final LocalDateTimeConverter STANDARD_CONVERTER = new LocalDateTimeConverter();
+
+    @Override
+    public boolean supportsClassForSerialization(Class<?> clazz) {
+        return clazz.equals(LocalDateTime.class);
+    }
+
+    @Override
+    public JsonElement serialize(LocalDateTime value) throws JsonSerializationException {
+        if (value.isBefore(NULL_THRESHOLD)) {
+            return JsonNull.INSTANCE;
+        } else {
+            return STANDARD_CONVERTER.serialize(value);
+        }
+    }
+
+}
 ```
-
-
-
-
-As a real-world example, 
-
-*     <li>When the registrable for a specific key is requested, the registered registrables are checked last-to-first,
-*     so the last-registered registrable that supports the key will be returned. This allows to register generic
-*     (multi-key) registrables first, and override them for specific keys later. In particular, if the keys are
-*     {@link Type}s, then the registrable for all <code>List&lt;T&gt;</code> types can be added early, and overridden
-*     for specific types like <code>List&lt;String&gt;</code> later.</li>
