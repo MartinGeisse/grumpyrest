@@ -6,6 +6,7 @@
  */
 package name.martingeisse.grumpyrest_jetty_launcher;
 
+import jakarta.servlet.DispatcherType;
 import name.martingeisse.grumpyrest.RestApi;
 import name.martingeisse.grumpyrest.servlet.RequestPathSourcingStrategy;
 import name.martingeisse.grumpyrest.servlet.RestServlet;
@@ -14,8 +15,11 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+
+import java.util.EnumSet;
 
 public final class GrumpyrestJettyLauncher {
 
@@ -48,6 +52,9 @@ public final class GrumpyrestJettyLauncher {
         ServletContextHandler context = new ServletContextHandler();
         context.setContextPath("/");
         context.addServlet(new ServletHolder(new RestServlet(api, requestPathSourcingStrategy)), "/");
+
+        FilterHolder corsFilterHolder = new FilterHolder(new CorsFilter());
+        context.addFilter(corsFilterHolder, "/*", EnumSet.of(DispatcherType.REQUEST));
 
         server.setHandler(new HandlerList(context, new DefaultHandler()));
         server.start();
