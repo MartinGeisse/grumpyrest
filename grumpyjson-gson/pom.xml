@@ -11,6 +11,7 @@
 
     <name>Grumpyjson Gson Bridge</name>
     <description>
+        The bridge package to make Grumpyjson use Gson for JSON syntax processing.
     </description>
 
     <dependencies>

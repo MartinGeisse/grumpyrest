@@ -12,6 +12,7 @@
     <name>Grumpyjson Core</name>
     <description>
         A JSON databinding framework based purely on static type information, without using annotations.
+        This package must be combined with a bridge package for an actual JSON library, such as grumpyjson-gson.
     </description>
 
 </project>
