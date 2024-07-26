@@ -36,6 +36,10 @@ import java.util.Map;
  */
 public abstract class JsonElement {
 
+    // only allow our own subclasses
+    JsonElement() {
+    }
+
     /**
      * If this JSON element is not JSON null, this method throws a {@link JsonDeserializationException}, otherwise
      * it does nothing.

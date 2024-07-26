@@ -27,6 +27,10 @@ public abstract class JsonArray extends JsonElement {
         return new VariableLenthArray(List.of(elements));
     }
 
+    // only allow our own subclasses
+    private JsonArray() {
+    }
+
     /**
      * Returns the elements of this JSON array as a {@link List}.
      *

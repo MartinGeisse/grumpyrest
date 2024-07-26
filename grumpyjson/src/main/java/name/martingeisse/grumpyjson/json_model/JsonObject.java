@@ -65,6 +65,10 @@ public abstract class JsonObject extends JsonElement {
         return new VariableSizeObject(Map.of(key1, value1, key2, value2, key3, value3));
     }
 
+    // only allow our own subclasses
+    private JsonObject() {
+    }
+
     /**
      * Returns the properties of this JSON object as a {@link Map}.
      *

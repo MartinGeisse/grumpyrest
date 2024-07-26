@@ -20,6 +20,10 @@ public final class JsonNull extends JsonElement {
         return INSTANCE;
     }
 
+    // only allow our own subclasses
+    private JsonNull() {
+    }
+
     @Override
     public void deserializerExpectsNull() {
     }
