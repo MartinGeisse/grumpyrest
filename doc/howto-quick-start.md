@@ -1,21 +1,7 @@
 
 # Quick Start
 
-## Publish to Maven Local
-
-TODO rework this section
-
-grumpyrest is not yet available on Maven Central. To use it, clone the repo:
-
-    git clone https://github.com/MartinGeisse/grumpyrest.git
-
-then run the following command in its main folder (the one containing the `settings.gradle` file):
-
-    ./gradlew publishToMavenLocal
-
-This will build and publish the libraries to your local Maven repo in `~/.m2`
-
-You can then refer to it like this:
+## Import from Maven Central
 
 * Maven:
     ```
@@ -34,11 +20,10 @@ You can then refer to it like this:
     implementation 'name.martingeisse:grumpyrest:0.9'
     ```
 
-## Using the pre-built Jetty Launcher
+## Using the Jetty Launcher from the Demo
 
-The `name.martingeisse:grumpyrest-jetty-launcher:...` package contains a helper class to get an API server up and
-running with minimal code. This package gets built and locally published together with the main grumpyrest package when
-using the above commands. You'll have to add it as a separate dependency in Maven or Gradle. It can be used like this:
+The demo contains a `GrumpyrestJettyLauncher` class that can be used to get an API server up and running with minimal
+code. You'll have to copy that class over to your project. It can be used like this:
 
 ```
 public class GreetingMain {
@@ -66,6 +51,9 @@ public class GreetingMain {
 ```
 
 This will launch an embedded Jetty at port 8080 and serve the API just defined.
+
+The launcher class is not part of the library because you'll like have to change the details, such as CORS origin
+whitelisting, in a real-world project.
 
 ## Using a Servlet Container
 
