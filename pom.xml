@@ -117,7 +117,6 @@
         <module>grumpyjson</module>
         <module>grumpyrest</module>
         <module>grumpyrest-demo</module>
-        <module>grumpyrest-jetty-launcher</module>
     </modules>
 
 </project>

@@ -9,7 +9,7 @@ package name.martingeisse.grumpyrest_demo;
 import name.martingeisse.grumpyjson.GsonBasedJsonEngine;
 import name.martingeisse.grumpyrest.RestApi;
 import name.martingeisse.grumpyrest.request.HttpMethod;
-import name.martingeisse.grumpyrest_jetty_launcher.GrumpyrestJettyLauncher;
+import name.martingeisse.grumpyrest_demo.server.GrumpyrestJettyLauncher;
 
 import java.util.List;
 

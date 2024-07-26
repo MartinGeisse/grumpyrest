@@ -7,7 +7,7 @@
 package name.martingeisse.grumpyrest_demo.shop;
 
 import name.martingeisse.grumpyrest.RestApi;
-import name.martingeisse.grumpyrest_jetty_launcher.GrumpyrestJettyLauncher;
+import name.martingeisse.grumpyrest_demo.server.GrumpyrestJettyLauncher;
 
 public class Main {
 

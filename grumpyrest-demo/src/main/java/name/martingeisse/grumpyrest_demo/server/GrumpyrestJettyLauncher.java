@@ -4,7 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-package name.martingeisse.grumpyrest_jetty_launcher;
+package name.martingeisse.grumpyrest_demo.server;
 
 import jakarta.servlet.DispatcherType;
 import name.martingeisse.grumpyrest.RestApi;

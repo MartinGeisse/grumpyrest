@@ -1,4 +1,4 @@
-package name.martingeisse.grumpyrest_jetty_launcher;
+package name.martingeisse.grumpyrest_demo.server;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
