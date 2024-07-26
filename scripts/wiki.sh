@@ -1,5 +1,4 @@
-cd ..
-cd grumpyrest-wiki
+cd ../grumpyrest.wiki
 rm -rf doc
 cp ../grumpyrest/README.md Home.md
 cp -R ../grumpyrest/doc .
