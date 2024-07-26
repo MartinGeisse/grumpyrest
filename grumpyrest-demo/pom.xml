@@ -20,6 +20,11 @@
         </dependency>
         <dependency>
             <groupId>io.github.grumpystuff</groupId>
+            <artifactId>grumpyjson-gson</artifactId>
+            <version>0.9-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.grumpystuff</groupId>
             <artifactId>grumpyrest</artifactId>
             <version>0.9-SNAPSHOT</version>
         </dependency>
