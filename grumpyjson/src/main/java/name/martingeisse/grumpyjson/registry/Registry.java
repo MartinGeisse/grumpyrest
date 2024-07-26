@@ -8,6 +8,7 @@ package name.martingeisse.grumpyjson.registry;
 
 import name.martingeisse.grumpyjson.util.ListUtil;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,11 @@ import java.util.concurrent.ConcurrentMap;
  *     <li>For each registrable ("value" in Map terminology), the registry can determine the keys which that registrable
  *     supports, i.e. the keys that can be used to obtain that registrable from the registry. Registrables can be added
  *     without specifying a key, and a registrable will be available using any of the keys it supports.</li>
+ *     <li>When the registrable for a specific key is requested, the registered registrables are checked last-to-first,
+ *     so the last-registered registrable that supports the key will be returned. This allows to register generic
+ *     (multi-key) registrables first, and override them for specific keys later. In particular, if the keys are
+ *     {@link Type}s, then the registrable for all <code>List&lt;T&gt;</code> types can be added early, and overridden
+ *     for specific types like <code>List&lt;String&gt;</code> later.</li>
  *     <li>Depending on the subclass, the registry may support auto-generation of a registrable for a key for which no
  *     registrable was registered manually.</li>
  *     <li>The only allowed ways to manipulate the registry are adding registrables manually, auto-generation, and
