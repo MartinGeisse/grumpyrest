@@ -1,4 +1,10 @@
 
+## Version 0.9
+
+* Removed the grumpyrest-jetty-launcher subproject. This project contained only two helper classes that at best helped
+  start a project with Grumpyrest, but had to be replaced later anyway to allow changes. Such code is better located
+  in a demo, so I moved these two classes into the grumpyrest-demo subproject.
+
 ## Version 0.8
 
 * Make the built-in converters use the `JsonProviders` interface to fetch the converters they depend on, instead of
