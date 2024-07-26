@@ -7,7 +7,7 @@
         </encoder>
     </appender>
 
-    <logger name="name.martingeisse" level="info" additivity="false">
+    <logger name="io.github.grumpystuff" level="info" additivity="false">
         <appender-ref ref="CONSOLE"/>
     </logger>
 
