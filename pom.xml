@@ -7,6 +7,10 @@
 
     <packaging>pom</packaging>
 
+    <name>Grumpyrest Parent</name>
+    <description>
+        Parent module for grumpyrest/grumpyjson.
+    </description>
     <url>https://github.com/GrumpyStuff/grumpyrest</url>
 
     <licenses>
